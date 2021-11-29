@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <title>カリキュラム画面</title>
+    <meta name="description" content="${description}" />
+ <script th:src="@{https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js}"></script>
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/frappe-gantt/0.5.0/frappe-gantt.css}">
+    <link th:href="@{/css/style2.css}" rel="stylesheet" />
+    <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/frappe-gantt/0.5.0/frappe-gantt.min.js}"></script>
+
+
+
+    <style>${style}</style>
+<script type="text/javascript" th:inline="javascript">
+
+/*<![CDATA[*/
+    window.onload = function() {
+  // タスクを用意
+
+  var tasks = [
+
+
+//listに格納されたdbの中身をfor文でループして表示　リクエスト先を指定するidもここで取得
+
+
+/*[# th:each="sw : ${kariki}" ]*/
+
+
+    	{id: ' [[${sw.studyid}]]',
+    	name:'<a href="/phrase?id=[[${sw.studyid}]]">[(${sw.subjectname})]・ [(${sw.bunya})]</a>',
+
+    	description: '',
+
+    	start: '[(${sw.startstudy})]',
+    	end: '[(${sw.endstudy})]',
+
+    	progress: '[[${sw.progresspercent}]]',
+
+    	},
+    	/*[/]*/
+    	/*]]>*/
+	];
+
+
+	 var gantt = new Gantt("#gantt", tasks, {
+
+    // ダブルクリック時
+    on_click: (task) => {
+      alert(task.id );
+    },
+    // 日付変更時
+    on_date_change: (task, start, end) => {
+      console.log(`${task.name}: change date`);
+      alert(`${task.name}: change date`);
+    },
+    // 進捗変更時
+    on_progress_change: (task, progress) => {
+    //  alert(task.id+ ":change progress to" + progress +"%");
+
+	$(function(){//セッションからユーザーidを拾ってidと項目と進捗で新しいテーブルでどうのこうの
+
+
+            $.ajax({//ajax呼ぶ
+              url: "/AjaxServlet",//参考にするサブレのアノテーション
+              type: "GET",//GetかPostか
+              data: {
+            	  id : task.id,
+            	  progress : progress
+            	  }//33行目text1を参照
+            }).done(function (result) {
+              // 通信成功時のコールバック
+              alert("読み込み成功:" + result);
+
+              //$("#text1").val(result);//result（サブレでアウトプリントした結果）の値をtext1に戻す
+            }).fail(function () {
+              // 通信失敗時のコールバック
+              alert("読み込み失敗");
+            }).always(function (result) {
+              // 常に実行する処理
+            	alert("結果:" + result);
+            });
+
+});
+
+    },
+
+  });
+ //カレンダーの設定変えるならここ
+};
+
+
+</script>
+
+
+</head>
+  <body>
+    <h1>ドラゴン桜</h1>
+    <p></p>
+    <p></p>
+    <p>aaa</p>
+
+<th:block th:each="kariki : ${kariki}">
+    	 [[${kariki.studyid}]] <br>
+</th:block>
+
+    <div class='gantt-wrap'>
+      <svg id="gantt"></svg>
+
+    </div>
+
+    <script>${script}</script>
+   <a href="/home">ホームに戻る</a></body>
+  </body>
+
+
+
+
+
+</html>

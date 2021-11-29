@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <title>勤怠表</title>
+    <link th:href="@{/css/workdays.css}" rel="stylesheet"/>
+<style>
+DIV.table
+{
+    display:table;
+}
+FORM.tr, DIV.tr
+{
+    display:table-row;
+}
+DIV.tr
+{
+    display:table-row;
+}
+
+DIV.th
+{
+    display:table-header;
+}
+
+SPAN.td
+{
+    display:table-cell;
+}
+</style>
+
+
+
+
+</head>
+  <body>
+    <h1>2021年11月</h1>
+
+<div class="table">
+<div class="tr">
+<span class="th">日付</span>
+<span class="th">曜日</span>
+<span class="th">開始時刻</span>
+<span class="th">終了時刻</span>
+<span class="th">休憩時間</span>
+<span class="th">作業時刻</span>
+<span class="th">備考</span>
+<span class="th">定時</span>
+<span class="th">更新</span>
+</div>
+ <form class="tr" method="post" th:action="@{/renew}" th:each="workday:${workdays}"th:object="${workdays}" >
+ <span class="td"><input type="text"  name="day"id=${workdays.day}/></span>
+  <span class="td"><a href="/renew?id=[[${workdays.day}]]" >更新</a></span>
+  <span class="td"><input type="submit" value="登録"></span>
+  </form>
+</div>
+
+
+<p><a href="/Excel">勤怠表のExcel化</a></p>
+<p><a href="/sendmail">メール送信</a></p>
+<p>   <a href="/home">ホームに戻る</a></p>
+  <p> <a href="/beforemonth">先月へ</a></p>
+ <p>  <a href="/nextmonth">来月分へ</a></p>
+
+  </body>
+
+<script>
+document.getElementById("sample").addEventListener("click", function () {
+	  location.replace("/renew?id=${workdays.day}");
+	}, false);
+</script>
+
+
+
+</html>

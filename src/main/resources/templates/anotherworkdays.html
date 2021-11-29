@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <title>勤怠表</title>
+    <link th:href="@{/css/style2.css}" rel="stylesheet"/>
+
+
+
+
+
+</head>
+  <body>
+    <h1>2021年11月</h1>
+
+
+   <table border=1>
+  <tr>
+    <th>日付</th> <th>曜日</th> <th>開始時刻</th> <th>終了時刻</th> <th>休憩時間</th><th>作業時刻</th> <th>備考</th><th>定時</th><th>更新</th>
+  </tr>
+</table>
+<form id="entryForm"th:action="@{/renew}" th:object="${anotherworkday}" method="post">
+ <table border=1 th:each="workday:${workdays}">
+  <tr>
+    <td>  <input type="text" th:field="*{day}"> [[${workdays2.day}]]</td> <td>[[${workday.weekday}]]</td> <td>[[${workday.start}]]</td><td>[[${workday.end}]]</td> <td>[[${workday.halftime}]]</td> <td>[[${workday.worktime}]]</td>
+  <td> <a href="/renew?id=[[${workdays.day}]]" >更新</a></td><td><input type="submit" value="登録"></td>
+  </tr>
+</table>
+
+</form>
+<p><a href="/Excel">勤怠表のExcel化</a></p>
+<p><a href="/sendmail">メール送信</a></p>
+   <a href="/home">ホームに戻る</a></body>
+  </body>
+
+<script>
+document.getElementById("sample").addEventListener("click", function () {
+	  location.replace("/renew?id=${workdays.day}");
+	}, false);
+</script>
+
+
+
+</html>

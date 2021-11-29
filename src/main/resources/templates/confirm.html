@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>登録確認</title>
+<link th:href="@{/css/confirmstyle.css}" rel="stylesheet" />
+</head>
+<body>
+<table class="entryTable" border="1">
+   <caption>会員情報</caption>
+
+
+<tr>
+      <th>名前 </th>
+      <td>[[${user.name}]] </td>
+    </tr>
+
+
+
+
+<tr>
+      <th>メールアドレス </th>
+      <td>[[${user.email}]]</td>
+    </tr>
+
+<tr>
+      <th>パスワード </th>
+      <td>[[${user.password}]]</td>
+    </tr>
+</table>
+<a href="#" id="back-link">戻る</a>
+</body>
+
+<form  th:action="@{/regist}" th:object="${user}"method="post" >
+<label for="name"></label>
+<input type="hidden" th:field="*{name}">
+<input type="hidden" th:field="*{email}">
+<input type="hidden" th:field="*{password}">
+<input type="submit" value="登録">
+</form>
+
+
+<script>
+  const backLink = document.getElementById('back-link');
+  backLink.addEventListener('click', () => {
+    history.back(-1);
+  });
+</script>
+
+</html>
