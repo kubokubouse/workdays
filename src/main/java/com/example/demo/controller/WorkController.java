@@ -100,8 +100,8 @@ public class WorkController
 
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("user",users);
-		List<Workdays> workdays =workdaysService.findId(users.getId());
-		model.addAttribute("workdays", workdays);
+
+
 		//苗字と名前合わせてname
 		String lastname=users.getLastname();
 		String firstname=users.getFirstname();
@@ -111,7 +111,11 @@ public class WorkController
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
 		int month=cal.get(Calendar.MONTH);
-		month=month+1;
+		String Stringyear=String.valueOf(year);
+		String Stringmonth=String.valueOf(month);
+		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),Stringyear,Stringmonth);
+
+		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
 		String filename="//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx";
 		//ここから既存のファイル消去パート
 		Path p0= Paths.get(filename);
@@ -148,6 +152,7 @@ public class WorkController
 	        }
 	        //名前を所定のセルに記入
 	        Sheet sheet = wb.getSheet(month+"月");
+	        System.out.println(month);
 	        Row namerow = sheet.getRow(4);
 	        Cell namecell=namerow.getCell(3);
 	        namecell.setCellValue(name);
@@ -165,12 +170,14 @@ public class WorkController
 			};
 
 		Row row = sheet.getRow(k);
+		System.out.println("k="+k);
+		System.out.println("row="+row);
 		k=k+1;
 
 
 		//セル単位のループ
 		for(int j=0;j<e.length;j++)
-		{
+		{	System.out.println("j;1="+j+1);
 			Cell cell = row.getCell(j+1);
 			//その行は何曜日かを明示
 			String s=workday.getWeekday();

@@ -9,10 +9,15 @@
 <table class="entryTable" border="1">
    <caption>会員情報</caption>
 
+<tr>
+      <th>苗字 </th>
+      <td>[[${user.lastname}]] </td>
+    </tr>
+
 
 <tr>
       <th>名前 </th>
-      <td>[[${user.name}]] </td>
+      <td>[[${user.firstname}]] </td>
     </tr>
 
 
@@ -33,7 +38,8 @@
 
 <form  th:action="@{/regist}" th:object="${user}"method="post" >
 <label for="name"></label>
-<input type="hidden" th:field="*{name}">
+<input type="hidden" th:field="*{lastname}">
+<input type="hidden" th:field="*{firstname}">
 <input type="hidden" th:field="*{email}">
 <input type="hidden" th:field="*{password}">
 <input type="submit" value="登録">

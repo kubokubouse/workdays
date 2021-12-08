@@ -54,11 +54,6 @@ public class HomeController
 
 
 
-	@GetMapping("/register")
-    public String register(@ModelAttribute User user)
-	{
-        return "register";
-    }
 
 
 //メール送信処理
@@ -70,8 +65,13 @@ public class HomeController
 		}
 
 
-
-
+	//会員登録ページに移行
+		@GetMapping("/register")
+	    public String register(@ModelAttribute User user)
+		{
+	        return "register";
+	    }
+//会員情報入力→確認画面へ
 	@PostMapping("/")
 
     public String confirm(@Validated @ModelAttribute User user,
@@ -84,6 +84,22 @@ public class HomeController
         }
 	return "confirm";
 }
+//会員情報をDBに登録
+	@PostMapping("/regist")
+    public String regist(@Validated @ModelAttribute User user, BindingResult result, Model model)
+	{System.out.println(1);
+		model.addAttribute("user", repository.findAll());
+        if (result.hasErrors())
+        {
+            return "confirm";
+        }
+        // COMMENTテーブル：コメント登録
+        repository.save(user);
+
+        // ルートパス("/") にリダイレクトします
+        return "done";
+    }
+
 
 
 	//ログイン時の処理
@@ -103,7 +119,11 @@ public class HomeController
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
 		int calendermonth=cal.get(Calendar.MONTH);//calendermonth=10
+		System.out.println(calendermonth);
 		int month=calendermonth+1;//month=11 カレンダーメソッドで拾ってくる値は実際の月-1だから1足した上で検索しないといけない
+		System.out.println(month);
+		//month=calendermonth;//11月の勤怠表送る暫定処置①終わったら消せな
+	    //calendermonth=calendermonth-1;//11月の勤怠表送る暫定処置②終わったら消せな　
 		String year2 = String.valueOf(year);
 		String month2 = String.valueOf(month);//検索するのは実際の月＝month
 		int userid=users.getId();
@@ -113,7 +133,7 @@ public class HomeController
 		if (workdays==null)
 		{
 
-		//もしDBにその月の勤怠データがナカッタラ　
+		//もしDBにその月の勤怠データがナカッタラ→勤怠データをDBに登録
 		//id year month はこの時点で回収済み　残りは日付と曜日
 		//年と月からforで回転させる回数を出してどうにかこうにか？
 
@@ -134,8 +154,8 @@ public class HomeController
 
 		    WorkingListParam workingListParam = userService.searchAll();
 
-		    workingListParam.setYear(2021);
-		    workingListParam.setMonth(11);
+		    //workingListParam.setYear(2021);
+		    //workingListParam.setMonth(11);
 
 		    model.addAttribute("workingListParam", workingListParam);
 		    return "list";
@@ -222,18 +242,5 @@ public class HomeController
 
 
 
-	@PostMapping("/regist")
-    public String regist(@Validated @ModelAttribute User user, BindingResult result, Model model)
-	{System.out.println(1);
-		model.addAttribute("user", repository.findAll());
-        if (result.hasErrors())
-        {
-            return "confirm";
-        }
-        // COMMENTテーブル：コメント登録
-        repository.save(user);
 
-        // ルートパス("/") にリダイレクトします
-        return "done";
-    }
 }
