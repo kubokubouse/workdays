@@ -52,6 +52,7 @@ public class MailSendService {
 
       // メッセージクラス生成
       MimeMessage mimeMsg = mailSender.createMimeMessage();
+
       // メッセージ情報をセットするためのヘルパークラスを生成(添付ファイル使用時の第2引数はtrue)
       try{
       MimeMessageHelper helper = new MimeMessageHelper(mimeMsg,true);
@@ -84,6 +85,7 @@ public class MailSendService {
       // 使用するテンプレートのファイル名とパラメータ情報を設定します。
       String text = engine.process("/mail/sample.txt", context);
       helper.setText(text);
+
 
       // 送信元アドレスをセット
       helper.setFrom("r-kubo@connectcrew.co.jp");//mail
