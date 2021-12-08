@@ -88,7 +88,7 @@ public class UserService
         return workingListParam;
       }
 
-    public WorkingListParam searchlastmonthAll() {
+ /*   public WorkingListParam searchlastmonthAll() {
     	User users=(User)session.getAttribute("Data");
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
@@ -149,7 +149,7 @@ public class UserService
         workingListParam.setWorkingDataList(list);
         return workingListParam;
       }
-
+*/
 
       /**
        * ユーザー情報更新
@@ -182,7 +182,7 @@ public class UserService
         workdaysRepository.saveAll(userList);
       }
 
-    public void updatebeforeAll(WorkingListParam param) {
+   /* public void updatebeforeAll(WorkingListParam param) {
         List<Workdays> userList = new ArrayList<Workdays>();
         // 画面パラメータをエンティティに詰め替える
         for (WorkingData data : param.getWorkingDataList()) {
@@ -236,5 +236,5 @@ public class UserService
             workdays.setOther(data.getOther());
         }
         workdaysRepository.saveAll(userList);
-      }
+      }*/
 }
