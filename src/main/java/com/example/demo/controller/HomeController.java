@@ -192,6 +192,7 @@ public class HomeController
 
 	    return "list";
 	  }
+/*
 	 @RequestMapping(value = "/beforelistUpdate", method = RequestMethod.POST)
 	  public String beforelistUpdate(@Validated @ModelAttribute WorkingListParam workingListParam, BindingResult result, Model model) {
 	    if (result.hasErrors()) {
@@ -227,7 +228,7 @@ public class HomeController
 
 	    return "nextworkdays";
 	  }
-
+*/
 	@PostMapping("/revisedone")
 	public String revisedone(@Validated @ModelAttribute User user,
 			BindingResult result)

@@ -63,7 +63,7 @@ public class WorkController
 		return "list";
 	}
 
-
+/*
 	@GetMapping("/beforemonth")
 
 	//userIdが一致かつログインした時の年と前の月のデータを取り出す
@@ -92,7 +92,7 @@ public class WorkController
 
 
 
-
+*/
 
 	@GetMapping("/Excel")
 	public String Excel( Model model)throws EncryptedDocumentException, IOException
