@@ -9,6 +9,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.MailParseException;
@@ -27,6 +28,8 @@ import com.example.demo.model.User;
 @Service
 public class MailSendService {
 
+	@Value("${worklist.path}")
+    private String path;
   /**
    * 「メール送信」のクラスをDIする。
    */
@@ -35,8 +38,10 @@ public class MailSendService {
 
   @Autowired
   ResourceLoader resourceLoader;
+
   @Autowired
   HttpSession session;
+
   public void send()  {
 	  //ファイル名などに必要なユーザーの名前と当月を取得
 	  User users=(User)session.getAttribute("Data");
@@ -48,7 +53,9 @@ public class MailSendService {
 	  String mail=users.getEmail();
 	  // メールに添付する「C:\text.txt」にあるファイルのオブジェクトを生成
       String fileName = "勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";
-      FileSystemResource fileResource = new FileSystemResource("//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx");
+
+      FileSystemResource fileResource = new FileSystemResource(path+fileName);
+
 
       // メッセージクラス生成
       MimeMessage mimeMsg = mailSender.createMimeMessage();

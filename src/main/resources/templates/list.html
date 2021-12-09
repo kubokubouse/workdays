@@ -64,13 +64,13 @@
               <input type="text" class="form-control" th:name="'workingDataList['+${st.index}+'].start'" th:value="${workingday.start}">
             </td>
             <td>
-              <input type="text" class="form-control" th:field="*{workingDataList[__${st.index}__].end}">
+              <input type="text" class="form-control" th:name="'workingDataList['+${st.index}+'].end'" th:value="${workingday.end}">
             </td>
 <td>
-              <input type="text" class="form-control" th:field="*{workingDataList[__${st.index}__].halftime}">
+              <input type="text" class="form-control" th:name="'workingDataList['+${st.index}+'].halftime'" th:value="${workingday.halftime}">
             </td>
             <td>
-              <input type="text" class="form-control" th:field="*{workingDataList[__${st.index}__].worktime}">
+              <input type="text" class="form-control" th:name="'workingDataList['+${st.index}+'].worktime'" th:value="${workingday.worktime}">
             </td>
             <td>
               <input type="text" class="form-control" th:field="*{workingDataList[__${st.index}__].other}">

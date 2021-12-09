@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +50,10 @@ public class WorkController
     MailSendService mailsendService;
     @Autowired
     HolidayService holidayService;
+
+    @Value("${worklist.path}")
+    private String path;
+
 
 	@GetMapping("/workdays")
 
@@ -111,14 +116,18 @@ public class WorkController
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
 		int month=cal.get(Calendar.MONTH);
+		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
 		String Stringyear=String.valueOf(year);
 		String Stringmonth=String.valueOf(month);
 		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),Stringyear,Stringmonth);
 
-		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
-		String filename="//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx";
+
+		System.out.println("month="+month);
+		String fileName = "勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";//aws.ver　ここに書き込まれる
+		//String filename="//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx";
+
 		//ここから既存のファイル消去パート
-		Path p0= Paths.get(filename);
+		Path p0= Paths.get(fileName);
 		if(p0!=null) {
 			try{
 		      Files.delete(p0);
@@ -126,19 +135,20 @@ public class WorkController
 		      System.out.println(e);
 		    }
 		  }
-
+		System.out.println("filename="+fileName);
 		//ここから実験
-		 String INPUT_DIR = "/apache/htdocs/image/test.xlsx";
-		 Path p1 = Paths.get(INPUT_DIR);
-		 Path p2 = Paths.get(filename);
+		 //String INPUT_DIR = "/apache/htdocs/image/test.xlsx";
+		String INPUT_DIR = path+"test.xlsx";//aws用　ベースになるエクセルファイル
+		 Path p1 = Paths.get(INPUT_DIR);//ベース
+		 Path p2 = Paths.get(path+fileName);
 
 		 try{
 		   Files.copy(p1, p2);
 		 }catch(IOException e){
 		  e.printStackTrace();
 		 }
-
-		  FileInputStream in  = new FileInputStream("//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx");
+		 	FileInputStream in  = new FileInputStream(path+fileName);
+		  //FileInputStream in  = new FileInputStream("//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx");
 	        Workbook wb=null;
 
 	        try
@@ -156,6 +166,7 @@ public class WorkController
 	        Row namerow = sheet.getRow(4);
 	        Cell namecell=namerow.getCell(3);
 	        namecell.setCellValue(name);
+
 
 	 int k=8;
 	 int tenhour=0;
@@ -342,7 +353,7 @@ public class WorkController
 	 try
 	 {
  	    // 変更するエクセルファイルを指定
- 	    out = new FileOutputStream("//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx");
+ 	    out = new FileOutputStream(path+fileName);
 
  	    // 書き込み
  	    wb.write(out);
