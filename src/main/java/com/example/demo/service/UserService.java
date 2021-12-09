@@ -164,7 +164,7 @@ public class UserService
         	Calendar cal = Calendar.getInstance();
     		int year=cal.get(Calendar.YEAR);
     		int month=cal.get(Calendar.MONTH);
-    		//month=month+1; 11月の勤怠表送る暫定処置　終わったら消す
+    		month=month+1;
     		String year2 = String.valueOf(year);
     		String month2 = String.valueOf(month);
     		User users=(User)session.getAttribute("Data");
