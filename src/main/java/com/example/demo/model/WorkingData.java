@@ -19,7 +19,7 @@ public class WorkingData implements Serializable {
 	@Column
 	 private Integer userid;//integer4
 	@Column
-	 private String day;
+	 private Integer day;
 
 
 	@Column

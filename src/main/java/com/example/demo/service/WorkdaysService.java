@@ -13,24 +13,22 @@ public class WorkdaysService {
     @Autowired
     WorkdaysRepository workdaysRepository;
 
-    public List <Workdays> findId(int id)
-    {
+    public List <Workdays> findId(int id){
     	return workdaysRepository.findByUserid(id);
     }
 
-    public List <Workdays> findYearMonth(int id,String year,String month)
-    {
+    public List <Workdays> findYearMonth(int id,int year,int month){
     	return workdaysRepository.findByUseridAndYearAndMonth(id,year,month);
     }
 
-    public  Workdays findUseridYearMonthDay(int userid,String year,String month,String day)
-    {
+    public  Workdays findUseridYearMonthDay(int userid,int year,int month,int day){
     	return workdaysRepository.findByUseridAndYearAndMonthAndDay(userid,year,month,day);
     }
 
-    public  int insertdata(int userid,int year,int month,int day,String weekday)
-    {
+    public  int insertdata(int userid,int year,int month,int day,String weekday){
     	return workdaysRepository.InsertData(userid,year,month,day,weekday);
     }
-
+    public void update(Workdays workdays){
+        workdaysRepository.save(workdays);
+    }
 }
