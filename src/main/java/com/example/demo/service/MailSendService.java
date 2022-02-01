@@ -20,8 +20,6 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
-import com.example.demo.model.User;
 /**
  * 「メール送信」のクラスのサンプルクラス。
  */
@@ -42,15 +40,15 @@ public class MailSendService {
   @Autowired
   HttpSession session;
 
-  public void send()  {
+  public void send(String lastname,String mail)  {
 	  //ファイル名などに必要なユーザーの名前と当月を取得
-	  User users=(User)session.getAttribute("Data");
-	  String lastname=users.getLastname();
+	  //User users=(User)session.getAttribute("Data");
+	  //String lastname=users.getLastname();
 	  Calendar cal = Calendar.getInstance();
 	  int year=cal.get(Calendar.YEAR);
 	  int month=cal.get(Calendar.MONTH);
 	  month=month+1;
-	  String mail=users.getEmail();
+	  //String mail=users.getEmail();
 	  // メールに添付する「C:\text.txt」にあるファイルのオブジェクトを生成
       String fileName = "勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";
 
@@ -109,6 +107,7 @@ public class MailSendService {
            }
       // メール送信
       mailSender.send(mimeMsg);
+      System.out.println("メール送れたよ");
 
   }
 }

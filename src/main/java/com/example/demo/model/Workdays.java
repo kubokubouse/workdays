@@ -21,11 +21,11 @@ public class Workdays
 	@Column
 	 private Integer userid;//integer4
 	@Column
-	 private String day;
+	 private Integer day;
 	@Column
-	 private String year;
+	 private Integer year;
 	@Column
-	 private String month;
+	 private Integer month;
 
 	@Column
 	 private String  weekday;

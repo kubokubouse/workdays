@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
   <title th:text="ユーザー情報一覧"></title>
+  <script th:src="@{https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <meta charset="utf-8" />
@@ -23,6 +24,36 @@
 
 
 </style>
+
+<script>
+  $(function(){
+    
+    // 値が更新されたときの処理
+    $('input').change(function(){
+      var invalue = $(this).val();
+      var day = $(this).attr('day');
+      var name = $(this).attr('name');
+      $.ajax({
+        url: "/AjaxServlet",
+        type: "POST",
+        data: {
+          invalue : invalue,
+          day : day,
+          name : name
+        }
+      }).done(function (result) {
+        // 通信成功時のコールバック
+        $("#text1").val(result);
+      }).fail(function () {
+        // 通信失敗時のコールバック
+        alert("読み込み失敗");
+      }).always(function (result) {
+        // 常に実行する処理
+      });
+    });
+    
+  });
+  </script>
 </head>
 <body>
   <div class="container">
@@ -61,19 +92,19 @@
               <input type="hidden" th:field="*{workingDataList[__${st.index}__].weekday}">
             </td>
             <td>
-              <input type="text" class="form-control" th:name="'workingDataList['+${st.index}+'].start'" th:value="${workingday.start}">
+              <input type="text" th:day="${workingday.day}" th:id="${workingday.day}" class="form-control" th:name="'workingDataList['+${st.index}+'].start'" th:value="${workingday.start}" >
             </td>
             <td>
-              <input type="text" class="form-control" th:name="'workingDataList['+${st.index}+'].end'" th:value="${workingday.end}">
-            </td>
-<td>
-              <input type="text" class="form-control" th:name="'workingDataList['+${st.index}+'].halftime'" th:value="${workingday.halftime}">
+              <input type="text" th:day="${workingday.day}" class="form-control" th:name="'workingDataList['+${st.index}+'].end'" th:value="${workingday.end}">
             </td>
             <td>
-              <input type="text" class="form-control" th:name="'workingDataList['+${st.index}+'].worktime'" th:value="${workingday.worktime}">
+              <input type="text" th:day="${workingday.day}" class="form-control" th:name="'workingDataList['+${st.index}+'].halftime'" th:value="${workingday.halftime}">
             </td>
             <td>
-              <input type="text" class="form-control" th:field="*{workingDataList[__${st.index}__].other}">
+              <input type="text" th:day="${workingday.day}" class="form-control" th:name="'workingDataList['+${st.index}+'].worktime'" th:value="${workingday.worktime}">
+            </td>
+            <td>
+              <input type="text" th:day="${workingday.day}" class="form-control" th:field="*{workingDataList[__${st.index}__].other}">
             </td>
           </tr>
         </tbody>

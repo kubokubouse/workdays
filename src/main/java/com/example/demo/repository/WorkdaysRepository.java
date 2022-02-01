@@ -20,8 +20,8 @@ public interface WorkdaysRepository extends JpaRepository<Workdays, Long>
 
 	    List<Workdays> findByUserid(int userid);
 
-	    List<Workdays> findByUseridAndYearAndMonth(int userid,String year, String month);
+	    List<Workdays> findByUseridAndYearAndMonth(int userid,int year, int month);
 
-	    Workdays findByUseridAndYearAndMonthAndDay(int userid,String year, String month,String Day);
+	    Workdays findByUseridAndYearAndMonthAndDay(int userid,int year, int month,int Day);
 }
 
