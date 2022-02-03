@@ -19,7 +19,55 @@
 }
 .tr_color2 {
   background-color: #ED5353;
- vertical-align: middle;
+  vertical-align: middle;
+}
+body {
+  font-family: sans-serif;
+}
+table {
+  font-family: sans-serif;
+}
+
+h1 {
+  border-bottom: solid 3px skyblue;
+  position: relative;
+}
+
+h1:after {
+  position: absolute;
+  content: " ";
+  display: block;
+  border-bottom: solid 3px #ffc778;
+  bottom: -3px;
+  width: 30%;
+}
+
+a{
+  position: relative;
+  display: inline-block;
+  transition: .3s;
+  text-decoration: none;
+}
+
+a::after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  content: '';
+  width: 0;
+  height: 2px;
+  background-color: #31aae2;
+  transition: .3s;
+  transform: translateX(-50%);
+}
+
+a:hover::after{
+  width: 100%;
+}
+
+.tabs {
+  margin-left: 50px;
+  margin-top: 50px;
 }
 
 
@@ -111,10 +159,11 @@
       </table>
     </form>
   </div>
-  <p><a href="/Excel">勤怠表のExcel化</a></p>
-<p><a href="/sendmail">メール送信</a></p>
-  <p> <a href="/beforemonth">先月へ</a></p>
- <p>  <a href="/nextmonth">来月分へ</a></p>
-
+  <div class="tabs">
+    <p><a href="/Excel">勤怠表のExcel化</a></p>
+    <p><a href="/sendmail">メール送信</a></p>
+    <p><a href="/beforemonth">先月へ</a></p>
+    <p><a href="/nextmonth">来月分へ</a></p>
+  </div>>
 </body>
 </html>
