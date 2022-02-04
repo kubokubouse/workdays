@@ -17,33 +17,37 @@ public class WorkingData implements Serializable {
 	@Id
 	private int id;
 	@Column
-	 private Integer userid;//integer4
+	private Integer userid;//integer4
+	
 	@Column
-	 private Integer day;
+	private Integer day;
 
 
 	@Column
-	 private String  weekday;
+	private String  weekday;
 
 	//@Pattern(regexp ="^([01][0-9]|2[0-3]):[0-5][0-9]$", message = "〇〇:〇〇の形式で入力してください")
 	//@NotEmpty(message = "開始時刻を入力してください")
 	@Column
 	@DateTimeFormat(pattern="HH:mm")
-	 private LocalTime start;//time4
+	private LocalTime start;//time4
 
 	//@Pattern(regexp ="^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$", message = "〇〇:〇〇:〇〇の形式で入力してください")
 	//@NotEmpty(message = "終了時刻を入力してください")
 	@Column
-	 private LocalTime end;
+	private LocalTime end;
 	//@Pattern(regexp ="^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$", message = "〇〇:〇〇:〇〇の形式で入力してください")
 	//@NotEmpty(message = "休憩時刻を入力してください")
 	@Column
-	 private LocalTime  halftime;
+	private LocalTime  halftime;
 	//@Pattern(regexp ="^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$", message = "〇〇:〇〇:〇〇の形式で入力してください")
 	//@NotEmpty(message = "勤務時刻を入力してください")
 	@Column
-	 private LocalTime  worktime;
+	private LocalTime  worktime;
 
 	@Column
-	 private String other;
+	private String other;
+
+	@Column
+	private Integer holiday;
 }

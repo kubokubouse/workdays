@@ -98,7 +98,7 @@ public class UserService{
           data.setHalftime(LocalTime.of(workday.getHalftime().getHours(),workday.getHalftime().getMinutes()));
           data.setWorktime(LocalTime.of(workday.getWorktime().getHours(),workday.getWorktime().getMinutes()));
           data.setOther(workday.getOther());
-
+		  data.setHoliday(workday.getHoliday());
           list.add(data);
         }
         workingListParam.setWorkingDataList(list);
