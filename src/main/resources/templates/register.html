@@ -25,45 +25,45 @@
   <table class="entryTable" border="1">
     <caption>会員情報</caption>
 
-<tr>
-      <th>苗字 </th>
-      <td><label for="lastname"></label>
-      <input type="text" class="register-control"
-      th:errorclass="is-invalid" th:field="*{lastname}">
-       <div class="invalid-feedback" th:errors="*{lastname}">
-            </div></td>
+    <tr>
+      <th>氏： </th>
+      <tr><td>
+        <label for="lastname"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{lastname}">
+       <div class="invalid-feedback" th:errors="*{lastname}"></div>
+      </td></tr>
     </tr>
 
     <tr>
-      <th>名前 </th>
-      <td><label for="firstname"></label>
-      <input type="text" class="register-control"
-      th:errorclass="is-invalid" th:field="*{firstname}">
-       <div class="invalid-feedback" th:errors="*{firstname}">
-            </div></td>
+      <th>名： </th>
+      <tr><td>
+        <label for="firstname"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{firstname}">
+        <div class="invalid-feedback" th:errors="*{firstname}"></div>
+      </td></tr>
     </tr>
 
-<tr>
-      <th>メールアドレス </th>
-      <td>
+    <tr>
+      <th>メールアドレス： </th>
+      <tr><td>
         <label for="email"></label>
       <input type="text" class="register-control"
       th:errorclass="is-invalid" th:field="*{email}">
-       <div class="invalid-feedback" th:errors="*{email}">
-            </div>
+       <div class="invalid-feedback" th:errors="*{email}"></div>
         <small>※半角で入力してください</small>
-      </td>
+      </td></tr>
     </tr>
-<tr>
-      <th>パスワード </th>
-      <td>
+    <tr>
+      <th>パスワード： </th>
+      <tr><td>
         <label for="password"></label>
-      <input type="text" class="register-control"
-      th:errorclass="is-invalid" th:field="*{password}">
-       <div class="invalid-feedback" th:errors="*{password}">
-            </div>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{password}">
+       <div class="invalid-feedback" th:errors="*{password}"></div>
         <small>※半角英数</small>
-      </td>
+      </td></tr>
     </tr>
 
   </table>
@@ -78,3 +78,31 @@
 
 </body>
 </html>
+
+<style>
+
+  body {
+    font-family: sans-serif;
+  }
+
+  h1 {
+    border-bottom: solid 3px skyblue;
+    position: relative;
+    font-family: sans-serif;
+  }
+  
+  h1:after {
+    position: absolute;
+    content: " ";
+    display: block;
+    border-bottom: solid 3px #ffc778;
+    bottom: -3px;
+    width: 30%;
+  }
+
+  .entryTable {
+    margin-top: 20px;
+    border: 0px none;
+  }
+
+</style>
