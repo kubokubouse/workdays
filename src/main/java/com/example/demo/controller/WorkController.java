@@ -139,7 +139,8 @@ public class WorkController
 	}
 
 
-
+	//Excelに書き込む用の処理
+	//
 	@GetMapping("/Excel")
 	public String Excel( Model model)throws EncryptedDocumentException, IOException{
 
@@ -158,10 +159,10 @@ public class WorkController
 	
 		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
 		System.out.println("month="+month);
-		String fileName = "勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";//aws.ver　ここに書き込まれる
-		//String filename="//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx";
+		//String fileName = "勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";//aws.ver　ここに書き込まれる
+		String fileName="//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx";
 		
-		//ここから既存のファイル消去パート
+		//既存のファイルを消去
 		Path p0= Paths.get(fileName);
 		if(p0!=null) {
 			try{
@@ -172,19 +173,19 @@ public class WorkController
 		}
 		
 		System.out.println("filename="+fileName);
-		//ここから実験
-		//String INPUT_DIR = "/apache/htdocs/image/test.xlsx";
-		String INPUT_DIR = path+"test.xlsx";//aws用　ベースになるエクセルファイル
+		//ベースになるエクセルファイルを定義
+		String INPUT_DIR = "/apache/htdocs/image/test.xlsx";
+		//String INPUT_DIR = path+"test.xlsx";//aws用　ベースになるエクセルファイル
 		Path p1 = Paths.get(INPUT_DIR);//ベース
-		Path p2 = Paths.get(path+fileName);
-
+		//Path p2 = Paths.get(path+fileName);
+	    Path p2 = Paths.get(fileName);
 		try{
 			Files.copy(p1, p2);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-		FileInputStream in  = new FileInputStream(path+fileName);
-		//FileInputStream in  = new FileInputStream("//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx");
+		//FileInputStream in  = new FileInputStream(path+fileName); aws用
+		FileInputStream in  = new FileInputStream(fileName);
 	    Workbook wb=null;
 		try{
 			// 既存のエクセルファイルを編集する際は、WorkbookFactoryを使用
@@ -196,7 +197,7 @@ public class WorkController
 	    
 		//名前を所定のセルに記入
 	    Sheet sheet = wb.getSheet(month+"月");
-	    System.out.println(month);
+	    //System.out.println(month);
 	    Row namerow = sheet.getRow(4);
 	    Cell namecell=namerow.getCell(3);
 	    namecell.setCellValue(name);
@@ -204,27 +205,35 @@ public class WorkController
 		int k=8;
 		int tenhour=0;
 		int hour=0;
+		int tenminutes=0;
 		int minutes=0;
 		
+		//ループを回してExcelに入力された値を入れ、フォントの設定をする
+		//外のループは行のループで中のループはセルのループ
+		//つまり具体的にどうループするかというと
+		//日付が入力される→曜日開始終了休憩作業備考の順に入力
+		//
 		for(Workdays workday:workdays){
 			String[]e={
 				Integer.toString(workday.getDay()),workday.getWeekday(),workday.getStart().toString(),workday.getEnd().toString(),workday.getHalftime().toString(),workday.getWorktime().toString(),workday.getOther(),
 			};
-			Row row = sheet.getRow(k);
-			System.out.println("k="+k);
-			System.out.println("row="+row);
-			k=k+1;
-			//セル単位のループ
+			Row row = sheet.getRow(k);//値を入れるセルの行を指定
+			k=k+1;					 //行番号に1加えて次のループに備える
+
+			//セル単位のループ　e.lengthは日付曜日開始終了休憩作業備考の7つなので7回処理を行うとその週のループが終わる
 			for(int j=0;j<e.length;j++){
-				System.out.println("j;1="+j+1);
 				Cell cell = row.getCell(j+1);
 				//その行は何曜日かを明示
-				String s=workday.getWeekday();
-				//getstart・end・falftime・worktimeだったら→後ろ3つの文字を消す
+				String weekday=workday.getWeekday();
+
+				//セルの値が開始(2)・終了(3)・休憩(4)・労働時間(5)だったら→後ろ3つの文字を消す
+				//入力されたデータそのものは秒数が存在しない00:00形式の値だが
+				//DBに登録されるのは
 				if(j==2||j==3||j==4) {
 					e[j]=e[j].substring(0,5);
 					cell.setCellValue(e[j]);
 				}
+
 				//日付は数値として処理
 				else if(j==0) {
 					int dj=Integer.parseInt(e[j]);
@@ -237,13 +246,17 @@ public class WorkController
 					//セルに埋め込む値は前6文字切り出した時点で確定しておく
 					cell.setCellValue(e[j]);
 					
-					//一文字目は10時間、二文字目は1時間、3文字目は10分（10分単位でしか計算しない前提だけど実際どうなの）
+					//一文字目は10時間、二文字目は1時間、4文字目は10分、5文字目は1分
+					//つまり10:35だったら前から順に1,0,3,5が抽出される
+					//ループを重ねるごとにそれぞれの〇〇文字目の値を加算していき総労働時間を求めていくイメージ
 					int first=Integer.parseInt(e[j].substring(0,1));
 					int second=Integer.parseInt(e[j].substring(1,2));
 					int third=Integer.parseInt(e[j].substring(3,4));
+					int forth=Integer.parseInt(e[j].substring(4,5));
 					tenhour=tenhour+first;
 					hour=hour+second;
-					minutes=minutes+third;
+					tenminutes=tenminutes+third;
+					minutes=minutes+forth;
 				}
 				
 				else {
@@ -251,55 +264,60 @@ public class WorkController
 				}
 				
 				//フォント設定
-				if(e[j].equals("日")){
-					Font font = wb.createFont();
+				//全項目共通項
+				Font font = wb.createFont();
+				CellStyle cs = wb.createCellStyle();
+
+				//ここからのif文6連打に関してザックリいうと
+				//jは配列の中の何番手かを表す。j=0なら日付になる
+				//weekday.equals(日)はあなたの所属する行は日曜ですってこと
+				//e[j].equals("日")はあなたのセルの値は日ですってこと
+				//ようはここでやってるのは曜日セルと日付セルに関して色を付けたりセルの枠の線の太さを規定してるってこと
+				//Q色を変えるのが土曜と日曜だけなら残りの平日は特段セル弄らなくてよいのでは？
+				//A ベースになってる勤怠表が2021年11月とかだから平日も真っ黒に塗り撫さないと
+				//11月休日で当月が平日だった日の日付曜日が真っ赤になる
+				//Qセル枠のフォント弄ってるのが日付と曜日のセルだけの理由は？全部弄るか全部弄らないかの二択でいいのでは
+				//Aセルのフォントをどこか一つでも弄るとセルの枠が真っ白になるので文字を青・赤にした
+				//曜日・日付
+				if(e[j].equals("日")){//セルの値が「日」だったら
 					font.setColor(IndexedColors.RED.index);
-					CellStyle cs = wb.createCellStyle();
 					cs.setBorderBottom(BorderStyle.HAIR);
 		    		cs.setFont(font);
 		    		cell.setCellStyle(cs);
 		    	}
-				if(j==0&&s.equals("日")){
-					Font font = wb.createFont();
+				if(j==0&&weekday.equals("日")){//セルが日付セルでありかつその行の曜日セルの値が「日」だったら
 					font.setColor(IndexedColors.RED.index);
-					CellStyle cs = wb.createCellStyle();
 					cs.setBorderLeft(BorderStyle.MEDIUM);
 					cs.setBorderRight(BorderStyle.HAIR);
 					cs.setBorderBottom(BorderStyle.HAIR);
 		    		cs.setFont(font);
 		    		cell.setCellStyle(cs);
 				}
+				
 				else if(e[j].equals("月")||e[j].equals("火")||e[j].equals("水")||e[j].equals("木")||e[j].equals("金")){
-		    		Font font = wb.createFont();
-					font.setColor(IndexedColors.BLACK.index);
-					CellStyle cs = wb.createCellStyle();
+		    		font.setColor(IndexedColors.BLACK.index);
 					cs.setBorderBottom(BorderStyle.HAIR);
 			    	cs.setFont(font);
 			    	cell.setCellStyle(cs);
 		    	}
 
-		    	else if(j==0&&s.equals("月")||j==0&&s.equals("火")||j==0&&s.equals("水")||j==0&&s.equals("木")||j==0&&s.equals("金")){
-		    		Font font = wb.createFont();
+		    	else if(j==0&&weekday.equals("月")||j==0&&weekday.equals("火")||j==0&&weekday.equals("水")||j==0&&weekday.equals("木")||j==0&&weekday.equals("金")){
 					font.setColor(IndexedColors.BLACK.index);
-					CellStyle cs = wb.createCellStyle();
 					cs.setBorderLeft(BorderStyle.MEDIUM);
 					cs.setBorderRight(BorderStyle.HAIR);
 					cs.setBorderBottom(BorderStyle.HAIR);
 			    	cs.setFont(font);
 			    	cell.setCellStyle(cs);
 		    	}
+					
 		    	else if(e[j].equals("土")){
-					Font font = wb.createFont();
 					font.setColor(IndexedColors.BLUE.index);
-					CellStyle cs = wb.createCellStyle();
 					cs.setBorderBottom(BorderStyle.HAIR);
 		    		cs.setFont(font);
 		    		cell.setCellStyle(cs);
 		    	}
-				else if(j==0&&s.equals("土")){
-					Font font = wb.createFont();
+				else if(j==0&&weekday.equals("土")){
 					font.setColor(IndexedColors.BLUE.index);
-					CellStyle cs = wb.createCellStyle();
 					cs.setBorderLeft(BorderStyle.MEDIUM);
 					cs.setBorderRight(BorderStyle.HAIR);
 					cs.setBorderBottom(BorderStyle.HAIR);
@@ -314,12 +332,13 @@ public class WorkController
 				int holiday2=holiday.getDay();
 				holiday2=holiday2+7;
 				Row row2 = sheet.getRow(holiday2);
+				Font font = wb.createFont();
+				font.setColor(IndexedColors.RED.index);
 				//日付と曜日を赤くするので申し訳程度のループ　i=1&2
 				for(int i=1; i<3; i++){
 					Cell cell2 = row2.getCell(i);
-					Font font = wb.createFont();
-					font.setColor(IndexedColors.RED.index);
 					CellStyle cs = wb.createCellStyle();
+					//日付の場合はセルの左枠を太線にしないとアカン
 					if(i==1){
 						cs.setBorderLeft(BorderStyle.MEDIUM);
 						cs.setBorderRight(BorderStyle.HAIR);
@@ -331,22 +350,23 @@ public class WorkController
 			}
 		}
 	
-		//労働時間の合計を出す　tenhour 10時間の合計　hour 1時間の合計 minutes 10分の合計
-		hour=hour+tenhour*10;//10時間の合計＊10+1時間の合計で全部で何時間か分かる
-		hour=hour+minutes/6;//10分の合計を6で割った数を1時間としてカウント
-		minutes=minutes%6;//6で割った余りを10分としてカウント　1なら10分
-		int tenminutes=minutes*10;
-		String totalhour=	String.valueOf(hour);
-		String totalminutes=	String.valueOf(tenminutes);
-		if(tenminutes==0) {//6で割って余りがでない場合分数の表記が0になってしまうのでその時は00表記にする
-			totalminutes="00";
-		}
+		//労働時間の合計を出す　tenhour 10時間の合計　hour 1時間の合計 tenminutes 10分の合計 minutes 1分の合計
+		tenminutes=tenminutes+minutes/10;
+		hour=hour+tenminutes/6;
+		tenhour=tenhour+hour/10;
+		minutes=minutes%10;
+		tenminutes=tenminutes%6;
+		hour=hour%10;
+
+		String totalhour=	String.valueOf(tenhour*10+hour);
+		String totalminutes=	String.valueOf(tenminutes*10+minutes);
 		String totalworktime=(totalhour+":"+totalminutes);
 		Row row = sheet.getRow(3);
 		Cell cell = row.getCell(9);
 		cell.setCellValue(totalworktime);
-		//年月を出す
-		String yearmonth=	String.valueOf(year)+"年"+String.valueOf(month)+"月";
+
+		//年月を出して記入する
+		String yearmonth=String.valueOf(year)+"年"+String.valueOf(month)+"月";
 		Row row_ym = sheet.getRow(3);
 		Cell cell_ym = row_ym.getCell(3);
 		cell_ym.setCellValue(yearmonth);
@@ -354,7 +374,8 @@ public class WorkController
 	 	FileOutputStream out = null;
 	 	try{
  	    	// 変更するエクセルファイルを指定
- 	    	out = new FileOutputStream(path+fileName);
+ 	    	//out = new FileOutputStream(path+fileName);
+			out = new FileOutputStream(fileName);
 			// 書き込み
  	    	wb.write(out);
  	    	System.out.println("書き込みok");
