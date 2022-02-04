@@ -104,7 +104,7 @@ public class HomeController{
 		return "done";
     }
 	
-	//ログイン時の処理
+	//ログイン時の処理 	reactで必要な分　返却値はjsonの文
 	@RequestMapping("/login")
 	@ResponseBody
 	@CrossOrigin(origins = "*")
@@ -123,9 +123,6 @@ public class HomeController{
 		int lastmonth=yearMonth.getLastmonth();
 		Workdays workdays =workdaysService.findUseridYearMonthDay(userid,year, month,1);
 		if (workdays==null){
-			//もしDBにその月の勤怠データがナカッタラ→勤怠データをDBに登録
-			//id year month はこの時点で回収済み　残りは日付と曜日
-			//年と月からforで回転させる回数を出してどうにかこうにか？
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.YEAR, year);
 			cal.set(Calendar.MONTH, lastmonth);//カレンダーメソッドなので使うのは実際の月-1の方
@@ -148,13 +145,9 @@ public class HomeController{
 		model.addAttribute("workingListParam", workingListParam);
 		return jstr;
 	}
-	//return "workdays";
-	//}
 
-
-	//ログイン時の処理
+	//ログイン時の処理　spring用
 	@RequestMapping("/login2")
-	//@ResponseBody
 	@CrossOrigin(origins = "*")
 	public String sucsess2(@Validated  @ModelAttribute Login login,Model model,BindingResult result){
 		User users=userService.findEmailPassword(login.getEmail(),login.getPassword());
@@ -166,7 +159,7 @@ public class HomeController{
 		session.setAttribute("Data",users);
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
-		int calendermonth=cal.get(Calendar.MONTH);//calendermonth=10
+		int calendermonth=cal.get(Calendar.MONTH);//当月11月の時calendermonth=10
 		int month=calendermonth+1;//month=11 カレンダーメソッドで拾ってくる値は実際の月-1だから1足した上で検索しないといけない
 		int userid=users.getId();
 		Workdays workdays =workdaysService.findUseridYearMonthDay(userid,year, month,1);
@@ -186,9 +179,10 @@ public class HomeController{
 			}
 		}
 		
-		//WorkingListParam workingListParam = userService.searchAll();→本来のやつ
 		//スタートやエンドの値を一括で変形する→workingListParm全体の値を別の箱に入れる→箱をjsonで変換する
 		WorkingListParam workingListParam = userService.searchAll(users);//リストに出す用の検索は必要
+		workingListParam.setMonth(month);
+		workingListParam.setYear(year);
 		model.addAttribute("workingListParam", workingListParam);
 		return "list";
 	}
