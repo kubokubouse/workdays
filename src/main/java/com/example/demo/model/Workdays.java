@@ -44,4 +44,10 @@ public class Workdays
 	@Column
 	 private String other;
 
+	 @Column
+	 private Integer holiday;
+
+
+	 
+
 }
