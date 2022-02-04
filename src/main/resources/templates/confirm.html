@@ -31,18 +31,19 @@
      <td>[[${user.password}]]</td>
   </tr>
 </table>
-<a href="#" id="back-link">戻る</a>
+
+<div class="footer">
+  <a href="#" id="back-link">戻る</a>
+  <form  th:action="@{/regist}" th:object="${user}"method="post" >
+    <label for="name"></label>
+    <input type="hidden" th:field="*{lastname}">
+    <input type="hidden" th:field="*{firstname}">
+    <input type="hidden" th:field="*{email}">
+    <input type="hidden" th:field="*{password}">
+    <input type="submit" value="登録">
+  </form>
+</div>
 </body>
-
-<form  th:action="@{/regist}" th:object="${user}"method="post" >
-<label for="name"></label>
-<input type="hidden" th:field="*{lastname}">
-<input type="hidden" th:field="*{firstname}">
-<input type="hidden" th:field="*{email}">
-<input type="hidden" th:field="*{password}">
-<input type="submit" value="登録">
-</form>
-
 
 <script>
   const backLink = document.getElementById('back-link');
@@ -57,6 +58,7 @@
 
   body {
     font-family: sans-serif;
+    text-align: center;
   }  
 
   caption {
@@ -79,8 +81,17 @@
     background-color: #CCCCFF;
   }
 
-  table {
+  .entryTable {
     border: 0px none;
+    margin: auto;
+    margin-top: 20px;
+    padding-top: 10px;
   }
 
+  .footer {
+    display:flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+  }
 </style>
