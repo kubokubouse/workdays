@@ -8,9 +8,10 @@ import java.nio.file.Paths;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.time.LocalTime;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -43,6 +44,7 @@ import com.example.demo.service.HolidayService;
 import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WorkdaysService;
+import com.example.demo.service.WorkdayMapping;
 import com.google.gson.Gson;
 @Controller
 public class WorkController
@@ -190,8 +192,8 @@ public class WorkController
 
 		}
 
-		String inputFilePath = "//LS520De8d/Public/竹林/自社開発業務システム/workdays/src/main/resources/PropertyFiles/" + propertyfileName;
-		String outputFilePath = "//LS520De8d/Public/竹林/自社開発業務システム/workdays/src/main/resources/OutputFiles/勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";
+		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles" + propertyfileName;
+		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";
 
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
