@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.time.LocalTime;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -137,6 +138,71 @@ public class WorkController
 		userService.toExcel(lastname,firstname,id);
 		return "done";
 	}
+
+	@RequestMapping(value="/selectFile")
+	public String select(){
+		return "selectFile";
+	}
+
+	@RequestMapping(value="/property")
+	public String ExcelwithProperty (@RequestParam String text, Model model) {
+
+		String propertyfileName = text;
+		
+		User users=(User)session.getAttribute("Data");
+		model.addAttribute("user",users);
+		//苗字と名前合わせてname
+		String lastname=users.getLastname();
+
+		//当日の年月取得
+		Calendar cal = Calendar.getInstance();
+		int year=cal.get(Calendar.YEAR);
+		int month=cal.get(Calendar.MONTH);
+		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
+	
+		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
+
+		Map<String, String> stHourMap = new HashMap<>();
+		Map<String, String> stMinMap = new HashMap<>(); 
+		Map<String, String> endHourMap = new HashMap<>(); 
+		Map<String, String> endMinMap = new HashMap<>();
+		Map<String, String> lunchTimeHourMap = new HashMap<>(); 
+		Map<String, String> lunchTimeMinMap = new HashMap<>();
+		Map<String, String> totalHourMap = new HashMap<>();
+		Map<String, String> totalMinMap = new HashMap<>(); 
+		Map<String, String> otherMap = new HashMap<>();
+
+		for(Workdays workday:workdays){
+
+			int i = 1;
+
+			stHourMap.put("sth"+i, workday.getStart().toString());
+			stMinMap.put("stm"+i, workday.getStart().toString());
+			endHourMap.put("edh"+i, workday.getEnd().toString());
+			endMinMap.put("edm"+i, workday.getEnd().toString());
+			lunchTimeHourMap.put("lth"+i, workday.getHalftime().toString());
+			lunchTimeMinMap.put("ltm"+i, workday.getHalftime().toString());
+			totalHourMap.put("th"+i, workday.getWorktime().toString());
+			totalMinMap.put("tm"+i, workday.getWorktime().toString());
+			otherMap.put("ot", workday.getOther());
+
+			i++;
+
+		}
+
+		String inputFilePath = "//LS520De8d/Public/竹林/自社開発業務システム/workdays/src/main/resources/PropertyFiles/" + propertyfileName;
+		String outputFilePath = "//LS520De8d/Public/竹林/自社開発業務システム/workdays/src/main/resources/OutputFiles/勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";
+
+		WorkdayMapping workdayMapping = new WorkdayMapping();
+		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
+			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
+			 totalHourMap, totalMinMap, otherMap);
+
+
+			return "done";
+
+	}
+
 
 
 	//Excelに書き込む用の処理
