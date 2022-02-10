@@ -174,25 +174,24 @@ public class WorkController
 		Map<String, String> totalMinMap = new HashMap<>(); 
 		Map<String, String> otherMap = new HashMap<>();
 
+		int index = 1;
 		for(Workdays workday:workdays){
 
-			int i = 1;
+			stHourMap.put("sth"+index, workday.getStart().toString().substring(0,2));
+			stMinMap.put("stm"+index, workday.getStart().toString().substring(3,5));
+			endHourMap.put("edh"+index, workday.getEnd().toString().substring(0,2));
+			endMinMap.put("edm"+index, workday.getEnd().toString().substring(3,5));
+			lunchTimeHourMap.put("lth"+index, workday.getHalftime().toString().substring(0,2));
+			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
+			totalHourMap.put("th"+index, workday.getWorktime().toString().substring(0,2));
+			totalMinMap.put("tm"+index, workday.getWorktime().toString().substring(3,5));
+			otherMap.put("ot"+index, workday.getOther());
 
-			stHourMap.put("sth"+i, workday.getStart().toString());
-			stMinMap.put("stm"+i, workday.getStart().toString());
-			endHourMap.put("edh"+i, workday.getEnd().toString());
-			endMinMap.put("edm"+i, workday.getEnd().toString());
-			lunchTimeHourMap.put("lth"+i, workday.getHalftime().toString());
-			lunchTimeMinMap.put("ltm"+i, workday.getHalftime().toString());
-			totalHourMap.put("th"+i, workday.getWorktime().toString());
-			totalMinMap.put("tm"+i, workday.getWorktime().toString());
-			otherMap.put("ot", workday.getOther());
-
-			i++;
+			index++;
 
 		}
 
-		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles" + propertyfileName;
+		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/" + propertyfileName;
 		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";
 
 		WorkdayMapping workdayMapping = new WorkdayMapping();
