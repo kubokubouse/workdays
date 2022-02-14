@@ -66,20 +66,33 @@ public class WorkdayMapping {
                 String setValue = null;
             //始業時刻
             //セルに2つのKeyがある時（例　sth1:stm1）
-                if (value.contains("stm")) {
-                    String index = value.substring(3,4);
+                if (value.contains("stm") && value.contains("sth")) {
+            //Indexの値が数字か判定
+                    String index = value.substring(3,5);
+                    boolean isNumeric =  index.matches("[+-]?\\d*(\\.\\d+)?");
+                    if (!isNumeric) {
+                        index = value.substring(3,4);
+                    }
                     Object sth = stHourMap.get("sth" + index);
                     Object stm = stMinMap.get("stm" + index);
+
+            //エクセルに記入されたsthの数がstHourMap内の値の数より多いとNullになる
+                    if (sth == null) {
+                        setValue = value.replace(value, " ");
+                        continue;
+                    }
                 
                     String sthValue = value.replace("sth" + index, sth.toString());
                     setValue = sthValue.replace("stm" + index, stm.toString());
+                } else {
+                    setValue = value;
                 }
             //セルの値にKeyが１つのとき（例　sth1　のみ）
                 if (value.contains("sth") && !value.contains("stm")) {
                     Object data = stHourMap.get(value);
             //データがNullの時
                     if (data == null) {
-                        setValue = value.replace(value, " ");;
+                        continue;
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
@@ -88,16 +101,26 @@ public class WorkdayMapping {
                 if (value.contains("stm") && !value.contains("sth")) {
                     Object data = stMinMap.get(value);
                     if (data == null) {
-                        setValue = value.replace(value, " ");;
+                        continue;
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
+                
             //終業時刻
                 if (value.contains("edh") && value.contains("edm")) {
-                    String index = value.substring(3,4);
+                    String index = value.substring(3,5);
+                    boolean isNumeric =  index.matches("[+-]?\\d*(\\.\\d+)?");
+                    if (!isNumeric) {
+                        index = value.substring(3,4);
+                    }
                     Object edh = endHourMap.get("edh" + index);
                     Object edm = endMinMap.get("edm" + index);
+
+                    if (edh == null) {
+                        setValue = value.replace(value, " ");
+                        continue;
+                    }
 
                     String edhValue = value.replace("edh" + index, edh.toString());
                     setValue = edhValue.replace("edm" + index, edm.toString());
@@ -105,7 +128,7 @@ public class WorkdayMapping {
                 if (value.contains("edh") && !value.contains("edm")) {
                     Object data = endHourMap.get(value);
                     if (data == null) {
-                        setValue = value.replace(value, " ");;
+                        continue;
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
@@ -113,16 +136,26 @@ public class WorkdayMapping {
                 if (value.contains("edm") && !value.contains("edh")) {
                     Object data = endMinMap.get(value);
                     if (data == null) {
-                        setValue = value.replace(value, " ");;
+                        continue;
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
+
             //休憩時間
-                if (value.contains("ltm")) {
-                    String index = value.substring(3,4);
+                if (value.contains("ltm") && value.contains("lth")) {
+                    String index = value.substring(3,5);
+                    boolean isNumeric =  index.matches("[+-]?\\d*(\\.\\d+)?");
+                    if (!isNumeric) {
+                        index = value.substring(3,4);
+                    }
                     Object lth = lunchTimeHourMap.get("lth" + index);
-                     Object ltm = lunchTimeMinMap.get("ltm" + index);
+                    Object ltm = lunchTimeMinMap.get("ltm" + index);
+
+                    if (lth == null) {
+                        setValue = value.replace(value, " ");
+                        continue;
+                    }
 
                     String lthValue = value.replace("lth" + index, lth.toString());
                     setValue = lthValue.replace("ltm" + index, ltm.toString());
@@ -130,7 +163,7 @@ public class WorkdayMapping {
                 if (value.contains("lth") && !value.contains("ltm")) {
                     Object data = lunchTimeHourMap.get(value);
                     if (data == null) {
-                        setValue = value.replace(value, " ");;
+                        continue;
                     }else {
                         setValue = value.replace(value, data.toString());
                     }
@@ -138,16 +171,26 @@ public class WorkdayMapping {
                 if (value.contains("ltm") && !value.contains("lth")) {
                     Object data = lunchTimeMinMap.get(value);
                     if (data == null) {
-                        setValue = value.replace(value, " ");;
+                        continue;
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
-            //就業時間合計
-                if (value.contains("ttm")) {
-                    String index = value.substring(3,4);
+
+            //一日の就業時間
+                if (value.contains("ttm") && value.contains("tth")) {
+                    String index = value.substring(3,5);
+                    boolean isNumeric =  index.matches("[+-]?\\d*(\\.\\d+)?");
+                    if (!isNumeric) {
+                        index = value.substring(3,4);
+                    }
                     Object tth = totalHourMap.get("tth" + index);
                     Object ttm = totalMinMap.get("ttm" + index);
+
+                    if (tth == null) {
+                        setValue = value.replace(value, " ");
+                        continue;
+                    }
 
                     String tthValue = value.replace("tth" + index, tth.toString());
                     setValue = tthValue.replace("ttm" + index, ttm.toString());
@@ -155,7 +198,7 @@ public class WorkdayMapping {
                 if (value.contains("tth") && !value.contains("ttm")) {
                     Object data = totalHourMap.get(value);
                     if (data == null) {
-                        setValue = value.replace(value, " ");
+                        continue;
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
@@ -163,7 +206,7 @@ public class WorkdayMapping {
                 if (value.contains("ttm") && !value.contains("tth")) {
                     Object data = totalMinMap.get(value);
                     if (data == null) {
-                        setValue = value.replace(value, " ");;
+                        continue;
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
@@ -172,7 +215,7 @@ public class WorkdayMapping {
                 if (value.contains("ot")) {
                     Object data = otherMap.get(value);
                     if (data == null) {
-                        setValue = value.replace(value, " ");;
+                        continue;
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
