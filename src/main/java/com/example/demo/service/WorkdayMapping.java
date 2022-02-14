@@ -45,14 +45,14 @@ public class WorkdayMapping {
 
     //行
         Row row;
-     
-            row = sheet.getRow(9);
-       
+        for (int i = 0; i < sheet.getLastRowNum()+1; i++) {
+            row = sheet.getRow(i);
+            for (int j = 0; j < row.getLastCellNum()+1; j++ ) {
             //セル
-                Cell cell = row.getCell(4);
+                Cell cell = row.getCell(j);
                 if (cell == null) {
                     System.out.println("CellがNullです");
-                    return;
+                    continue;
                 }
                 String value = null;
                 CellType cType = cell.getCellType();
@@ -60,14 +60,14 @@ public class WorkdayMapping {
             //文字列の取得
                     value = cell.getStringCellValue();
                 } else {
-                    return;
+                    continue;
                 }
             //セルの値がMapと一致すればセルの内容を書き換える 
-                String index = value.substring(3,4);
                 String setValue = null;
             //始業時刻
             //セルに2つのKeyがある時（例　sth1:stm1）
                 if (value.contains("stm")) {
+                    String index = value.substring(3,4);
                     Object sth = stHourMap.get("sth" + index);
                     Object stm = stMinMap.get("stm" + index);
                 
@@ -95,6 +95,7 @@ public class WorkdayMapping {
                 }
             //終業時刻
                 if (value.contains("edh") && value.contains("edm")) {
+                    String index = value.substring(3,4);
                     Object edh = endHourMap.get("edh" + index);
                     Object edm = endMinMap.get("edm" + index);
 
@@ -119,6 +120,7 @@ public class WorkdayMapping {
                 }
             //休憩時間
                 if (value.contains("ltm")) {
+                    String index = value.substring(3,4);
                     Object lth = lunchTimeHourMap.get("lth" + index);
                      Object ltm = lunchTimeMinMap.get("ltm" + index);
 
@@ -143,6 +145,7 @@ public class WorkdayMapping {
                 }
             //就業時間合計
                 if (value.contains("ttm")) {
+                    String index = value.substring(3,4);
                     Object tth = totalHourMap.get("tth" + index);
                     Object ttm = totalMinMap.get("ttm" + index);
 
@@ -175,11 +178,12 @@ public class WorkdayMapping {
                     }
                 }
                 cell.setCellValue(setValue);
-                FileOutputStream out = null;
-                out = new FileOutputStream(outputFilePath);
-                excel.write(out);
+               }
+            }   
+            FileOutputStream out = null;
+            out = new FileOutputStream(outputFilePath);
+            excel.write(out);
                 
-            
         } catch (IOException io){
         io.printStackTrace();
         return;
