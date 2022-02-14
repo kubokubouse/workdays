@@ -28,16 +28,17 @@ public class WorkdayMapping {
     }
     
     //ファイルのコピーが成功したときは０が戻り値となる
-    // int copyFiles = copyFile(inputFilePath, outputFilePath);
+    int copyFiles = copyFile(inputFilePath, outputFilePath);
 
-    // if (copyFiles != 0) {
-    //     return;
-    // }
+    if (copyFiles != 0) {
+        return;
+    }
        
     Workbook excel;
     try {
     //エクセルファイルへアクセスするためのオブジェクト
-        excel = WorkbookFactory.create(new File(outputFilePath));
+        FileInputStream in = new FileInputStream(outputFilePath);
+        excel = WorkbookFactory.create(in);
    
     // シート名がわかっている場合
         Sheet sheet = excel.getSheet("Sheet1");
