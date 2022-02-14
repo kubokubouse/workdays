@@ -47,11 +47,13 @@ public class WorkdayMapping {
         Row row;
         for (int i = 0; i < sheet.getLastRowNum()+1; i++) {
             row = sheet.getRow(i);
+            if (row == null) {
+                break;
+            }
             for (int j = 0; j < row.getLastCellNum()+1; j++ ) {
             //セル
                 Cell cell = row.getCell(j);
                 if (cell == null) {
-                    System.out.println("CellがNullです");
                     continue;
                 }
                 String value = null;
