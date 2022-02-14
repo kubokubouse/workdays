@@ -193,6 +193,7 @@ public class WorkController
 		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/" + propertyfileName;
 		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";
 
+		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
@@ -377,13 +378,13 @@ public class WorkController
 		    	}
 					
 		    	else if(e[j].equals("土")){
-					font.setColor(IndexedColors.BLUE.index);
+					font.setColor(IndexedColors.RED.index);
 					cs.setBorderBottom(BorderStyle.HAIR);
 		    		cs.setFont(font);
 		    		cell.setCellStyle(cs);
 		    	}
 				else if(j==0&&weekday.equals("土")){
-					font.setColor(IndexedColors.BLUE.index);
+					font.setColor(IndexedColors.RED.index);
 					cs.setBorderLeft(BorderStyle.MEDIUM);
 					cs.setBorderRight(BorderStyle.HAIR);
 					cs.setBorderBottom(BorderStyle.HAIR);
