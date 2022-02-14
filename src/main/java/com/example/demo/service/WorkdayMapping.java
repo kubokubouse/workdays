@@ -28,11 +28,11 @@ public class WorkdayMapping {
     }
     
     //ファイルのコピーが成功したときは０が戻り値となる
-    int copyFiles = copyFile(inputFilePath, outputFilePath);
+    // int copyFiles = copyFile(inputFilePath, outputFilePath);
 
-    if (copyFiles != 0) {
-        return;
-    }
+    // if (copyFiles != 0) {
+    //     return;
+    // }
        
     Workbook excel;
     try {
@@ -44,13 +44,14 @@ public class WorkdayMapping {
 
     //行
         Row row;
-        for (int i=0; i< sheet.getLastRowNum(); i++) {
-            row = sheet.getRow(i);
-            for (int j=0; j<row.getLastCellNum(); j++) {
+     
+            row = sheet.getRow(9);
+       
             //セル
-                Cell cell = row.getCell(i);
+                Cell cell = row.getCell(4);
                 if (cell == null) {
-                    continue;
+                    System.out.println("CellがNullです");
+                    return;
                 }
                 String value = null;
                 CellType cType = cell.getCellType();
@@ -58,108 +59,108 @@ public class WorkdayMapping {
             //文字列の取得
                     value = cell.getStringCellValue();
                 } else {
-                    continue;
+                    return;
                 }
             //セルの値がMapと一致すればセルの内容を書き換える 
                 String index = value.substring(3,4);
                 String setValue = null;
             //始業時刻
-                if (value.contains("sth")) {
+            //セルに2つのKeyがある時（例　sth1:stm1）
+                if (value.contains("stm")) {
+                    Object sth = stHourMap.get("sth" + index);
+                    Object stm = stMinMap.get("stm" + index);
+                
+                    String sthValue = value.replace("sth" + index, sth.toString());
+                    setValue = sthValue.replace("stm" + index, stm.toString());
+                }
+            //セルの値にKeyが１つのとき（例　sth1　のみ）
+                if (value.contains("sth") && !value.contains("stm")) {
                     Object data = stHourMap.get(value);
             //データがNullの時
                     if (data == null) {
                         setValue = value.replace(value, " ");;
-            //セルに2つのKeyがある時（例　sth1:stm1）
-                    } else if (value.contains("stm")) {
-                        Object sth = stHourMap.get("sth" + index);
-                        Object stm = stMinMap.get("stm" + index);
-                        
-                        String sthValue = value.replace("sth" + index, sth.toString());
-                        setValue = sthValue.replace("stm" + index, stm.toString());
                     } else {
-            //セルの値にKeyが１つのとき（例　sth1　のみ）
                         setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("stm")) {
+            //セルの値にKeyが１つのとき（例　stm1　のみ）
+                if (value.contains("stm") && !value.contains("sth")) {
                     Object data = stMinMap.get(value);
                     if (data == null) {
                         setValue = value.replace(value, " ");;
-                    } 
-            //セルの値にKeyが１つのとき（例　stm1　のみ）
-                    if (!value.contains("sth")) {
+                    } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
             //終業時刻
-                if (value.contains("edh")) {
+                if (value.contains("edh") && value.contains("edm")) {
+                    Object edh = endHourMap.get("edh" + index);
+                    Object edm = endMinMap.get("edm" + index);
+
+                    String edhValue = value.replace("edh" + index, edh.toString());
+                    setValue = edhValue.replace("edm" + index, edm.toString());
+                }
+                if (value.contains("edh") && !value.contains("edm")) {
                     Object data = endHourMap.get(value);
                     if (data == null) {
                         setValue = value.replace(value, " ");;
-                    } else if (value.contains("edm")) {
-                        Object edh = endHourMap.get("edh" + index);
-                        Object edm = endMinMap.get("edm" + index);
-
-                        String edhValue = value.replace("edh" + index, edh.toString());
-                        setValue = edhValue.replace("edm" + index, edm.toString());
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("edm")) {
+                if (value.contains("edm") && !value.contains("edh")) {
                     Object data = endMinMap.get(value);
                     if (data == null) {
                         setValue = value.replace(value, " ");;
-                    }
-                    if (!value.contains("edh")) {
+                    } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
             //休憩時間
-                if (value.contains("lth")) {
+                if (value.contains("ltm")) {
+                    Object lth = lunchTimeHourMap.get("lth" + index);
+                     Object ltm = lunchTimeMinMap.get("ltm" + index);
+
+                    String lthValue = value.replace("lth" + index, lth.toString());
+                    setValue = lthValue.replace("ltm" + index, ltm.toString());
+                }
+                if (value.contains("lth") && !value.contains("ltm")) {
                     Object data = lunchTimeHourMap.get(value);
                     if (data == null) {
                         setValue = value.replace(value, " ");;
-                    }else if (value.contains("ltm")) {
-                        Object lth = lunchTimeHourMap.get("lth" + index);
-                        Object ltm = lunchTimeMinMap.get("ltm" + index);
-
-                        String lthValue = value.replace("lth" + index, lth.toString());
-                        setValue = lthValue.replace("ltm" + index, ltm.toString());
-                    } else {
+                    }else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("ltm")) {
+                if (value.contains("ltm") && !value.contains("lth")) {
                     Object data = lunchTimeMinMap.get(value);
                     if (data == null) {
                         setValue = value.replace(value, " ");;
-                    }
-                    if (!value.contains("lth")) {
+                    } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
             //就業時間合計
-                if (value.contains("tth")) {
+                if (value.contains("ttm")) {
+                    Object tth = totalHourMap.get("tth" + index);
+                    Object ttm = totalMinMap.get("ttm" + index);
+
+                    String tthValue = value.replace("tth" + index, tth.toString());
+                    setValue = tthValue.replace("ttm" + index, ttm.toString());
+                }
+                if (value.contains("tth") && !value.contains("ttm")) {
                     Object data = totalHourMap.get(value);
                     if (data == null) {
                         setValue = value.replace(value, " ");
-                    } else if (value.contains("ttm")) {
-                        Object tth = totalHourMap.get("tth" + index);
-                        Object ttm = totalMinMap.get("ttm" + index);
-
-                        String tthValue = value.replace("tth" + index, tth.toString());
-                        setValue = tthValue.replace("ttm" + index, ttm.toString());
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("ttm")) {
+                if (value.contains("ttm") && !value.contains("tth")) {
                     Object data = totalMinMap.get(value);
                     if (data == null) {
                         setValue = value.replace(value, " ");;
-                    }
-                    if (!value.contains("tth")) {
+                    } else {
                         setValue = value.replace(value, data.toString());
                     }
                 }
@@ -176,8 +177,8 @@ public class WorkdayMapping {
                 FileOutputStream out = null;
                 out = new FileOutputStream(outputFilePath);
                 excel.write(out);
-                }
-            }
+                
+            
         } catch (IOException io){
         io.printStackTrace();
         return;
