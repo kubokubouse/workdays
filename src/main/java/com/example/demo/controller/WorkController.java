@@ -182,8 +182,8 @@ public class WorkController
 			endMinMap.put("edm"+index, workday.getEnd().toString().substring(3,5));
 			lunchTimeHourMap.put("lth"+index, workday.getHalftime().toString().substring(0,2));
 			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
-			totalHourMap.put("th"+index, workday.getWorktime().toString().substring(0,2));
-			totalMinMap.put("tm"+index, workday.getWorktime().toString().substring(3,5));
+			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
+			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
 			otherMap.put("ot"+index, workday.getOther());
 
 			index++;

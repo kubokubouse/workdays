@@ -20,60 +20,39 @@ public class WorkdayMapping {
 
                 
     File inputFileObject = new File(inputFilePath);
-    File outputFileObject = new File(outputFilePath);
+    
 
     if (!inputFileObject.exists()) {
         System.out.println("ファイルが存在しません：" + inputFilePath);
         return;
     }
-        try {
-        //FileInputStreamクラスのオブジェクトを生成
+    
+    //ファイルのコピーが成功したときは０が戻り値となる
+    int copyFiles = copyFile(inputFilePath, outputFilePath);
 
-        FileInputStream inputFile = new FileInputStream(inputFilePath);
-
-        //FileOutputStreamクラスのオブジェクトを生成
-
-        if (!outputFileObject.exists()) {
-            outputFileObject.createNewFile();
-        }
-        
-        FileOutputStream outputFile = new FileOutputStream(outputFilePath);
-
-        byte[] buf = new byte[256];
-
-        int len;
-
-        while((len = inputFile.read(buf)) != -1){ 
-            outputFile.write(buf); 
-        }
-
-        outputFile.flush();
-
-        inputFile.close();
-        outputFile.close();
-    } catch (FileNotFoundException e){
-
-    } catch (IOException io){
-
+    if (copyFiles != 0) {
+        return;
     }
        
     Workbook excel;
     try {
     //エクセルファイルへアクセスするためのオブジェクト
-        excel = WorkbookFactory.create(new File(outputFilePath));
+        FileInputStream in = new FileInputStream(outputFilePath);
+        excel = WorkbookFactory.create(in);
    
     // シート名がわかっている場合
         Sheet sheet = excel.getSheet("Sheet1");
 
     //行
         Row row;
-        for (int i=0; i< sheet.getLastRowNum(); i++) {
-            row = sheet.getRow(i);
-            for (int j=0; j<row.getLastCellNum(); j++) {
+     
+            row = sheet.getRow(9);
+       
             //セル
-                Cell cell = row.getCell(i);
+                Cell cell = row.getCell(4);
                 if (cell == null) {
-                    continue;
+                    System.out.println("CellがNullです");
+                    return;
                 }
                 String value = null;
                 CellType cType = cell.getCellType();
@@ -81,171 +60,168 @@ public class WorkdayMapping {
             //文字列の取得
                     value = cell.getStringCellValue();
                 } else {
-                    continue;
+                    return;
                 }
+            //セルの値がMapと一致すればセルの内容を書き換える 
+                String index = value.substring(3,4);
+                String setValue = null;
+            //始業時刻
+            //セルに2つのKeyがある時（例　sth1:stm1）
+                if (value.contains("stm")) {
+                    Object sth = stHourMap.get("sth" + index);
+                    Object stm = stMinMap.get("stm" + index);
                 
-            //セルの値がMapと一致すればセルの内容を書き換える
-                if (value.contains("sth")) {
+                    String sthValue = value.replace("sth" + index, sth.toString());
+                    setValue = sthValue.replace("stm" + index, stm.toString());
+                }
+            //セルの値にKeyが１つのとき（例　sth1　のみ）
+                if (value.contains("sth") && !value.contains("stm")) {
                     Object data = stHourMap.get(value);
+            //データがNullの時
                     if (data == null) {
-                        value.replace(value, " ");;
-                    } else{
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, " ");;
+                    } else {
+                        setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("stm")) {
+            //セルの値にKeyが１つのとき（例　stm1　のみ）
+                if (value.contains("stm") && !value.contains("sth")) {
                     Object data = stMinMap.get(value);
                     if (data == null) {
-                        value.replace(value, " ");;
+                        setValue = value.replace(value, " ");;
                     } else {
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("edh")) {
+            //終業時刻
+                if (value.contains("edh") && value.contains("edm")) {
+                    Object edh = endHourMap.get("edh" + index);
+                    Object edm = endMinMap.get("edm" + index);
+
+                    String edhValue = value.replace("edh" + index, edh.toString());
+                    setValue = edhValue.replace("edm" + index, edm.toString());
+                }
+                if (value.contains("edh") && !value.contains("edm")) {
                     Object data = endHourMap.get(value);
                     if (data == null) {
-                        value.replace(value, " ");;
+                        setValue = value.replace(value, " ");;
                     } else {
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("edm")) {
+                if (value.contains("edm") && !value.contains("edh")) {
                     Object data = endMinMap.get(value);
                     if (data == null) {
-                        value.replace(value, " ");;
+                        setValue = value.replace(value, " ");;
                     } else {
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("lth")) {
+            //休憩時間
+                if (value.contains("ltm")) {
+                    Object lth = lunchTimeHourMap.get("lth" + index);
+                     Object ltm = lunchTimeMinMap.get("ltm" + index);
+
+                    String lthValue = value.replace("lth" + index, lth.toString());
+                    setValue = lthValue.replace("ltm" + index, ltm.toString());
+                }
+                if (value.contains("lth") && !value.contains("ltm")) {
                     Object data = lunchTimeHourMap.get(value);
                     if (data == null) {
-                        value.replace(value, " ");;
-                    } else {
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, " ");;
+                    }else {
+                        setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("ltm")) {
+                if (value.contains("ltm") && !value.contains("lth")) {
                     Object data = lunchTimeMinMap.get(value);
                     if (data == null) {
-                        value.replace(value, " ");;
+                        setValue = value.replace(value, " ");;
                     } else {
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("th")) {
+            //就業時間合計
+                if (value.contains("ttm")) {
+                    Object tth = totalHourMap.get("tth" + index);
+                    Object ttm = totalMinMap.get("ttm" + index);
+
+                    String tthValue = value.replace("tth" + index, tth.toString());
+                    setValue = tthValue.replace("ttm" + index, ttm.toString());
+                }
+                if (value.contains("tth") && !value.contains("ttm")) {
                     Object data = totalHourMap.get(value);
                     if (data == null) {
-                        value.replace(value, " ");;
+                        setValue = value.replace(value, " ");
                     } else {
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, data.toString());
                     }
                 }
-                if (value.contains("tm")) {
+                if (value.contains("ttm") && !value.contains("tth")) {
                     Object data = totalMinMap.get(value);
                     if (data == null) {
-                        value.replace(value, " ");;
+                        setValue = value.replace(value, " ");;
                     } else {
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, data.toString());
                     }
                 }
+            //備考データ
                 if (value.contains("ot")) {
                     Object data = otherMap.get(value);
                     if (data == null) {
-                        value.replace(value, " ");;
+                        setValue = value.replace(value, " ");;
                     } else {
-                    value.replace(value, data.toString());
+                        setValue = value.replace(value, data.toString());
                     }
                 }
-                cell.setCellValue(value);
+                cell.setCellValue(setValue);
+                FileOutputStream out = null;
+                out = new FileOutputStream(outputFilePath);
+                excel.write(out);
                 
-            }
-        }
-    } catch (IOException io){
-
-    }
-    }
-
-    public void outputExcel(String inputFilePath, String outputFilePath,
-    Map stHourMap, Map endHourMap, Map lunchTimeHourMap, Map totalHourMap, Map otherMap) {
-
-    File inputFileObject = new File(inputFilePath);
-    if (!inputFileObject.exists()) {
-        System.out.println("ファイルが存在しません：" + inputFilePath);
-    }
-    try {
-    //FileInputStreamクラスのオブジェクトを生成
-
-    FileInputStream inputFile = new FileInputStream(inputFilePath);
-
-    //FileOutputStreamクラスのオブジェクトを生成
-
-    FileOutputStream outputFile = new FileOutputStream(outputFilePath);
-
-    byte[] buf = new byte[256];
-
-    int len;
-
-    while((len = inputFile.read(buf)) != -1){ 
-        outputFile.write(buf); 
-    }
-
-    outputFile.flush();
-
-    inputFile.close();
-    outputFile.close();
-} catch (FileNotFoundException e){
-
-} catch (IOException io){
-
-}
-   
-Workbook excel;
-try {
-//エクセルファイルへアクセスするためのオブジェクト
-    excel = WorkbookFactory.create(new File(outputFilePath));
-
-// シート名がわかっている場合
-    Sheet sheet = excel.getSheet("Sheet1");
-
-//行
-    Row row = null;
-    for (int i=0; i< row.getLastCellNum(); i++) {
-        row = sheet.getRow(i);
-        for (int j=0; j<row.getLastCellNum(); j++) {
-        //セル
-            Cell cell = row.getCell(i);
-        //文字列の取得
-            String value = cell.getStringCellValue();
             
-        //セルの値がMapと一致すればセルの内容を書き換える
-            if (value.contains("sth")) {
-                Object data = stHourMap.get(value);
-                value.replace(value, data.toString());
-            }
-            if (value.contains("edh")) {
-                Object data = endHourMap.get(value);
-                value.replace(value, data.toString());
-            }
-            if (value.contains("lth")) {
-                Object data = lunchTimeHourMap.get(value);
-                value.replace(value, data.toString());
-            }
-            if (value.contains("th")) {
-                Object data = totalHourMap.get(value);
-                value.replace(value, data.toString());
-            }
-            if (value.contains("ot")) {
-                Object data = otherMap.get(value);
-                value.replace(value, data.toString());
-            }
-            cell.setCellValue(value);
-            
+        } catch (IOException io){
+        io.printStackTrace();
+        return;
         }
     }
-} catch (IOException io){
 
+    private Integer copyFile (String inputFilePath, String outputFilePath) {
+        
+        File outputFileObject = new File(outputFilePath);
+        
+        try {
+            //FileInputStreamクラスのオブジェクトを生成
+    
+            FileInputStream inputFile = new FileInputStream(inputFilePath);
+    
+            //FileOutputStreamクラスのオブジェクトを生成
+    
+            if (!outputFileObject.exists()) {
+                outputFileObject.createNewFile();
+            }
+            
+            FileOutputStream outputFile = new FileOutputStream(outputFilePath);
+    
+            byte[] buf = new byte[256];
+    
+            int len;
+    
+            while((len = inputFile.read(buf)) != -1){ 
+                outputFile.write(buf); 
+            }
+    
+            outputFile.flush();
+    
+            inputFile.close();
+            outputFile.close();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+            return 1;
+        } catch (IOException io){
+            io.printStackTrace();
+            return 1;    
+        }
+        return 0;
+    }
 }
-}
-}
-
