@@ -84,6 +84,68 @@ a:hover::after{
   margin-top: 50px;
 }
 
+body {
+  font-family: sans-serif;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  padding: 0;
+  width: 850px;
+  table-layout: fixed;
+}
+thead th{
+  padding: 1em .8em;
+  border-right: 5px solid#fff;
+  background-color: #eee;;
+}
+table tr {
+  background-color: #fff;
+  padding: .35em;
+}
+
+h1 {
+  border-bottom: solid 3px skyblue;
+  position: relative;
+}
+
+h1:after {
+  position: absolute;
+  content: " ";
+  display: block;
+  border-bottom: solid 3px #ffc778;
+  bottom: -3px;
+  width: 30%;
+}
+
+a{
+  position: relative;
+  display: inline-block;
+  transition: .3s;
+  text-decoration: none;
+}
+
+a::after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  content: '';
+  width: 0;
+  height: 2px;
+  background-color: #31aae2;
+  transition: .3s;
+  transform: translateX(-50%);
+}
+
+a:hover::after{
+  width: 100%;
+}
+
+.tabs {
+  margin-left: 100px;
+  margin-top: 50px;
+}
 
 </style>
 
@@ -122,8 +184,14 @@ a:hover::after{
     <div th:if="${validationError}" th:each="error : ${validationError}">
       <label class="text-danger" th:text="${error}"></label>
     </div>
-    <h1>勤怠表</h1>
+    <h1>[[${workingListParam.month}]]月勤怠表</h1>
+    <form th:action="@{/companyselect}" th:object="${users}" >
+    <input type="radio" name="company" th:value=${users.company1}> [[${users.company1}]]
+    <input type="radio" name="company" th:value=${users.company2}> [[${users.company2}]]
+    <input type="submit" value="Excelファイル作成">
+  </form>
     <form th:action="@{/listUpdate}" th:object="${workingListParam}" th:method="post">
+
     <input type=hidden th:field="${workingListParam.year}">
      <input type=hidden th:field="${workingListParam.month}">
       <div  class="text-end">
