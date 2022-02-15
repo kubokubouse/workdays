@@ -8,6 +8,6 @@ public interface UserRepository extends JpaRepository<User, String>
 	//@Query(value = "SELECT *from personaldata where email ="+"'"+ "ryowhite@icloud.com"+"'"+ "and password="+"'"+"1211"+"'", nativeQuery = true)
 	User findByEmailAndPassword(String email,String password);
 
-
 }
+
 
