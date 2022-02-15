@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -191,13 +192,17 @@ public class WorkController
 		}
 
 		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/" + propertyfileName;
-		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";
+		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表.xlsx";
 
+		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			 totalHourMap, totalMinMap, otherMap);
 
+
+		String outputFileName = "勤怠表.xlsx";
+		model.addAttribute("outputFileName", outputFileName);
 
 			return "done";
 
@@ -226,7 +231,7 @@ public class WorkController
 		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
 		System.out.println("month="+month);
 		//String fileName = "勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";//aws.ver　ここに書き込まれる
-		String fileName="//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx";
+		String fileName="C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表_"+year+"年"+month+"月.xlsx";
 		
 		//既存のファイルを消去
 		Path p0= Paths.get(fileName);
@@ -250,6 +255,7 @@ public class WorkController
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+
 		//FileInputStream in  = new FileInputStream(path+fileName); aws用
 		FileInputStream in  = new FileInputStream(fileName);
 	    Workbook wb=null;
@@ -377,13 +383,13 @@ public class WorkController
 		    	}
 					
 		    	else if(e[j].equals("土")){
-					font.setColor(IndexedColors.BLUE.index);
+					font.setColor(IndexedColors.RED.index);
 					cs.setBorderBottom(BorderStyle.HAIR);
 		    		cs.setFont(font);
 		    		cell.setCellStyle(cs);
 		    	}
 				else if(j==0&&weekday.equals("土")){
-					font.setColor(IndexedColors.BLUE.index);
+					font.setColor(IndexedColors.RED.index);
 					cs.setBorderLeft(BorderStyle.MEDIUM);
 					cs.setBorderRight(BorderStyle.HAIR);
 					cs.setBorderBottom(BorderStyle.HAIR);

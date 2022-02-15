@@ -27,9 +27,11 @@ import com.example.demo.model.Holiday;
 import com.example.demo.model.Login;
 import com.example.demo.model.StringListParam;
 import com.example.demo.model.User;
+import com.example.demo.model.SuperUser;
 import com.example.demo.model.Workdays;
 import com.example.demo.model.WorkingListParam;
 import com.example.demo.model.YearMonth;
+import com.example.demo.model.SuperUserLogin;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.MailSendService;
@@ -157,7 +159,18 @@ public class HomeController{
 	//ログイン時の処理　spring用
 	@RequestMapping("/login2")
 	@CrossOrigin(origins = "*")
-	public String sucsess2(@Validated  @ModelAttribute Login login,Model model,BindingResult result){
+	public String sucsess2(@Validated  @ModelAttribute Login login, BindingResult result,
+	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult){
+		
+		String id = login.getEmail();
+		String pass = login.getPassword();
+
+			//管理者の場合は管理者ページに移行
+		SuperUserLogin superUser = userService.findIdAndPass(id, pass);
+		if (superUser != null && !sudoresult.hasErrors()) {
+			return "superuser";
+		}
+		
 		User users=userService.findEmailPassword(login.getEmail(),login.getPassword());
 		if (result.hasErrors()||users==null){
 			// エラーがある場合、login.htmlに戻る
