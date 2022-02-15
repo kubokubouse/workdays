@@ -49,4 +49,11 @@ public class User
 	  @NotBlank
 	  private String password;
 
+	  @Column
+	  private String company1;
+
+	  @Column
+	  private String company2;
+
+
 }
