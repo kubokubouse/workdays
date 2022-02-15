@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.model.Holiday;
@@ -31,6 +34,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.WorkdayMapping;
 import com.example.demo.service.WorkdaysService;
 import com.google.gson.Gson;
 @Controller
@@ -196,6 +200,7 @@ public class HomeController{
 		workingListParam.setMonth(month);
 		workingListParam.setYear(year);
 		model.addAttribute("workingListParam", workingListParam);
+		model.addAttribute("users", users);
 		return "list";
 	}
 
@@ -228,4 +233,66 @@ public class HomeController{
 		return "sucsess";
 	}
 
+	//会社選択時の処理
+	@RequestMapping(value="/companyselect")
+	public String CompanySelect (@RequestParam String company, Model model) {
+		System.out.println(company);
+		String propertyfileName = company;
+		
+		User users=(User)session.getAttribute("Data");
+		model.addAttribute("user",users);
+		//苗字と名前合わせてname
+		String lastname=users.getLastname();
+
+		//当日の年月取得
+		Calendar cal = Calendar.getInstance();
+		int year=cal.get(Calendar.YEAR);
+		int month=cal.get(Calendar.MONTH);
+		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
+	
+		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
+
+		Map<String, String> stHourMap = new HashMap<>();
+		Map<String, String> stMinMap = new HashMap<>(); 
+		Map<String, String> endHourMap = new HashMap<>(); 
+		Map<String, String> endMinMap = new HashMap<>();
+		Map<String, String> lunchTimeHourMap = new HashMap<>(); 
+		Map<String, String> lunchTimeMinMap = new HashMap<>();
+		Map<String, String> totalHourMap = new HashMap<>();
+		Map<String, String> totalMinMap = new HashMap<>(); 
+		Map<String, String> otherMap = new HashMap<>();
+
+		int index = 1;
+		for(Workdays workday:workdays){
+
+			stHourMap.put("sth"+index, workday.getStart().toString().substring(0,2));
+			stMinMap.put("stm"+index, workday.getStart().toString().substring(3,5));
+			endHourMap.put("edh"+index, workday.getEnd().toString().substring(0,2));
+			endMinMap.put("edm"+index, workday.getEnd().toString().substring(3,5));
+			lunchTimeHourMap.put("lth"+index, workday.getHalftime().toString().substring(0,2));
+			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
+			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
+			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
+			otherMap.put("ot"+index, workday.getOther());
+
+			index++;
+
+		}
+		
+		String inputFilePath = "C:/久保さん/PropertyFiles/" + propertyfileName+".xls";
+		String outputFilePath = "C:/久保さん/PropertyFiles/勤怠表_"+lastname+"_"+year+"年"+month+"月.xls";
+
+		WorkdayMapping workdayMapping = new WorkdayMapping();
+		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
+			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
+			 totalHourMap, totalMinMap, otherMap);
+
+		return "done";
+	}
+
+	@GetMapping("/superuser")
+	public String adminmenue(){
+		
+		return "superuser";
+	}
 }
