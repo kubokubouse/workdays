@@ -7,13 +7,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <meta charset="utf-8" />
 
-  <style>
-  .tr_color0 {
+<style>
+.tr_color0 {
 
  vertical-align: middle;
 }
 
-  .tr_color1 {
+.tr_color1 {
   background-color: #EAF6FD;
   vertical-align: middle;
 }
@@ -188,7 +188,8 @@ a:hover::after{
     <form th:action="@{/companyselect}" th:object="${users}" >
     <input type="radio" name="company" th:value=${users.company1}> [[${users.company1}]]
     <input type="radio" name="company" th:value=${users.company2}> [[${users.company2}]]
-    <input type="submit" value="Excelファイル作成">
+    <br>
+    <input type="submit" class="btn btn-primary" value="Excelファイル出力">
   </form>
     <form th:action="@{/listUpdate}" th:object="${workingListParam}" th:method="post">
 
@@ -242,8 +243,8 @@ a:hover::after{
     </form>
   </div>
   <div class="tabs">
-    <p><a href="/Excel">勤怠表のExcel化</a></p>
-    <p><a href="/selectFile">テンプレを指定してExcel化</a></p>
+    <!-- <p><a href="/Excel">勤怠表のExcel化</a></p>
+    <p><a href="/selectFile">テンプレを指定してExcel化</a></p> -->
     <p><a href="/sendmail">メール送信</a></p>
     <p><a href="/beforemonth">先月へ</a></p>
     <p><a href="/nextmonth">来月分へ</a></p>
