@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ファイルアップロード</title>
+<link th:href="@{/css/confirmstyle.css}" rel="stylesheet" />
+</head>
+<body>
+
+    <h2>アップロードするファイルを指定してください</h2>
+    
+
+    <form th:action="@{/uploadFile}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
+        <input type="file" name="file">
+        <br>
+        <p class="error">[[${error}]]</p>
+        <button type="submit" class="btn">アップロード</button>
+    </form>
+
+    <div class="tab">
+        <p><a href="/templatelist">ファイル一覧</a></p>
+        <p><a href="/">ログアウト</a></p>
+    </div>
+
+</body>
+</html>
+
+<style>
+
+    body {
+        font-family: sans-serif;
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 30px;
+        border-bottom: solid 3px skyblue;
+        position: relative;
+      }
+      
+      h2:after {
+        position: absolute;
+        content: " ";
+        display: block;
+        border-bottom: solid 3px #ffc778;
+        bottom: -3px;
+        width: 30%;
+      }
+    .error {
+        color: blue;
+        font-weight: bold;
+    }
+    .upform {
+        margin-top: 80px;
+    }
+
+    .btn {
+        margin-top: 50px;
+    }
+
+    .tab {
+        margin-top: 50px;
+    }
+
+</style>
