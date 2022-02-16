@@ -12,7 +12,7 @@
 <h1>ログイン</h1>
 </header>
 <main id=contents>
-<form id="entryform" th:action="@{/login}"  th:object="${login}"method="post" >
+<form id="entryform" th:action="@{/login2}"  th:object="${login}"method="post" >
 
 <table class="entryTable" border="1">
 <caption>ログイン情報</caption>
@@ -45,7 +45,6 @@
   <input type="submit" value="ログイン">
 </form>
 </main>
-<a href="/register">会員登録していない方はこちら</a>
 
 <img src="./img/CCCLogo.jpg">
 <p>©株式会社コネクトクルー</p>

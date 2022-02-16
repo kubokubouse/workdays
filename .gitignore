@@ -1,3 +1,7 @@
+#outputフォルダとPropertyフォルダ下
+OutputFiles/
+PropertyFiles/
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar

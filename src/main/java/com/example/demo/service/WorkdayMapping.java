@@ -48,7 +48,7 @@ public class WorkdayMapping {
         for (int i = 0; i < sheet.getLastRowNum()+1; i++) {
             row = sheet.getRow(i);
             if (row == null) {
-                break;
+                continue;
             }
             for (int j = 0; j < row.getLastCellNum()+1; j++ ) {
             //セル
