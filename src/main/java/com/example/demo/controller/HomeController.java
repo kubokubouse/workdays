@@ -85,34 +85,6 @@ public class HomeController{
 		mailsendService.send(lastname,mail);
 		return "done";
 	}
-	//会員登録ページに移行
-	@GetMapping("/register")
-	public String register(@ModelAttribute User user){
-		return "register";
-	}
-
-	//会員情報入力→確認画面へ
-	@PostMapping("/")
-	public String confirm(@Validated @ModelAttribute User user,BindingResult result){
-		if (result.hasErrors()){
-			// エラーがある場合、index.htmlに戻る
-            return "register";
-        }
-		return "confirm";
-	}
-	//会員情報をDBに登録
-	@PostMapping("/regist")
-    public String regist(@Validated @ModelAttribute User user, BindingResult result, Model model){
-		
-		model.addAttribute("user", repository.findAll());
-        if (result.hasErrors()){
-			return "confirm";
-		}
-		// COMMENTテーブル：コメント登録
-		repository.save(user);
-		// ルートパス("/") にリダイレクトします
-		return "superuser";
-    }
 	
 	//ログイン時の処理 	reactで必要な分　返却値はjsonの文
 	@RequestMapping("/login")
@@ -168,6 +140,8 @@ public class HomeController{
 			//管理者の場合は管理者ページに移行
 		SuperUserLogin superUser = userService.findIdAndPass(id, pass);
 		if (superUser != null && !sudoresult.hasErrors()) {
+			session.setAttribute("id", id);
+			session.setAttribute("pass", pass);
 			return "superuser";
 		}
 		
@@ -298,8 +272,8 @@ public class HomeController{
 
 		}
 		
-		String inputFilePath = "C:/久保さん/PropertyFiles/" + propertyfileName+".xls";
-		String outputFilePath = "C:/久保さん/PropertyFiles/勤怠表_"+lastname+"_"+year+"年"+month+"月.xls";
+		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/" + propertyfileName+".xls";
+		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表.xls";
 
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
