@@ -74,6 +74,9 @@ public class AdminController {
 			case "company2":
 			  user.setCompany2(inputvalue);
 			  break;
+			case "company3":
+			  user.setCompany2(inputvalue);
+			  break;
 			} 
 		userService.update(user);
 		UserListParam userListParam = userService.searchAllUser();

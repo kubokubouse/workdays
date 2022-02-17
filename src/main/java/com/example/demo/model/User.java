@@ -56,6 +56,8 @@ public class User
 	  private String company2;
 	  @Column
 	  private String company3;
+	  @Column
+	  private Integer banned;
 
 
 

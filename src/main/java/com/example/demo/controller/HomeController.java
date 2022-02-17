@@ -176,6 +176,10 @@ public class HomeController{
 			// エラーがある場合、login.htmlに戻る
 			return "login";
 		}
+		//利用禁止ユーザーの場合loginに
+		if(users.getBanned()==1){
+			return "banned";
+		}
 
 		session.setAttribute("Data",users);
 		Calendar cal = Calendar.getInstance();
