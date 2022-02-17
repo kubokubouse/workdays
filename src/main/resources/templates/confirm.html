@@ -30,6 +30,21 @@
      <th>パスワード </th>
      <td>[[${user.password}]]</td>
   </tr>
+
+  <tr>
+    <th>会社1 </th>
+    <td>[[${user.company1}]]</td>
+ </tr>
+
+ <tr>
+  <th>会社2 </th>
+  <td>[[${user.company2}]]</td>
+</tr>
+
+<tr>
+  <th>会社3 </th>
+  <td>[[${user.company3}]]</td>
+</tr>
 </table>
 
 <div class="footer">
@@ -40,6 +55,9 @@
     <input type="hidden" th:field="*{firstname}">
     <input type="hidden" th:field="*{email}">
     <input type="hidden" th:field="*{password}">
+    <input type="hidden" th:field="*{company1}">
+    <input type="hidden" th:field="*{company2}">
+    <input type="hidden" th:field="*{company3}">
     <input type="submit" value="登録">
   </form>
 </div>

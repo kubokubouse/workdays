@@ -54,6 +54,39 @@
         <small>※半角英数</small>
       </td>
     </tr>
+
+    <tr>
+      <th>会社1 </th>
+      <td>
+        <label for="password"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{company1}">
+       <div class="invalid-feedback" th:errors="*{company1}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>会社2 </th>
+      <td>
+        <label for="password"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{company2}">
+       <div class="invalid-feedback" th:errors="*{company2}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>会社3 </th>
+      <td>
+        <label for="password"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{company3}">
+       <div class="invalid-feedback" th:errors="*{company3}"></div>
+      </td>
+    </tr>
+
+
+
   </table>
   <div class="send">
     <input type="reset" value="クリア">
