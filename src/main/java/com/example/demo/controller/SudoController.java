@@ -70,7 +70,7 @@ public class SudoController {
     
         File uploadFile = null;
         String fileName = multipartFile.getOriginalFilename();
-        String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/" + fileName;
+        String inputFilePath = "/久保さん/PropertyFiles" + fileName;
 
 
         // ファイルが空の場合は異常終了
@@ -115,7 +115,7 @@ public class SudoController {
     public String showTemplateFileList(Model model) {
 
         List<String> fileNameList = new ArrayList<String>();
-        String fileFolderPath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles";
+        String fileFolderPath = "/久保さん/PropertyFiles";
         File fileFolder = new File(fileFolderPath);
         File[] fileList = fileFolder.listFiles();
         
@@ -134,7 +134,7 @@ public class SudoController {
     //ファイル一覧からファイル削除
     @RequestMapping("/filedelete")
     public String showTemplateFileList(@RequestParam("deleteFileName") String deleteFileName, Model model) {
-        String folderPath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/";
+        String folderPath = "/久保さん/PropertyFiles";
 
         File deleteFile = new File(folderPath + deleteFileName);
         if(!deleteFile.delete()){

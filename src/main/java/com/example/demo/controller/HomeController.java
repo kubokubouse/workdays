@@ -111,7 +111,7 @@ public class HomeController{
 		// COMMENTテーブル：コメント登録
 		repository.save(user);
 		// ルートパス("/") にリダイレクトします
-		return "done";
+		return "superuser";
     }
 	
 	//ログイン時の処理 	reactで必要な分　返却値はjsonの文
@@ -238,6 +238,8 @@ public class HomeController{
 	    }
 	    // ユーザー情報の更新
 	    userService.updateAll(workingListParam);
+		User users=(User)session.getAttribute("Data");
+		model.addAttribute("users", users);
 		return "list";
 	}
 
@@ -307,12 +309,7 @@ public class HomeController{
 		return "done";
 	}
 
-	//スーパーユーザーログイン時の処理　暫定
-	@GetMapping("/superuser")
-	public String superuser(){
-		
-		return "superuser";
-	}
+	
 
 	/*@GetMapping("/userlist")
 	public String userlist(Model model){
