@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,7 +9,8 @@ import java.nio.file.Paths;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
-import java.time.LocalTime;
+import java.util.Map;
+import java.util.HashMap;
 import javax.servlet.http.HttpSession;
 
 import org.apache.poi.EncryptedDocumentException;
@@ -42,6 +44,7 @@ import com.example.demo.service.HolidayService;
 import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WorkdaysService;
+import com.example.demo.service.WorkdayMapping;
 import com.google.gson.Gson;
 @Controller
 public class WorkController
@@ -138,6 +141,74 @@ public class WorkController
 		return "done";
 	}
 
+	@RequestMapping(value="/selectFile")
+	public String select(){
+		return "selectFile";
+	}
+
+	@RequestMapping(value="/property")
+	public String ExcelwithProperty (@RequestParam String text, Model model) {
+
+		String propertyfileName = text;
+		
+		User users=(User)session.getAttribute("Data");
+		model.addAttribute("user",users);
+		//苗字と名前合わせてname
+		String lastname=users.getLastname();
+
+		//当日の年月取得
+		Calendar cal = Calendar.getInstance();
+		int year=cal.get(Calendar.YEAR);
+		int month=cal.get(Calendar.MONTH);
+		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
+	
+		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
+
+		Map<String, String> stHourMap = new HashMap<>();
+		Map<String, String> stMinMap = new HashMap<>(); 
+		Map<String, String> endHourMap = new HashMap<>(); 
+		Map<String, String> endMinMap = new HashMap<>();
+		Map<String, String> lunchTimeHourMap = new HashMap<>(); 
+		Map<String, String> lunchTimeMinMap = new HashMap<>();
+		Map<String, String> totalHourMap = new HashMap<>();
+		Map<String, String> totalMinMap = new HashMap<>(); 
+		Map<String, String> otherMap = new HashMap<>();
+
+		int index = 1;
+		for(Workdays workday:workdays){
+
+			stHourMap.put("sth"+index, workday.getStart().toString().substring(0,2));
+			stMinMap.put("stm"+index, workday.getStart().toString().substring(3,5));
+			endHourMap.put("edh"+index, workday.getEnd().toString().substring(0,2));
+			endMinMap.put("edm"+index, workday.getEnd().toString().substring(3,5));
+			lunchTimeHourMap.put("lth"+index, workday.getHalftime().toString().substring(0,2));
+			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
+			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
+			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
+			otherMap.put("ot"+index, workday.getOther());
+
+			index++;
+
+		}
+
+		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/" + propertyfileName;
+		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表.xlsx";
+
+		
+		WorkdayMapping workdayMapping = new WorkdayMapping();
+		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
+			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
+			 totalHourMap, totalMinMap, otherMap);
+
+
+		String outputFileName = "勤怠表.xlsx";
+		model.addAttribute("outputFileName", outputFileName);
+
+			return "done";
+
+	}
+
+
 
 	//Excelに書き込む用の処理
 	//
@@ -160,7 +231,7 @@ public class WorkController
 		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
 		System.out.println("month="+month);
 		//String fileName = "勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";//aws.ver　ここに書き込まれる
-		String fileName="//LS520De8d/Public/"+lastname+"/勤怠表_"+year+"年"+month+"月.xlsx";
+		String fileName="C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表_"+year+"年"+month+"月.xlsx";
 		
 		//既存のファイルを消去
 		Path p0= Paths.get(fileName);
@@ -184,6 +255,7 @@ public class WorkController
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+
 		//FileInputStream in  = new FileInputStream(path+fileName); aws用
 		FileInputStream in  = new FileInputStream(fileName);
 	    Workbook wb=null;
@@ -311,13 +383,13 @@ public class WorkController
 		    	}
 					
 		    	else if(e[j].equals("土")){
-					font.setColor(IndexedColors.BLUE.index);
+					font.setColor(IndexedColors.RED.index);
 					cs.setBorderBottom(BorderStyle.HAIR);
 		    		cs.setFont(font);
 		    		cell.setCellStyle(cs);
 		    	}
 				else if(j==0&&weekday.equals("土")){
-					font.setColor(IndexedColors.BLUE.index);
+					font.setColor(IndexedColors.RED.index);
 					cs.setBorderLeft(BorderStyle.MEDIUM);
 					cs.setBorderRight(BorderStyle.HAIR);
 					cs.setBorderBottom(BorderStyle.HAIR);

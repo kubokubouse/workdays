@@ -9,20 +9,21 @@ import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
-public class Login
-{
+@Table(name = "superuser")
+
+public class SuperUserLogin {
 	@Id
-	@Column
+	@Column(name="id")
 	@NotBlank
-	private String email;
+	private String id;
 
 
-	@Column
+	@Column(name="pass")
 	@NotBlank
-	private String password;
+	private String pass;
 }

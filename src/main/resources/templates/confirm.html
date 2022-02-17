@@ -6,45 +6,44 @@
 <link th:href="@{/css/confirmstyle.css}" rel="stylesheet" />
 </head>
 <body>
-<table class="entryTable" border="1">
-   <caption>会員情報</caption>
 
-<tr>
-      <th>苗字 </th>
-      <td>[[${user.lastname}]] </td>
-    </tr>
+  <table class="entryTable" border="1">
 
+  <caption>会員情報</caption>
 
-<tr>
-      <th>名前 </th>
-      <td>[[${user.firstname}]] </td>
-    </tr>
+  <tr>
+    <th>氏 </th>
+    <td>[[${user.lastname}]] </td>
+  </tr>
 
+  <tr>
+    <th>名 </th>
+    <td>[[${user.firstname}]] </td>
+  </tr>
 
+  <tr>
+    <th>メールアドレス </th>
+    <td>[[${user.email}]]</td>
+  </tr>
 
-
-<tr>
-      <th>メールアドレス </th>
-      <td>[[${user.email}]]</td>
-    </tr>
-
-<tr>
-      <th>パスワード </th>
-      <td>[[${user.password}]]</td>
-    </tr>
+  <tr>
+     <th>パスワード </th>
+     <td>[[${user.password}]]</td>
+  </tr>
 </table>
-<a href="#" id="back-link">戻る</a>
+
+<div class="footer">
+  <a href="#" id="back-link">戻る</a>
+  <form  th:action="@{/regist}" th:object="${user}"method="post" >
+    <label for="name"></label>
+    <input type="hidden" th:field="*{lastname}">
+    <input type="hidden" th:field="*{firstname}">
+    <input type="hidden" th:field="*{email}">
+    <input type="hidden" th:field="*{password}">
+    <input type="submit" value="登録">
+  </form>
+</div>
 </body>
-
-<form  th:action="@{/regist}" th:object="${user}"method="post" >
-<label for="name"></label>
-<input type="hidden" th:field="*{lastname}">
-<input type="hidden" th:field="*{firstname}">
-<input type="hidden" th:field="*{email}">
-<input type="hidden" th:field="*{password}">
-<input type="submit" value="登録">
-</form>
-
 
 <script>
   const backLink = document.getElementById('back-link');
@@ -54,3 +53,45 @@
 </script>
 
 </html>
+
+<style>
+
+  body {
+    font-family: sans-serif;
+    text-align: center;
+  }  
+
+  caption {
+    border-bottom: solid 3px skyblue;
+    position: relative;
+    font-family: sans-serif;
+  }
+  
+  caption:after {
+    position: absolute;
+    content: " ";
+    display: block;
+    border-bottom: solid 3px #ffc778;
+    bottom: -3px;
+    width: 30%;
+  }
+
+  th {
+    color: black;
+    background-color: #CCCCFF;
+  }
+
+  .entryTable {
+    border: 0px none;
+    margin: auto;
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+
+  .footer {
+    display:flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+  }
+</style>
