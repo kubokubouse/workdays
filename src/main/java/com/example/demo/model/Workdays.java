@@ -42,12 +42,16 @@ public class Workdays
 	 private Time  worktime;
 
 	@Column
-	 private String other;
+	 private String other1;
 
 	 @Column
 	 private Integer holiday;
+	 
+	 @Column
+	 private String other2;
 
-
+	 @Column
+	 private String other3;
 	 
 
 }

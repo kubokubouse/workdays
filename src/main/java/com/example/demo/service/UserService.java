@@ -118,7 +118,9 @@ public class UserService{
           data.setEnd(LocalTime.of(workday.getEnd().getHours(),workday.getEnd().getMinutes()));
           data.setHalftime(LocalTime.of(workday.getHalftime().getHours(),workday.getHalftime().getMinutes()));
           data.setWorktime(LocalTime.of(workday.getWorktime().getHours(),workday.getWorktime().getMinutes()));
-          data.setOther(workday.getOther());
+          data.setOther1(workday.getOther1());
+		  data.setOther2(workday.getOther2());
+		  data.setOther3(workday.getOther3());
 		  data.setHoliday(workday.getHoliday());
           list.add(data);
         }
@@ -139,7 +141,9 @@ public class UserService{
           stringList.setEnd(workday.getEnd().toString().substring(0,5));
           stringList.setHalftime(workday.getHalftime().toString().substring(0,5));
           stringList.setWorktime(workday.getWorktime().toString().substring(0,5));
-          stringList.setOther(workday.getOther());
+          stringList.setOther1(workday.getOther1());
+		  stringList.setOther2(workday.getOther2());
+		  stringList.setOther3(workday.getOther3());
 
           list.add(stringList);
         }
@@ -161,8 +165,9 @@ public class UserService{
           stringList.setEnd(workday.getEnd().toString());
           stringList.setHalftime(workday.getHalftime().toString());
           stringList.setWorktime(workday.getWorktime().toString());
-          stringList.setOther(workday.getOther());
-
+          stringList.setOther1(workday.getOther1());
+		  stringList.setOther2(workday.getOther2());
+		  stringList.setOther3(workday.getOther3());
           list.add(stringList);
         }
         stringListParam.setStringList2(list);
@@ -210,7 +215,9 @@ public class UserService{
             workdays.setEnd(new Time( data.getEnd().getHour(),data.getEnd().getMinute(),data.getEnd().getSecond()));
             workdays.setHalftime(new Time( data.getHalftime().getHour(),data.getHalftime().getMinute(),data.getHalftime().getSecond()));
             workdays.setWorktime(new Time( data.getHalftime().getHour(),data.getHalftime().getMinute(),data.getHalftime().getSecond()));
-            workdays.setOther(data.getOther());
+            workdays.setOther1(data.getOther1());
+			workdays.setOther2(data.getOther2());
+			workdays.setOther3(data.getOther3());
         }
         workdaysRepository.saveAll(userList);
     }
@@ -284,7 +291,7 @@ public class UserService{
 		for(Workdays workday:workdays){
 			String[]e=
 			{
-				Integer.toString(workday.getDay()),workday.getWeekday(),workday.getStart().toString(),workday.getEnd().toString(),workday.getHalftime().toString(),workday.getWorktime().toString(),workday.getOther(),
+				Integer.toString(workday.getDay()),workday.getWeekday(),workday.getStart().toString(),workday.getEnd().toString(),workday.getHalftime().toString(),workday.getWorktime().toString(),workday.getOther1(),
 		    };
 			
 			Row row = sheet.getRow(k);

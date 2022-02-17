@@ -39,8 +39,11 @@ import lombok.Data;
 		 private String  worktime;
 
 
-		 private String other;
+		 private String other1;
 
+		 private String other2;
+
+		 private String other3;
 
 
 }
