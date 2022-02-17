@@ -88,6 +88,15 @@ public class UserService{
 	public User updateUser(User user){
         return userRepository.save(user);
     }
+
+	public void delete(int id){
+		User user=userRepository.findById(id);
+        userRepository.delete(user);
+    }
+	public User findId(int id){
+		return userRepository.findById(id);
+	}
+
 	
 	//画面一覧を表示する	
     public WorkingListParam searchAll(User users) {

@@ -40,23 +40,7 @@ public class AdminController {
 	}
 
 	
-	@RequestMapping(value = "/userlistUpdate", method = RequestMethod.POST)
-	public String listUpdate(@Validated @ModelAttribute UserListParam userListParam, BindingResult result, Model model) {
-	   
-	  if (result.hasErrors()) {
-		  List<String> errorList = new ArrayList<String>();
-		  for (ObjectError error : result.getAllErrors()) {
-			  if (!errorList.contains(error.getDefaultMessage())) {
-				  errorList.add(error.getDefaultMessage());
-				}
-			}
-		  model.addAttribute("validationError", errorList);
-		  return "userlist";
-		}
-		userService.updateUserAll(userListParam);
-		return "userlist";
 	
-	}
 
 	@RequestMapping(value="/userdelete")
 	public String deleteuser(@RequestParam String userid, Model model){
