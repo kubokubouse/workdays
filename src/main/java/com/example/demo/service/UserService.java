@@ -159,6 +159,28 @@ public class UserService{
         return stringListParam;
     }
     
+	//DBの全てのユーザーをuserListParamに埋め込む
+	public UserListParam searchAllUser() {
+		List<User>userList=userRepository.findAll();
+		UserListParam userListParam=new UserListParam();
+		List<UserData> userDataList= new ArrayList<UserData>();
+		for(User user:userList){
+			UserData userData=new UserData();
+			userData.setId(user.getId());
+			userData.setFirstname(user.getFirstname());
+			userData.setLastname(user.getLastname());
+			userData.setEmail(user.getEmail());
+			userData.setPassword(user.getPassword());
+			userData.setCompany1(user.getCompany1());
+			userData.setCompany2(user.getCompany2());
+			userData.setCompany3(user.getCompany3());
+			userDataList.add(userData);
+		}
+		userListParam.setUserDataList(userDataList);
+		return userListParam;
+	}
+
+
 	
     public void updateAll(WorkingListParam param) {
         List<Workdays> userList = new ArrayList<Workdays>();
