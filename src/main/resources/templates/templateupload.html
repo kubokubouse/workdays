@@ -7,11 +7,24 @@
 </head>
 <body>
 
-    <h2>アップロードするファイルを指定してください</h2>
+    <h2>アップロードするファイルを以下の点に注意して指定してください</h2>
 
-    <p>※ファイルのセルやシートが保護されていない状態であることを確認してください</p>
+    <div class="caution">
+    <p>※ファイルのセルやシートが保護されていない状態であること</p>
+    <p>※ファイル名が.xlsで終わっていること</p>
+    <p>※ファイルに入力した値が以下の規則に基づいていること</p>
+    <p>アルファベットは小文字で記載し、続く数字は日付と同じであること</p>
+    <ul>
+        <li type="disc">開始 (時間sth1,　分stm1)</li>
+        <li type="disc">終了(時間edh1,　分edm1)</li>
+        <li type="disc">休憩(時間lth1,　分ltm1)</li>
+        <li type="disc">合計(時間tth1,  分ttm1)</li>
+        <li type="disc">備考１(oa1)</li>
+        <li type="disc">備考2(ob1)</li>
+        <li type="disc">備考3(oc1)</li>
+    </ul>
+    </div>
     
-
     <form th:action="@{/uploadFile}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
         <input type="file" name="file">
         <br>
@@ -48,12 +61,16 @@
         bottom: -3px;
         width: 30%;
       }
+      .caution {
+          display: inline-block;
+          text-align: left;
+      }
     .error {
         color: blue;
         font-weight: bold;
     }
     .upform {
-        margin-top: 80px;
+        margin-top: 30px;
     }
 
     .btn {
