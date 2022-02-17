@@ -46,7 +46,11 @@ public class WorkingData implements Serializable {
 	private LocalTime  worktime;
 
 	@Column
-	private String other;
+	private String other1;
+	@Column
+	private String other2;
+	@Column
+	private String other3;
 
 	@Column
 	private Integer holiday;

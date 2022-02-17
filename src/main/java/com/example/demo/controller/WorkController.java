@@ -70,7 +70,7 @@ public class WorkController
 		int id=users.getId();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
-		workdays.setOther(invalue);
+		workdays.setOther1(invalue);
 		workdaysService.update(workdays);
 
 		System.out.println(invalue);
@@ -92,7 +92,7 @@ public class WorkController
 		int month=yearMonth.getMonth();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(userid,year,month,intday);//id拾えば5は問題ない
-		workdays.setOther(other);
+		workdays.setOther1(other);
 		//仮置き 入力値に:00を足せば多分いける
 		String timeother=other+":00";
 		Time time=Time.valueOf(timeother);
@@ -185,7 +185,7 @@ public class WorkController
 			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
 			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
 			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
-			otherMap.put("ot"+index, workday.getOther());
+			otherMap.put("ot"+index, workday.getOther1());
 
 			index++;
 
@@ -287,7 +287,7 @@ public class WorkController
 		//
 		for(Workdays workday:workdays){
 			String[]e={
-				Integer.toString(workday.getDay()),workday.getWeekday(),workday.getStart().toString(),workday.getEnd().toString(),workday.getHalftime().toString(),workday.getWorktime().toString(),workday.getOther(),
+				Integer.toString(workday.getDay()),workday.getWeekday(),workday.getStart().toString(),workday.getEnd().toString(),workday.getHalftime().toString(),workday.getWorktime().toString(),workday.getOther1(),
 			};
 			Row row = sheet.getRow(k);//値を入れるセルの行を指定
 			k=k+1;					 //行番号に1加えて次のループに備える

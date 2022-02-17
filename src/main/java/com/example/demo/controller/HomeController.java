@@ -292,7 +292,7 @@ public class HomeController{
 			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
 			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
 			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
-			otherMap.put("ot"+index, workday.getOther());
+			otherMap.put("ot"+index, workday.getOther1());
 
 			index++;
 
