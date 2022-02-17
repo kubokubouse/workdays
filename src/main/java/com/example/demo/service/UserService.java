@@ -32,15 +32,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.model.Holiday;
 import com.example.demo.model.StringList;
 import com.example.demo.model.StringListParam;
-import com.example.demo.model.User;
-import com.example.demo.model.SuperUser;
 import com.example.demo.model.SuperUserLogin;
+import com.example.demo.model.User;
+import com.example.demo.model.UserData;
+import com.example.demo.model.UserListParam;
 import com.example.demo.model.Workdays;
 import com.example.demo.model.WorkingData;
 import com.example.demo.model.WorkingListParam;
 import com.example.demo.model.YearMonth;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.SuperUserRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WorkdaysRepository;
 @Service
 @Transactional
