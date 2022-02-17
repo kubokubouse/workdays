@@ -1,50 +1,24 @@
 package com.example.demo.controller;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Time;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import javax.servlet.http.HttpSession;
 
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.demo.model.User;
+import com.example.demo.model.UserListParam;
+import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.ObjectError;
 
-import com.example.demo.model.Holiday;
-import com.example.demo.model.StringListParam;
-import com.example.demo.model.User;
-import com.example.demo.model.Workdays;
-import com.example.demo.model.WorkingListParam;
-import com.example.demo.model.YearMonth;
-import com.example.demo.service.HolidayService;
-import com.example.demo.service.MailSendService;
-import com.example.demo.service.UserService;
-import com.example.demo.service.WorkdaysService;
-import com.example.demo.service.WorkdayMapping;
-import com.google.gson.Gson;
 
 @Controller
 public class AdminController {
@@ -59,10 +33,68 @@ public class AdminController {
 	}
 
 	@GetMapping("/userlist")
-	public String userlist(){
-		
+	public String userlist(@Validated  Model model){
+		UserListParam userListParam = userService.searchAllUser();
+		model.addAttribute("userListParam", userListParam);
 		return "/userlist";
 	}
 
+	
+	@RequestMapping(value = "/userlistUpdate", method = RequestMethod.POST)
+	public String listUpdate(@Validated @ModelAttribute UserListParam userListParam, BindingResult result, Model model) {
+	   
+	  if (result.hasErrors()) {
+		  List<String> errorList = new ArrayList<String>();
+		  for (ObjectError error : result.getAllErrors()) {
+			  if (!errorList.contains(error.getDefaultMessage())) {
+				  errorList.add(error.getDefaultMessage());
+				}
+			}
+		  model.addAttribute("validationError", errorList);
+		  return "userlist";
+		}
+		userService.updateUserAll(userListParam);
+		return "userlist";
+	
+	}
+
+	@RequestMapping(value="/userdelete")
+	public String deleteuser(@RequestParam String userid, Model model){
+		System.out.println(userid);
+		userService.delete(Integer.parseInt(userid));
+		UserListParam userListParam = userService.searchAllUser();
+		model.addAttribute("userListParam", userListParam);
+		return "/userlist";
+	}
+
+
+	@PostMapping("/UserAjaxServlet")
+	public String AjaxServlet(@RequestParam String inputvalue, String name,String userid, Model model){	
+		User user=userService.findId(Integer.parseInt(userid));
+		switch (name) {
+			case "lastname":
+			  user.setLastname(inputvalue);
+			  break;
+			case "firsttname":
+			  user.setFirstname(inputvalue);
+			  break;
+			  case "email":
+			  user.setEmail(inputvalue);
+			  break;
+			case "password":
+			  user.setPassword(inputvalue);
+			  break;
+			case "company1":
+			  user.setCompany1(inputvalue);
+			  break;
+			case "company2":
+			  user.setCompany2(inputvalue);
+			  break;
+			} 
+		userService.update(user);
+		UserListParam userListParam = userService.searchAllUser();
+		model.addAttribute("userListParam", userListParam);
+		return "/userlist";
+	}
 
 }

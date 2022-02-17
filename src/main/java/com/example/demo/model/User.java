@@ -54,6 +54,9 @@ public class User
 
 	  @Column
 	  private String company2;
+	  @Column
+	  private String company3;
+
 
 
 }

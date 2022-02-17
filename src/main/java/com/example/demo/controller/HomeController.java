@@ -103,7 +103,7 @@ public class HomeController{
 	//会員情報をDBに登録
 	@PostMapping("/regist")
     public String regist(@Validated @ModelAttribute User user, BindingResult result, Model model){
-		System.out.println(1);
+		
 		model.addAttribute("user", repository.findAll());
         if (result.hasErrors()){
 			return "confirm";
@@ -303,9 +303,22 @@ public class HomeController{
 		return "done";
 	}
 
+	//スーパーユーザーログイン時の処理　暫定
 	@GetMapping("/superuser")
-	public String adminmenue(){
+	public String superuser(){
 		
 		return "superuser";
 	}
+
+	/*@GetMapping("/userlist")
+	public String userlist(Model model){
+		System.out.println("a");
+		List<User>userList=userService.findAll();
+		model.addAttribute("userList", userList);
+		return "/userlist";
+
+
+	}*/
+
+	
 }
