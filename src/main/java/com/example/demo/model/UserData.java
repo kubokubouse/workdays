@@ -34,6 +34,8 @@ public class UserData implements Serializable{
 	private String company2;
 	@Column
 	private String company3;
+	@Column
+	private Integer banned;
 
 
 }

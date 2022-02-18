@@ -192,6 +192,7 @@ public class UserService{
 			userData.setCompany1(user.getCompany1());
 			userData.setCompany2(user.getCompany2());
 			userData.setCompany3(user.getCompany3());
+			userData.setBanned(user.getBanned());
 			userDataList.add(userData);
 		}
 		userListParam.setUserDataList(userDataList);
