@@ -97,6 +97,9 @@ public class UserService{
 		return userRepository.findById(id);
 	}
 
+	public User findEmail(String Email){
+		return userRepository.findByEmail(Email);
+	}
 	
 	//画面一覧を表示する	
     public WorkingListParam searchAll(User users) {
