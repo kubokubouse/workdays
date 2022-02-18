@@ -56,10 +56,9 @@ public class AdminController extends WorkdaysProperties{
         //会員登録ページに移行
 	@GetMapping("/superuser")
 	public String menue(@ModelAttribute User user){
-        String id = (String)session.getAttribute("id");
-        String pass = (String)session.getAttribute("pass");
 
-        SuperUserLogin superUser = userService.findIdAndPass(id, pass);
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        
         if (superUser == null) {
             return "accessError";
         }
@@ -70,10 +69,8 @@ public class AdminController extends WorkdaysProperties{
     //会員登録ページに移行
 	@GetMapping("/register")
 	public String register(@ModelAttribute User user){
-        String id = (String)session.getAttribute("id");
-        String pass = (String)session.getAttribute("pass");
 
-        SuperUserLogin superUser = userService.findIdAndPass(id, pass);
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
         if (superUser == null) {
             return "accessError";
         }
@@ -114,10 +111,7 @@ public class AdminController extends WorkdaysProperties{
 	@GetMapping("/userlist")
 	public String userlist(@Validated  Model model){
 
-        String id = (String)session.getAttribute("id");
-        String pass = (String)session.getAttribute("pass");
-
-        SuperUserLogin superUser = userService.findIdAndPass(id, pass);
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
         if (superUser == null) {
             return "accessError";
         }
@@ -173,10 +167,7 @@ public class AdminController extends WorkdaysProperties{
 	@GetMapping("/templateupload")
 	public String getTemplateUpload(){
 
-        String id = (String)session.getAttribute("id");
-        String pass = (String)session.getAttribute("pass");
-
-        SuperUserLogin superUser = userService.findIdAndPass(id, pass);
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
         if (superUser != null) {
             return "templateupload";
         }
@@ -233,10 +224,7 @@ public class AdminController extends WorkdaysProperties{
     @RequestMapping("/templatelist")
     public String showTemplateFileList(Model model) {
 
-        String id = (String)session.getAttribute("id");
-        String pass = (String)session.getAttribute("pass");
-
-        SuperUserLogin superUser = userService.findIdAndPass(id, pass);
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
         if (superUser == null) {
             return "accessError";
         }
