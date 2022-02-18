@@ -139,6 +139,7 @@ a:hover::after{
             <th>所属会社1</th>
             <th>所属会社2</th>
             <th>所属会社3</th>
+            <th>利用可否(可は0,非は1)</th>
             <th>ユーザー削除</th>
   
           </tr>
@@ -174,6 +175,10 @@ a:hover::after{
             </td>
             <td>
               <input type="text" th:userid="${user.id}" class="form-control" th:name="company3" th:value="${user.company3}">
+            </td>
+            
+            <td>
+              <input type="text" th:userid="${user.id}" class="form-control" th:name="banned" th:value="${user.banned}">
             </td>
             <td>
               <a th:href="@{/userdelete(userid=${user.id})}" input type="hidden" >削除</a>

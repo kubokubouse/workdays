@@ -154,7 +154,10 @@ public class AdminController extends WorkdaysProperties{
 			  user.setCompany2(inputvalue);
 			  break;
 			case "company3":
-			  user.setCompany2(inputvalue);
+			  user.setCompany3(inputvalue);
+			  break;
+            case "banned":
+			  user.setBanned(Integer.parseInt(inputvalue));
 			  break;
 			} 
 		userService.update(user);
