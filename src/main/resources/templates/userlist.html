@@ -159,7 +159,6 @@ a:hover::after{
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Id</th>
             <th>苗字</th>
             <th>名前</th>
             <th>メールアドレス</th>
@@ -175,11 +174,6 @@ a:hover::after{
         
         <tbody>
           <tr th:each="user, st : *{userDataList}" >
-            
-            <td>
-            <label th:text="${user.id}"></label>
-            <input type="hidden" th:field="*{userDataList[__${st.index}__].id}">
-            </td>
 
             <td>
               <input type="text" th:userid="${user.id}" th:id="${user.lastname}" class="form-control" th:name="lastname" th:value="${user.lastname}" >
