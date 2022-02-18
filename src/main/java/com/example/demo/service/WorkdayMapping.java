@@ -225,7 +225,7 @@ public class WorkdayMapping {
                     }
                 }
             //備考1データ
-                if (value.contains("ota")) {
+                if (value.contains("oa")) {
                     Object data = other1Map.get(value);
                     if (data == null) {
                         continue;
@@ -234,7 +234,7 @@ public class WorkdayMapping {
                     }
                 }
             //備考2データ
-                if (value.contains("otb")) {
+                if (value.contains("ob")) {
                     Object data = other2Map.get(value);
                     if (data == null) {
                         continue;
@@ -244,7 +244,7 @@ public class WorkdayMapping {
                 }
 
                 //備考3データ
-                if (value.contains("otc")) {
+                if (value.contains("oc")) {
                     Object data = other3Map.get(value);
                     if (data == null) {
                         continue;

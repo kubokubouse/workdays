@@ -272,9 +272,9 @@ public class HomeController extends WorkdaysProperties{
 			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
 			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
 			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
-			other1Map.put("ota"+index, workday.getOther1());
-			other2Map.put("otb"+index, workday.getOther2());
-			other3Map.put("otc"+index, workday.getOther3());
+			other1Map.put("oa"+index, workday.getOther1());
+			other2Map.put("ob"+index, workday.getOther2());
+			other3Map.put("oc"+index, workday.getOther3());
 
 			index++;
 
