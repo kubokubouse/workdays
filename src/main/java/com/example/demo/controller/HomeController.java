@@ -38,9 +38,10 @@ import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WorkdayMapping;
 import com.example.demo.service.WorkdaysService;
+import com.example.demo.WorkdaysProperties;
 import com.google.gson.Gson;
 @Controller
-public class HomeController{
+public class HomeController extends WorkdaysProperties{
 	private final UserRepository repository;
     @Autowired //← コンストラクタが１つの場合、@Autowiredは省略できます
     HttpSession session;
@@ -276,9 +277,10 @@ public class HomeController{
 
 		}
 		
-		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/" + propertyfileName+".xls";
-		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表.xls";
-
+		WorkdaysProperties wp = new WorkdaysProperties();
+		String inputFilePath = WorkdaysProperties.inputFolder + "/" + propertyfileName + ".xls";
+		String outputFilePath = wp.getOutputFile();
+		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,

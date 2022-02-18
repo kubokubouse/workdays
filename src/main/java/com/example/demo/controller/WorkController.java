@@ -45,10 +45,10 @@ import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WorkdaysService;
 import com.example.demo.service.WorkdayMapping;
+import com.example.demo.WorkdaysProperties;
 import com.google.gson.Gson;
 @Controller
-public class WorkController
-{
+public class WorkController extends WorkdaysProperties{
 	@Autowired
     HttpSession session;
     @Autowired
@@ -191,8 +191,9 @@ public class WorkController
 
 		}
 
-		String inputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/PropertyFiles/" + propertyfileName;
-		String outputFilePath = "C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表.xlsx";
+		WorkdaysProperties wp = new WorkdaysProperties();
+		String inputFilePath = WorkdaysProperties.inputFolder + propertyfileName;
+		String outputFilePath = wp.getOutputFile();
 
 		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
@@ -201,7 +202,7 @@ public class WorkController
 			 totalHourMap, totalMinMap, otherMap);
 
 
-		String outputFileName = "勤怠表.xlsx";
+		String outputFileName = WorkdaysProperties.outputFileName;
 		model.addAttribute("outputFileName", outputFileName);
 
 			return "done";
@@ -230,8 +231,9 @@ public class WorkController
 	
 		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
 		System.out.println("month="+month);
-		//String fileName = "勤怠表_"+lastname+"_"+year+"年"+month+"月.xlsx";//aws.ver　ここに書き込まれる
-		String fileName="C:/pleiades/workdays/workdays/src/main/resources/OutputFiles/勤怠表_"+year+"年"+month+"月.xlsx";
+		//String fileName = "勤怠表.xlsx";//aws.ver　ここに書き込まれる
+		WorkdaysProperties wp = new WorkdaysProperties();
+		String fileName= wp.getOutputFile();
 		
 		//既存のファイルを消去
 		Path p0= Paths.get(fileName);
