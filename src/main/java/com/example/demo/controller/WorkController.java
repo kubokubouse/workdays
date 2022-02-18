@@ -196,7 +196,7 @@ public class WorkController extends WorkdaysProperties{
 		}
 
 		WorkdaysProperties wp = new WorkdaysProperties();
-		String inputFilePath = WorkdaysProperties.inputFolder + propertyfileName;
+		String inputFilePath = WorkdaysProperties.inputFolder + "/" + propertyfileName;
 		String outputFilePath = wp.getOutputFile();
 
 		
