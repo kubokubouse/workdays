@@ -172,7 +172,9 @@ public class WorkController extends WorkdaysProperties{
 		Map<String, String> lunchTimeMinMap = new HashMap<>();
 		Map<String, String> totalHourMap = new HashMap<>();
 		Map<String, String> totalMinMap = new HashMap<>(); 
-		Map<String, String> otherMap = new HashMap<>();
+		Map<String, String> other1Map = new HashMap<>();
+		Map<String, String> other2Map = new HashMap<>();
+		Map<String, String> other3Map = new HashMap<>();
 
 		int index = 1;
 		for(Workdays workday:workdays){
@@ -185,7 +187,9 @@ public class WorkController extends WorkdaysProperties{
 			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
 			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
 			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
-			otherMap.put("ot"+index, workday.getOther1());
+			other1Map.put("oa"+index, workday.getOther1());
+			other2Map.put("ob"+index, workday.getOther2());
+			other3Map.put("oc"+index, workday.getOther3());
 
 			index++;
 
@@ -199,7 +203,7 @@ public class WorkController extends WorkdaysProperties{
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
-			 totalHourMap, totalMinMap, otherMap);
+			 totalHourMap, totalMinMap, other1Map,other2Map,other3Map);
 
 
 		String outputFileName = WorkdaysProperties.outputFileName;

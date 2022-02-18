@@ -290,19 +290,5 @@ public class HomeController extends WorkdaysProperties{
 			 totalHourMap, totalMinMap, other1Map,other2Map,other3Map);
 
 		return "done";
-	}
-
-	
-
-	/*@GetMapping("/userlist")
-	public String userlist(Model model){
-		System.out.println("a");
-		List<User>userList=userService.findAll();
-		model.addAttribute("userList", userList);
-		return "/userlist";
-
-
-	}*/
-
-	
+	}	
 }
