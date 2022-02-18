@@ -26,11 +26,11 @@ import com.example.demo.service.UserService;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.UserListParam;
 import com.example.demo.repository.UserRepository;
-
+import com.example.demo.WorkdaysProperties;
 
 
 @Controller
-public class AdminController {
+public class AdminController extends WorkdaysProperties{
 
     private final UserRepository repository;
 
@@ -95,6 +95,7 @@ public class AdminController {
         }
 		return "confirm";
 	}
+
 	//会員情報をDBに登録
 	@PostMapping("/regist")
     public String regist(@Validated @ModelAttribute User user, BindingResult result, Model model){
@@ -188,7 +189,7 @@ public class AdminController {
     
         File uploadFile = null;
         String fileName = multipartFile.getOriginalFilename();
-        String inputFilePath = "/久保さん/PropertyFiles" + fileName;
+        String inputFilePath = WorkdaysProperties.inputFolder + "/" + fileName;
 
 
         // ファイルが空の場合は異常終了
@@ -241,7 +242,7 @@ public class AdminController {
         }
 
         List<String> fileNameList = new ArrayList<String>();
-        String fileFolderPath = "/久保さん/PropertyFiles";
+        String fileFolderPath = WorkdaysProperties.inputFolder;
         File fileFolder = new File(fileFolderPath);
         File[] fileList = fileFolder.listFiles();
         
@@ -260,9 +261,9 @@ public class AdminController {
     //ファイル一覧からファイル削除
     @RequestMapping("/filedelete")
     public String showTemplateFileList(@RequestParam("deleteFileName") String deleteFileName, Model model) {
-        String folderPath = "/久保さん/PropertyFiles";
+        String deleteFilePath = WorkdaysProperties.inputFolder + "/" + deleteFileName;
 
-        File deleteFile = new File(folderPath + deleteFileName);
+        File deleteFile = new File(deleteFilePath);
         if(!deleteFile.delete()){
             model.addAttribute("error", "ファイルが削除できませんでした");
         }
