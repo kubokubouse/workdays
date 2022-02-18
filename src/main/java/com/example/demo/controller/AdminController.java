@@ -134,6 +134,9 @@ public class AdminController extends WorkdaysProperties{
 	@PostMapping("/UserAjaxServlet")
 	public String AjaxServlet(@RequestParam String inputvalue, String name,String userid, Model model){	
 		User user=userService.findId(Integer.parseInt(userid));
+        System.out.println(name);
+        System.out.println(inputvalue);
+
 		switch (name) {
 			case "lastname":
 			  user.setLastname(inputvalue);
