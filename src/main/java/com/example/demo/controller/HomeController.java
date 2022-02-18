@@ -145,8 +145,7 @@ public class HomeController extends WorkdaysProperties{
 			//管理者の場合は管理者ページに移行
 		SuperUserLogin superUser = userService.findIdAndPass(id, pass);
 		if (superUser != null && !sudoresult.hasErrors()) {
-			session.setAttribute("id", id);
-			session.setAttribute("pass", pass);
+			session.setAttribute("superUser", superUser);
 			return "superuser";
 		}
 		
