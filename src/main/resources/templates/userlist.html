@@ -114,9 +114,37 @@ a:hover::after{
         // 常に実行する処理
       });
     });
+    $('select').change(function(){
+      var inputvalue = $(this).val();
+      var userid = $(this).attr('userid');
+      var name = $(this).attr('name');
+      $.ajax({
+        url: "/UserAjaxServlet",
+        type: "POST",
+        data: {
+          inputvalue : inputvalue,
+          userid : userid,
+          name : name
+        }
+      }).done(function (result) {
+        // 通信成功時のコールバック
+        alert("更新成功")
+      }).fail(function () {
+        // 通信失敗時のコールバック
+        alert("更新失敗");
+      }).always(function (result) {
+        // 常に実行する処理
+      });
+
+      
+
+
+
+
+    });
     
   });
-  </script>
+</script>
 </head>
 <body>
   <div class="container">
@@ -177,9 +205,26 @@ a:hover::after{
               <input type="text" th:userid="${user.id}" class="form-control" th:name="company3" th:value="${user.company3}">
             </td>
             
-            <td>
-              <input type="text" th:userid="${user.id}" class="form-control" th:name="banned" th:value="${user.banned}">
-            </td>
+            <div th:if="${user.banned==0}">
+              <td>
+                <select name="banned" th:userid="${user.id}">
+                  <option value="0" selected>許可</option>
+                  <option value="1">禁止</option>
+                  
+                </select>
+              </td>
+            </div>
+  
+              <div th:if="${user.banned==1}">
+              <td>
+                <select name="banned">
+                  <option value="0" >許可</option>
+                  <option value="1" selected>禁止</option>
+                  
+                </select>
+              </td>
+            </div>
+
             <td>
               <a th:href="@{/userdelete(userid=${user.id})}" input type="hidden" >削除</a>
             </td>
