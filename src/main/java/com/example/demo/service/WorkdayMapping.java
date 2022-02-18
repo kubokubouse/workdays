@@ -18,7 +18,7 @@ public class WorkdayMapping {
     
     public void outputExcel(String inputFilePath, String outputFilePath,
         Map stHourMap, Map stMinMap, Map endHourMap, Map endMinMap,
-            Map lunchTimeHourMap, Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map otherMap) {
+            Map lunchTimeHourMap, Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map other1Map,Map other2Map,Map other3Map) {
 
                 
     File inputFileObject = new File(inputFilePath);
@@ -224,9 +224,28 @@ public class WorkdayMapping {
                         setValue = value.replace(value, data.toString());
                     }
                 }
-            //備考データ
-                if (value.contains("ot")) {
-                    Object data = otherMap.get(value);
+            //備考1データ
+                if (value.contains("ota")) {
+                    Object data = other1Map.get(value);
+                    if (data == null) {
+                        continue;
+                    } else {
+                        setValue = value.replace(value, data.toString());
+                    }
+                }
+            //備考2データ
+                if (value.contains("otb")) {
+                    Object data = other2Map.get(value);
+                    if (data == null) {
+                        continue;
+                    } else {
+                        setValue = value.replace(value, data.toString());
+                    }
+                }
+
+                //備考3データ
+                if (value.contains("otc")) {
+                    Object data = other3Map.get(value);
                     if (data == null) {
                         continue;
                     } else {
