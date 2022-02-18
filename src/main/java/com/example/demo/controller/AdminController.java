@@ -101,6 +101,7 @@ public class AdminController extends WorkdaysProperties{
         if (result.hasErrors()){
 			return "confirm";
 		}
+        user.setBanned(0);
 		// COMMENTテーブル：コメント登録
 		repository.save(user);
 		// ルートパス("/") にリダイレクトします
