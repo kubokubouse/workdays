@@ -10,9 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.demo.model.Workdays;
 
 public interface WorkdaysRepository extends JpaRepository<Workdays, Long>
-{	@Transactional
+{	
+	@Transactional
 	@Modifying
-	@Query(value ="insert into workdays(userid,year,month,day,start,end,halftime,worktime,other,weekday) values(?1,?2,?3,?4,'00:00:00','00:00:00','00:00:00','00:00:00','',?5) ",
+	@Query(value ="insert into workdays(userid,year,month,day,start,end,halftime,worktime,other1,other2,other3,weekday) values(?1,?2,?3,?4,'00:00:00','00:00:00','00:00:00','00:00:00','','','',?5) ",
 
 	        nativeQuery = true)
 	//1から順にuserid,year,month,day,id,weekdayが入る感じ　
