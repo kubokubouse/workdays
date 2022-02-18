@@ -217,7 +217,7 @@ a:hover::after{
   
               <div th:if="${user.banned==1}">
               <td>
-                <select name="banned">
+                <select name="banned" th:userid="${user.id}">
                   <option value="0" >許可</option>
                   <option value="1" selected>禁止</option>
                   
