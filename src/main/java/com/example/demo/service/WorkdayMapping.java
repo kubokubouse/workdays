@@ -3,6 +3,8 @@ package com.example.demo.service;
 import org.apache.poi.ss.usermodel.Row;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.print.DocFlavor.STRING;
 
@@ -34,6 +36,15 @@ public class WorkdayMapping {
         return;
     }
        
+    //シート名を取得
+    List<String> sheetName = new ArrayList<String>();
+    try {
+        sheetName = getSheetNames(inputFileObject);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+
     Workbook excel;
     try {
     //エクセルファイルへアクセスするためのオブジェクト
@@ -41,7 +52,7 @@ public class WorkdayMapping {
         excel = WorkbookFactory.create(in);
    
     // シート名がわかっている場合
-        Sheet sheet = excel.getSheet("Sheet1");
+        Sheet sheet = excel.getSheet(sheetName.get(0));
 
     //行
         Row row;
@@ -272,5 +283,16 @@ public class WorkdayMapping {
             return 1;    
         }
         return 0;
+    }
+
+    private List<String> getSheetNames(File file) throws Exception {
+
+        try (Workbook book = WorkbookFactory.create(file)) {
+
+            return IntStream.range(0, book.getNumberOfSheets())
+                    .mapToObj(book::getSheetAt)
+                    .map(Sheet::getSheetName)
+                    .collect(Collectors.toList());
+        }
     }
 }
