@@ -247,7 +247,7 @@ public class WorkController extends WorkdaysProperties{
 		
 		System.out.println("filename="+fileName);
 		//ベースになるエクセルファイルを定義
-		String INPUT_DIR = "/apache/htdocs/image/test.xlsx";
+		String INPUT_DIR = WorkdaysProperties.cccExcelFile;
 		//String INPUT_DIR = path+"test.xlsx";//aws用　ベースになるエクセルファイル
 		Path p1 = Paths.get(INPUT_DIR);//ベース
 		//Path p2 = Paths.get(path+fileName);
