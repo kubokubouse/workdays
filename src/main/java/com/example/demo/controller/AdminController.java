@@ -83,7 +83,13 @@ public class AdminController {
     //会員情報入力→確認画面へ
 	@PostMapping("/")
 	public String confirm(@Validated @ModelAttribute User user,BindingResult result){
-		if (result.hasErrors()){
+		//メアドに重複があった場合重複画面に飛ぶ
+		User usedEmailuser=userService.findEmail(user.getEmail());
+		if(usedEmailuser!=null){
+			return "usedemail";
+		}
+        
+        if (result.hasErrors()){
 			// エラーがある場合、index.htmlに戻る
             return "register";
         }
