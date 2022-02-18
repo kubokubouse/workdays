@@ -86,42 +86,8 @@ public class HomeController{
 		return "done";
 	}
 
-	//会員登録ページに移行
-	@GetMapping("/register")
-	public String register(@ModelAttribute User user){
-		return "register";
-	}
-
-	//会員情報入力→確認画面へ
-	@PostMapping("/")
-	public String confirm(@Validated @ModelAttribute User user,BindingResult result){
-		//メアドに重複があった場合重複画面に飛ぶ
-		User usedEmailuser=userService.findEmail(user.getEmail());
-		if(usedEmailuser!=null){
-			return "usedemail";
-		}
-
-		if (result.hasErrors()){
-			// エラーがある場合、index.htmlに戻る
-            return "register";
-        }
-		//メアドに重複があった場合重複画面に飛ぶ
-		
-		return "confirm";
-	}
-	//会員情報をDBに登録
-	@PostMapping("/regist")
-    public String regist(@Validated @ModelAttribute User user, BindingResult result, Model model){
-		
-		model.addAttribute("user", repository.findAll());
-        if (result.hasErrors()){
-			return "confirm";
-		}
-		// COMMENTテーブル：コメント登録
-		repository.save(user);
-		// ルートパス("/") にリダイレクトします
-		return "superuser";
-    }
+	
+	
 
 	
 	//ログイン時の処理 	reactで必要な分　返却値はjsonの文
