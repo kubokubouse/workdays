@@ -18,11 +18,13 @@
         <li type="disc">開始 (時間sth1,　分stm1)</li>
         <li type="disc">終了(時間edh1,　分edm1)</li>
         <li type="disc">休憩(時間lth1,　分ltm1)</li>
-        <li type="disc">合計(時間tth1,  分ttm1)</li>
+        <li type="disc">就業時間(時間tth1,  分ttm1)</li>
         <li type="disc">備考１(oa1)</li>
         <li type="disc">備考2(ob1)</li>
         <li type="disc">備考3(oc1)</li>
     </ul>
+    <p>例）４日の就業時間を(00:00)表記で記入する場合 </p>
+    <p class="example">tth4:ttm4</p>        
     </div>
     
     <form th:action="@{/uploadFile}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
@@ -73,7 +75,9 @@
     .upform {
         margin-top: 30px;
     }
-
+    .example {
+        padding-left: 100px;
+    }
     .upbtn {
         background    : #1a1aff; 
         color         : #ffffff; 
