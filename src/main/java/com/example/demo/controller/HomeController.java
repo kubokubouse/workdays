@@ -38,8 +38,10 @@ import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WorkdayMapping;
 import com.example.demo.service.WorkdaysService;
+import com.example.demo.service.CellvalueGet;
 import com.example.demo.WorkdaysProperties;
 import com.google.gson.Gson;
+import com.example.demo.model.Judgeused;
 @Controller
 public class HomeController extends WorkdaysProperties{
 	private final UserRepository repository;
@@ -61,6 +63,11 @@ public class HomeController extends WorkdaysProperties{
 	@GetMapping("/")
 	public String login(@ModelAttribute Login login){
 		session.removeAttribute("Data");
+		CellvalueGet cellgetvalue=new CellvalueGet();
+		Judgeused judgeused=cellgetvalue.GetCellvalue("コネクトクルー");
+		System.out.println(judgeused.getOa());
+		System.out.println(judgeused.getOb());
+		System.out.println(judgeused.getOc());
 		//return "login";
 		return "login2";
 	}
@@ -151,8 +158,8 @@ public class HomeController extends WorkdaysProperties{
 		
 		User users=userService.findEmailPassword(login.getEmail(),login.getPassword());
 		if (result.hasErrors()||users==null){
-			// エラーがある場合、login.htmlに戻る
-			return "login";
+			// 
+			return "loginfalse";
 		}
 		//利用禁止ユーザーの場合loginに
 		if(users.getBanned()==1){
@@ -196,6 +203,13 @@ public class HomeController extends WorkdaysProperties{
 		workingListParam.setYear(year);
 		model.addAttribute("workingListParam", workingListParam);
 		model.addAttribute("users", users);
+
+		//備考1,2,3に会社名を添付する処理をする
+
+		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
+		CellvalueGet cellgetvalue=new CellvalueGet();
+		Judgeused judgeused=cellgetvalue.GetCellvalue(users.getCompany2());
+		model.addAttribute("judgeused", judgeused);
 		return "list";
 	}
 
@@ -218,6 +232,11 @@ public class HomeController extends WorkdaysProperties{
 	    userService.updateAll(workingListParam);
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("users", users);
+
+		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
+		CellvalueGet cellgetvalue=new CellvalueGet();
+		Judgeused judgeused=cellgetvalue.GetCellvalue(users.getCompany2());
+		model.addAttribute("judgeused", judgeused);
 		return "list";
 	}
 
