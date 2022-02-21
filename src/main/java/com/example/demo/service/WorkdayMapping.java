@@ -2,9 +2,13 @@ package com.example.demo.service;
 
 import org.apache.poi.ss.usermodel.Row;
 import java.io.*;
+import java.sql.Time;
 import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.time.*;
 
 import javax.print.DocFlavor.STRING;
 
@@ -13,6 +17,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 public class WorkdayMapping {
     
@@ -224,6 +231,21 @@ public class WorkdayMapping {
                         setValue = value.replace(value, data.toString());
                     }
                 }
+
+            //時間はTime型として保存
+
+            Date timeValue = null;
+            if (setValue.contains(":")){              
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+            // Date型変換
+            try {
+                timeValue = sdf.parse(setValue);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }            
+            }
+             
             //備考1データ
                 if (value.contains("oa")) {
                     Object data = other1Map.get(value);
@@ -251,6 +273,10 @@ public class WorkdayMapping {
                     } else {
                         setValue = value.replace(value, data.toString());
                     }
+                }
+                if (timeValue != null) {
+                cell.setCellValue(timeValue);
+                continue;
                 }
                 cell.setCellValue(setValue);
                }
