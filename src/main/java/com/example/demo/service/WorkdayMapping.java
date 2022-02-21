@@ -84,6 +84,7 @@ public class WorkdayMapping {
                 }
             //セルの値がMapと一致すればセルの内容を書き換える 
                 String setValue = null;
+                int intValue = 1000;
             //始業時刻
             //セルに2つのKeyがある時（例　sth1:stm1）
                 if (value.contains("stm") && value.contains("sth")) {
@@ -114,7 +115,7 @@ public class WorkdayMapping {
                     if (data == null) {
                         continue;
                     } else {
-                        setValue = value.replace(value, data.toString());
+                        intValue = Integer.valueOf(value.replace(value, data.toString()));
                     }
                 }
             //セルの値にKeyが１つのとき（例　stm1　のみ）
@@ -123,7 +124,7 @@ public class WorkdayMapping {
                     if (data == null) {
                         continue;
                     } else {
-                        setValue = value.replace(value, data.toString());
+                        intValue = Integer.valueOf(value.replace(value, data.toString()));
                     }
                 }
                 
@@ -150,7 +151,7 @@ public class WorkdayMapping {
                     if (data == null) {
                         continue;
                     } else {
-                        setValue = value.replace(value, data.toString());
+                        intValue = Integer.valueOf(value.replace(value, data.toString()));
                     }
                 }
                 if (value.contains("edm") && !value.contains("edh")) {
@@ -158,7 +159,7 @@ public class WorkdayMapping {
                     if (data == null) {
                         continue;
                     } else {
-                        setValue = value.replace(value, data.toString());
+                        intValue = Integer.valueOf(value.replace(value, data.toString()));
                     }
                 }
 
@@ -185,7 +186,7 @@ public class WorkdayMapping {
                     if (data == null) {
                         continue;
                     }else {
-                        setValue = value.replace(value, data.toString());
+                        intValue = Integer.valueOf(value.replace(value, data.toString()));
                     }
                 }
                 if (value.contains("ltm") && !value.contains("lth")) {
@@ -193,7 +194,7 @@ public class WorkdayMapping {
                     if (data == null) {
                         continue;
                     } else {
-                        setValue = value.replace(value, data.toString());
+                        intValue = Integer.valueOf(value.replace(value, data.toString()));
                     }
                 }
 
@@ -220,7 +221,7 @@ public class WorkdayMapping {
                     if (data == null) {
                         continue;
                     } else {
-                        setValue = value.replace(value, data.toString());
+                        intValue = Integer.valueOf(value.replace(value, data.toString()));
                     }
                 }
                 if (value.contains("ttm") && !value.contains("tth")) {
@@ -228,7 +229,7 @@ public class WorkdayMapping {
                     if (data == null) {
                         continue;
                     } else {
-                        setValue = value.replace(value, data.toString());
+                        intValue = Integer.valueOf(value.replace(value, data.toString()));
                     }
                 }
 
@@ -274,9 +275,15 @@ public class WorkdayMapping {
                         setValue = value.replace(value, data.toString());
                     }
                 }
+                //sth:stmなどコロンがある時
                 if (timeValue != null) {
-                cell.setCellValue(timeValue);
-                continue;
+                    cell.setCellValue(timeValue);
+                    continue;
+                }
+                //時間タグがsthのみなど時と分で分かれているとき
+                if (intValue != 1000) {
+                    cell.setCellValue(intValue);
+                    continue;
                 }
                 cell.setCellValue(setValue);
                }
