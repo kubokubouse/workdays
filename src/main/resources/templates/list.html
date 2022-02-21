@@ -207,9 +207,33 @@ a:hover::after{
             <th>終了時刻</th>
             <th>休憩時間</th>
             <th>作業時間</th>
-            <th>備考1</th>
-            <th>備考2</th>
-            <th>備考3</th>
+
+            
+            <div th:if="${judgeused.oa==0}">
+              <th>備考1([[${users.company1}]])</th>
+             </div>
+ 
+            <div th:if="${judgeused.oa==1}">
+             <th>備考1([[${users.company1}]]　[[${users.company2}]])</th>
+            </div>
+
+            <div th:if="${judgeused.ob==0}">
+              <th>備考2</th>
+            </div>
+
+            <div th:if="${judgeused.ob==1}">
+              <th>備考2([[${users.company2}]])</th>
+            </div>
+
+            <div th:if="${judgeused.oc==0}">
+              <th>備考3</th>
+            </div>
+
+            <div th:if="${judgeused.oc==1}">
+              <th>備考3([[${users.company2}]])</th>
+            </div>
+
+            
             
 
           </tr>
