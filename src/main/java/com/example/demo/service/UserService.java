@@ -100,6 +100,10 @@ public class UserService{
 	public void delete(int id){
 		User user=userRepository.findById(id);
         userRepository.delete(user);
+		List<Workdays> workList = workdaysRepository.findByUserid(id);
+		for(Workdays wd : workList) {
+			workdaysRepository.delete(wd);
+		}
     }
 	public User findId(int id){
 		return userRepository.findById(id);
