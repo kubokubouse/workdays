@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.model.Otherpa;
 import com.example.demo.model.Holiday;
 import com.example.demo.model.Login;
 import com.example.demo.model.StringListParam;
@@ -208,8 +209,33 @@ public class HomeController extends WorkdaysProperties{
 
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
 		CellvalueGet cellgetvalue=new CellvalueGet();
-		Judgeused judgeused=cellgetvalue.GetCellvalue(users.getCompany2());
-		model.addAttribute("judgeused", judgeused);
+		
+		
+		List<Otherpa>opList=new ArrayList<Otherpa>();
+		Judgeused judgeused1=cellgetvalue.GetCellvalue(users.getCompany1());
+		Judgeused judgeused2=cellgetvalue.GetCellvalue(users.getCompany2());
+		Judgeused judgeused3=cellgetvalue.GetCellvalue(users.getCompany3());
+		
+		Otherpa opa_oa=new Otherpa();
+		opa_oa.setCompany1(judgeused1.getOa());
+		opa_oa.setCompany2(judgeused2.getOa());
+		opa_oa.setCompany3(judgeused3.getOa());
+
+		opList.add(opa_oa);
+		
+		Otherpa opa_ob=new Otherpa();
+		opa_ob.setCompany1(judgeused1.getOb());
+		opa_ob.setCompany2(judgeused2.getOb());
+		opa_ob.setCompany3(judgeused3.getOb());
+		opList.add(opa_ob);
+
+		Otherpa opa_oc=new Otherpa();
+		opa_oc.setCompany1(judgeused1.getOc());
+		opa_oc.setCompany2(judgeused2.getOc());
+		opa_oc.setCompany3(judgeused3.getOc());
+		opList.add(opa_oc);
+
+		model.addAttribute("opList", opList);
 		return "list";
 	}
 
