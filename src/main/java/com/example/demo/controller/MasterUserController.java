@@ -74,8 +74,24 @@ public class MasterUserController {
 		return "masteruser";
     }
 
+	//会社情報一覧
+	@GetMapping("/companylist")
+	public String companylist(Model model){
 
-    
-    
-    
+	//TODO セッション管理する
+
+		List<CompanyInfo> ciList = new ArrayList<CompanyInfo>();
+		ciList = ciService.searchAllCompanyInfo();
+		model.addAttribute("ciList", ciList);
+		return "companyList";
+	}  
+
+	@RequestMapping("/cidelete")
+	public String deleteuser(@RequestParam("id") String id, Model model){
+		ciService.delete(Integer.valueOf(id));
+		List<CompanyInfo> ciList = ciService.searchAllCompanyInfo();
+		model.addAttribute("ciList", ciList);
+		return "companyList";
+	}
+	   
 }
