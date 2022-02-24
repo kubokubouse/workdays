@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.File;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
@@ -24,10 +23,9 @@ import org.springframework.validation.BindingResult;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.repository.CompanyInfoRepository;
-import com.example.demo.WorkdaysProperties;
 
 @Controller
-public class MasterUserController extends WorkdaysProperties{
+public class MasterUserController {
 
 	private final CompanyInfoRepository repository;
 
@@ -72,21 +70,12 @@ public class MasterUserController extends WorkdaysProperties{
         ci.setBanned(0);
 		repository.save(ci);
 
-		//Input,OutputFolder作成
-		File inputFile = new File(getInputFolderPath(ci.getCompany_name()));
-		File outputFile = new File(getOutputFolderPath(ci.getCompany_name()));
-
-		try {
-			inputFile.createNewFile();
-			outputFile.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 		//TODO セッション管理つける
 		return "masteruser";
     }
-  
+
+
+    
     
     
 }
