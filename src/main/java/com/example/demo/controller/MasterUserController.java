@@ -21,17 +21,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
 
 import com.example.demo.model.CompanyInfo;
+import com.example.demo.model.ContractData;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.repository.CompanyInfoRepository;
+import com.example.demo.repository.ContractDataRepository;
 
 @Controller
 public class MasterUserController {
 
-	private final CompanyInfoRepository repository;
+	private final CompanyInfoRepository companyRepository;
+	private final ContractDataRepository contractRepository;
 
 	@Autowired
-    public MasterUserController(CompanyInfoRepository repository){
-        this.repository = repository;
+    public MasterUserController(CompanyInfoRepository cirepository, ContractDataRepository cDataRepository){
+        this.companyRepository = cirepository;
+		this.contractRepository = cDataRepository;
     }
 
     @Autowired
@@ -60,15 +64,25 @@ public class MasterUserController {
 		return "confirm_companyInfo";
 	}
 
-    //会社情報をDBに登録
+    //会社情報、契約情報をDBに登録
 	@PostMapping("/ci_regist")
-    public String regist(@Validated @ModelAttribute CompanyInfo ci, BindingResult result, Model model){
+    public String regist(@Validated @ModelAttribute CompanyInfo ci, BindingResult result, 
+		@ModelAttribute ContractData cData, Model model){
 		
         if (result.hasErrors()){
 			return "confirm_companyInfo";
 		}
         ci.setBanned(0);
-		repository.save(ci);
+		companyRepository.save(ci);
+
+		//契約情報も登録する
+		cData.setCompanyID(ci.getCompanyID());
+		cData.setRegister(ci.getStart_contract());
+		cData.setStart_contract(ci.getStart_contract());
+		cData.setEnd_contract(ci.getEnd_contract());
+		cData.setLimited_user(ci.getLimited_user());
+
+		contractRepository.save(cData);
 
 		//TODO セッション管理つける
 		return "masteruser";
@@ -87,11 +101,32 @@ public class MasterUserController {
 	}  
 
 	@RequestMapping("/cidelete")
-	public String deleteuser(@RequestParam("id") String id, Model model){
-		ciService.delete(Integer.valueOf(id));
+	public String deleteCompany(@RequestParam("id") String id, Model model){
+		ciService.deleteCompany(Integer.valueOf(id));
 		List<CompanyInfo> ciList = ciService.searchAllCompanyInfo();
 		model.addAttribute("ciList", ciList);
 		return "companyList";
 	}
+
+		//契約情報一覧
+	@GetMapping("/contractlist")
+	public String contractlist(Model model){
+	
+		//TODO セッション管理する
+	
+		List<ContractData> ciList = ciService.searchAllContractData();
+		model.addAttribute("ciList", ciList);
+		return "contractlist";
+	}
+
+	@RequestMapping("/cddelete")
+	public String deletContract(@RequestParam("id") String id, Model model){
+		ciService.deleteContract(Integer.valueOf(id));
+		List<ContractData> ciList = ciService.searchAllContractData();
+		model.addAttribute("ciList", ciList);
+		return "contractlist";
+	}
+	
+	
 	   
 }

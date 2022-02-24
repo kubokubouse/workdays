@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.demo.repository.CompanyInfoRepository;
+import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.model.CompanyInfo;
+import com.example.demo.model.ContractData;
 
 @Service
 @Transactional
@@ -15,6 +17,8 @@ public class CompanyInfoService {
 
     @Autowired
     CompanyInfoRepository companyInfoRepository;
+    @Autowired
+    ContractDataRepository contractDataRepository;
 
     public CompanyInfo findByCompanyID(int id){
     	return companyInfoRepository.findById(id);
@@ -25,9 +29,18 @@ public class CompanyInfoService {
 		return companyList;
 	}
 
+    public List<ContractData> searchAllContractData() {
+		List<ContractData> contractList = contractDataRepository.findAll();
+		return contractList;
+	}
     
-	public void delete(int id){
+	public void deleteCompany(int id){
 		CompanyInfo ci = companyInfoRepository.findById(id);
         companyInfoRepository.delete(ci);
+    }
+
+	public void deleteContract(int id){
+		ContractData cd = contractDataRepository.findById(id);
+        contractDataRepository.delete(cd);
     }
 }

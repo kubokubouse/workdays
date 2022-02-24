@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="契約一覧"></title>
+  <script th:src="@{https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js}"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <meta charset="utf-8" />
+
+  <style>
+  .tr_color0 {
+
+ vertical-align: middle;
+}
+
+  .tr_color1 {
+  background-color: #EAF6FD;
+  vertical-align: middle;
+}
+.tr_color2 {
+  background-color: #ED5353;
+ vertical-align: middle;
+}
+
+body {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  padding: 0;
+  width: 850px;
+  table-layout: fixed;
+}
+thead th{
+  padding: 1em .8em;
+  border-right: 5px solid#fff;
+  background-color: #eee;;
+}
+table tr {
+  background-color: #fff;
+  padding: .35em;
+}
+
+h1 {
+  border-bottom: solid 3px skyblue;
+  position: relative;
+}
+
+h1:after {
+  position: absolute;
+  content: " ";
+  display: block;
+  border-bottom: solid 3px #ffc778;
+  bottom: -3px;
+  width: 30%;
+}
+
+a{
+  position: relative;
+  display: inline-block;
+  transition: .3s;
+  text-decoration: none;
+}
+
+a::after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  content: '';
+  width: 0;
+  height: 2px;
+  background-color: #31aae2;
+  transition: .3s;
+  transform: translateX(-50%);
+}
+
+a:hover::after{
+  width: 100%;
+}
+
+.tabs {
+  margin-left: 100px;
+  margin-top: 50px;
+}
+
+</style>
+
+<script>
+  
+</script>
+
+</head>
+<body>
+  <div class="container">
+    <div th:if="${validationError}" th:each="error : ${validationError}">
+      <label class="text-danger" th:text="${error}"></label>
+    </div>
+    <h1>契約一覧</h1>
+    <form th:action="@{/userlistUpdate}" th:object="${ciList}" th:method="post">
+
+      <br/>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>会社ID</th>
+            <th>登録日</th>
+            <th>開始日</th>
+            <th>終了日</th>
+            <th>上限ユーザー数</th>
+            <th>ランク</th>
+            <th>税抜き価格</th>
+            <th>税込み価格</th>
+            
+          </tr>
+        </thead>
+        
+        <tbody>
+          <tr th:each="user, st : ${ciList}" >
+
+            <td>
+              <input type="text" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >
+            </td>
+            <td>
+              <input type="text" class="form-control" th:name="topup_contract" th:value="${user.register}">
+            </td>
+            <td>
+              <input type="text" class="form-control" th:name="start_contract" th:value="${user.start_contract}" >
+            </td>
+            
+            <td>
+              <input type="text" class="form-control" th:name="end_contract" th:value="${user.end_contract}">
+            </td>
+           
+            <td>
+              <input type="text" class="form-control" th:name="limited_user" th:value="${user.limited_user}">
+            </td>
+            <td>
+              <input type="text" class="form-control" th:name="user_rank" th:value="${user.user_rank}">
+            </td>
+            <td>
+              <input type="text" class="form-control" th:name="tax_include" th:value="${user.tax_include}">
+            </td>
+            <td>
+              <input type="text" class="form-control" th:name="tax_exclude" th:value="${user.tax_exclude}">
+            </td>
+            
+
+            <td>
+              <form th:action="@{/cddelete}">
+                <input type="hidden" name="id" th:value="${user.companyID}" />
+                <input type="submit" value="削除">
+
+              </form>
+            </td>
+            
+            
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    
+    
+
+
+  </div>
+  <p><a href="/">ログアウト</a></p>
+</body>
+</html>
