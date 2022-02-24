@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>会社情報画面</title>
+</head>
+
+<body>
+  <header>
+    <h1>会社情報登録</h1>
+  </header>
+
+  <main id="contents">
+    <form id="entryForm" th:action="@{/send_company_info}" th:object="${companyInfo}"method="post" novalidate>
+    <table class="entryTable" border="1">
+
+    <tr>
+      <th>企業名</th>
+      <td>
+        <label for="company_name"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{company_name}">
+       <div class="invalid-feedback" th:errors="*{company_name}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>登録日</th>
+      <td>
+        <label for="start_contract"></label>
+        <input type="date" class="register-control"
+        th:errorclass="is-invalid" th:field="*{start_contract}">
+        <div class="invalid-feedback" th:errors="*{start_contract}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>更新日</th>
+      <td>
+        <label for="topup_contract"></label>
+        <input type="date" class="register-control"
+        th:errorclass="is-invalid" th:field="*{topup_contract}">
+       <div class="invalid-feedback" th:errors="*{topup_contract}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>終了予定日</th>
+      <td>
+        <label for="end_contract"></label>
+        <input type="date" class="register-control"
+        th:errorclass="is-invalid" th:field="*{end_contract}">
+       <div class="invalid-feedback" th:errors="*{end_contract}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>担当者名</th>
+      <td>
+        <label for="person"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{person}">
+       <div class="invalid-feedback" th:errors="*{person}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>電話番号</th>
+      <td>
+        <label for="tel"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{tel}">
+       <div class="invalid-feedback" th:errors="*{tel}"></div>
+      </td>
+    </tr>
+
+    
+    <tr>
+      <th>メールアドレス </th>
+      <td>
+        <label for="mail"></label>
+      <input type="text" class="register-control"
+      th:errorclass="is-invalid" th:field="*{mail}">
+       <div class="invalid-feedback" th:errors="*{mail}"></div>
+        <small>※半角で入力してください</small>
+      </td>
+    </tr>
+
+
+    <tr>
+      <th>会社HP</th>
+      <td>
+        <label for="homepage"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{homepage}">
+       <div class="invalid-feedback" th:errors="*{homepage}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>上限ユーザー</th>
+      <td>
+        <label for="limited_user"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{limited_user}">
+       <div class="invalid-feedback" th:errors="*{limited_user}"></div>
+      </td>
+    </tr>
+
+  </table>
+
+  <div class="send">
+    <input type="reset" value="クリア">
+    <input type="submit" value="登録">
+  </div>
+</form>
+</main>
+
+  <p><a href="/">ログアウト</a></p>
+
+</body>
+</html>
+
+<style>
+
+  body {
+    font-family: sans-serif;
+    margin: center;
+    text-align: center;
+  }
+
+  h1 {
+    border-bottom: solid 3px skyblue;
+    position: relative;
+    font-family: sans-serif;
+  }
+  
+  h1:after {
+    position: absolute;
+    content: " ";
+    display: block;
+    border-bottom: solid 3px #ffc778;
+    bottom: -3px;
+    width: 30%;
+  }
+
+  .entryTable {
+    margin: auto;
+    border: 0px none;
+    text-align: center;
+  }
+
+  th {
+    background-color: #CCCCFF;
+    color: black;
+  }
+  
+  td {
+  padding-left: 10px;
+  text-align: left;
+  }
+  
+  .send {
+    margin-top: 20px;
+  }
+
+  a {
+    display: block;
+    padding-top: 10px;
+  }
+</style>
