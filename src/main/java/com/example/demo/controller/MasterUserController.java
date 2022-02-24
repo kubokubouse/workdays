@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.File;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
@@ -25,9 +26,10 @@ import com.example.demo.model.ContractData;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.repository.CompanyInfoRepository;
 import com.example.demo.repository.ContractDataRepository;
+import com.example.demo.WorkdaysProperties;
 
 @Controller
-public class MasterUserController {
+public class MasterUserController extends WorkdaysProperties{
 
 	private final CompanyInfoRepository companyRepository;
 	private final ContractDataRepository contractRepository;
@@ -84,6 +86,17 @@ public class MasterUserController {
 
 		contractRepository.save(cData);
 
+		//テンプレ格納フォルダを作成
+		File input = getInputFolder(ci.getCompanyID());
+		File output = getOutputFolder(ci.getCompanyID());
+
+		try {
+			input.createNewFile();
+			output.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		//TODO セッション管理つける
 		return "masteruser";
     }
@@ -100,11 +113,20 @@ public class MasterUserController {
 		return "companyList";
 	}  
 
+	//会社情報削除
 	@RequestMapping("/cidelete")
 	public String deleteCompany(@RequestParam("id") String id, Model model){
 		ciService.deleteCompany(Integer.valueOf(id));
 		List<CompanyInfo> ciList = ciService.searchAllCompanyInfo();
 		model.addAttribute("ciList", ciList);
+
+		//テンプレ格納フォルダも削除
+		File input = getInputFolder(Integer.valueOf(id));
+		File output = getOutputFolder(Integer.valueOf(id));
+
+		input.delete();
+		output.delete();
+
 		return "companyList";
 	}
 

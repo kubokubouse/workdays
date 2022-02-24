@@ -1,18 +1,21 @@
 package com.example.demo;
 
+import java.io.File;
+
 public class WorkdaysProperties {
 
-    public static String inputFolder = "C:/久保さん/PropertyFiles";
-    public static String outputFolder = "C:/久保さん/OutputFiles";
+    public static String basePath = "C:/pleiades/workdays/workdays/src/main/resources/";
+    // public static String basePath = "C:/久保さん/";
     public static String outputFileName = "勤怠表.xls";
     public static String cccExcelFile = "/apache/htdocs/image/test.xlsx";
 
-    //久保さん
-	// String inputFolder = "C:/久保さん/PropertyFiles";
-	// String outputFolder = "C:/久保さん/OutputFiles;
-
-    public String getOutputFile() {
-        return outputFolder + "/" + outputFileName;
+    public File getInputFolder(int companyID) {
+        File inputFile = new File(basePath + companyID + "_input");
+        return inputFile;
+    }
+    public File getOutputFolder(int companyID) {
+        File outputFile = new File(basePath + companyID + "_output");
+        return outputFile;
     }
     
 }
