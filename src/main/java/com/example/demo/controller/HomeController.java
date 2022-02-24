@@ -29,6 +29,7 @@ import com.example.demo.model.Login;
 import com.example.demo.model.StringListParam;
 import com.example.demo.model.User;
 import com.example.demo.model.SuperUser;
+import com.example.demo.model.RePassword;
 import com.example.demo.model.Workdays;
 import com.example.demo.model.WorkingListParam;
 import com.example.demo.model.YearMonth;
@@ -64,11 +65,7 @@ public class HomeController extends WorkdaysProperties{
 	@GetMapping("/")
 	public String login(@ModelAttribute Login login){
 		session.removeAttribute("Data");
-		CellvalueGet cellgetvalue=new CellvalueGet();
-		Judgeused judgeused=cellgetvalue.GetCellvalue("コネクトクルー");
-		System.out.println(judgeused.getOa());
-		System.out.println(judgeused.getOb());
-		System.out.println(judgeused.getOc());
+		
 		//return "login";
 		return "login2";
 	}
@@ -336,4 +333,43 @@ public class HomeController extends WorkdaysProperties{
 
 		return "done";
 	}	
+	
+	//パスワード忘れた人用の処理 メール送信画面へ飛ぶ
+	@GetMapping("/forgetpassword")
+	public String forgetpassword (@ModelAttribute User user){
+		
+		return "repass";
+	}
+
+	//送信されたメアドに対してリンクを送る
+	@PostMapping("/repassmail")
+	public String repassmail (@ModelAttribute User user){
+		mailsendService.send(user.getEmail());
+		return "maildone";
+	}
+	//リンク踏んだ奴に対する処理
+	@RequestMapping("/renewpass")
+	public String renewpass (@ModelAttribute User users, RePassword rePassword, Model model, @RequestParam String email){
+		User user=userService.findEmail(email);
+		session.setAttribute("passworduser" ,user);
+		int flag=0;
+		model.addAttribute("flag", flag);
+		return "/newpassword";
+	}
+	
+	//新規パスワードが送られてきた場合の処理
+	@PostMapping("/inputpassword")
+	public String inputpassword (@ModelAttribute User user, RePassword rePassword, Model model){
+		User passworduser=(User)session.getAttribute("passworduser");
+		String pass=rePassword.getPassword();
+		String confirm=rePassword.getConfirmpassword();
+		if(pass.equals(confirm)){
+			passworduser.setPassword(pass);
+			userService.update(passworduser);
+			return "renewdone";
+		}
+		int flag=1;
+		model.addAttribute("flag", flag);
+		return "newpassword";
+	}
 }
