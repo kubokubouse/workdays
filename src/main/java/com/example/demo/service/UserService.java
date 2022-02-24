@@ -30,6 +30,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Holiday;
+import com.example.demo.model.MasterUser;
+import com.example.demo.repository.MasterUserRepository;
 import com.example.demo.model.StringList;
 import com.example.demo.model.StringListParam;
 import com.example.demo.model.SuperUserLogin;
@@ -63,6 +65,9 @@ public class UserService{
     @Autowired
     HolidayService holidayService;
 
+	@Autowired
+	MasterUserRepository masterRepository;
+
     @Value("${worklist.path}")
     private String path;
 
@@ -76,7 +81,10 @@ public class UserService{
 	public SuperUserLogin findIdAndPass(String id, String pass) {
 		return suserRepository.findByIdAndPass(id, pass);
 	}
-
+	//マスターユーザーログイン処理
+	public MasterUser findIdPass(String id, String password) {
+		return masterRepository.findByIdAndPassword(id, password);
+	}
 
     public void insert(User user){
         userRepository.save(user);

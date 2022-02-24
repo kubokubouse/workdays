@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
-
+import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 
 import com.example.demo.model.Login;
 import com.example.demo.model.User;
+import com.example.demo.model.MasterUser;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.SuperUserLogin;
@@ -32,6 +33,10 @@ import com.example.demo.WorkdaysProperties;
 @Controller
 
 public class MasterController {
+
+    @Autowired
+    UserService userService;
+
     @GetMapping("/master")
 	public String master(@ModelAttribute Login login){
 
@@ -39,7 +44,13 @@ public class MasterController {
 	}
 
     @RequestMapping("/masterlogin")
-	public String masterlogin(@ModelAttribute User user){
+	public String masterlogin(@ModelAttribute Login login){
+        String id = login.getEmail();
+		String password = login.getPassword();
+        MasterUser masterUser=userService.findIdPass(id, password);
+        if(masterUser==null){
+            return "masterloginfault";
+        }
 
 		return "masteruser";
 	}
