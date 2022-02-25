@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,16 +20,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+//@Table(name = "super_user")
 public class SuperUser{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    @NotBlank
-	 private String id;
-
-
+	private Integer id;
+	
+	@Column
+	private String pass;
 
 	@Column
-	@NotBlank
-	  private String pass;
+	
+	private String email;
+
+	@Column
+	private Integer companyID;
 }
