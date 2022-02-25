@@ -25,7 +25,7 @@ public class CellvalueGet {
         judgeused.setOb(0);
         judgeused.setOc(0);
         //使用するテンプレートファイルのパスを定義する
-        String inputFilePath = WorkdaysProperties.inputFolder + "/" + companyname + ".xls";
+        String inputFilePath = WorkdaysProperties.basePath + "/" + companyname + ".xls";
         //ファイルのコピー
         File inputFileObject = new File(inputFilePath);
 
