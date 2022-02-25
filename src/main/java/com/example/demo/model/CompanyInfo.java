@@ -36,17 +36,17 @@ public class CompanyInfo
 	  private Date register;
 
 	  @Column
-	  private Date start_contract;
+	  private Date startContract;
 
 	 @Column
-	  private Date topup_contract;
+	  private Date topupContract;
 	  
 	 @Column
-	 private Date end_contract;
+	 private Date endContract;
 
 	 @Column
 	 @NotEmpty
-	 private String company_name;
+	 private String companyName;
 
 	  @Column
 	  @Email
@@ -65,6 +65,6 @@ public class CompanyInfo
 	  private Integer banned;
 
 	  @Column
-	  private Integer limited_user;
+	  private Integer limitedUser;
 
 }

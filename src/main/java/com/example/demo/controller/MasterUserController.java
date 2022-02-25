@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Date;
 import java.io.File;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
@@ -43,10 +44,17 @@ public class MasterUserController extends WorkdaysProperties{
     @Autowired
     CompanyInfoService ciService;
 
+	//メニュー　<p><a href="/masteruser">メニュー画面へ戻る</a></p>
+	@GetMapping("/masteruser")
+	public String showMenue(@ModelAttribute CompanyInfo companyInfo){
+		//TODO セッション管理
+		return "masteruser";
+	}
+
     //会社情報登録画面
     @GetMapping("/company_info")
 	public String register_superUser(@ModelAttribute CompanyInfo companyInfo){
-		
+	//TODO セッション管理	
 		return "company_info";
 	}
 
@@ -79,10 +87,10 @@ public class MasterUserController extends WorkdaysProperties{
 
 		//契約情報も登録する
 		cData.setCompanyID(ci.getCompanyID());
-		cData.setRegister(ci.getStart_contract());
-		cData.setStart_contract(ci.getStart_contract());
-		cData.setEnd_contract(ci.getEnd_contract());
-		cData.setLimited_user(ci.getLimited_user());
+		cData.setRegister(ci.getStartContract());
+		cData.setStartContract(ci.getStartContract());
+		cData.setEndContract(ci.getEndContract());
+		cData.setLimitedUser(ci.getLimitedUser());
 
 		contractRepository.save(cData);
 
@@ -113,6 +121,51 @@ public class MasterUserController extends WorkdaysProperties{
 		return "companyList";
 	}  
 
+	//会社情報更新
+	@PostMapping("/updateCompanyInfo")
+	public String UpdateCompanyInfo(@RequestParam String inputvalue, String userid, String name, Model model){	
+		CompanyInfo ci = ciService.findByCompanyID(Integer.parseInt(userid));
+        System.out.println(name);
+        System.out.println(inputvalue);
+
+		switch (name) {
+			case "companyName":
+			  ci.setCompanyName(inputvalue);
+			  break;
+			case "startContract":
+			  ci.setStartContract(Date.valueOf(inputvalue));
+			  break;
+			  case "topupContract":
+			  ci.setTopupContract(Date.valueOf(inputvalue));
+			  break;
+			case "endContract":
+			  ci.setEndContract(Date.valueOf(inputvalue));
+			  break;
+			case "person":
+			  ci.setPerson(inputvalue);
+			  break;
+			case "tel":
+			  ci.setTel(inputvalue);
+			  break;
+			case "mail":
+			  ci.setMail(inputvalue);
+			  break;
+			case "homepage":
+			  ci.setHomepage(inputvalue);;
+			  break;
+			case "limitedUser":
+			  ci.setLimitedUser(Integer.valueOf(inputvalue));
+			  break;
+            case "banned":
+			  ci.setBanned(Integer.valueOf(inputvalue));
+			  break;
+			} 
+		companyRepository.save(ci);
+		List<CompanyInfo> ciList = ciService.searchAllCompanyInfo();
+		model.addAttribute("ciList", ciList);
+		return "companyList";
+	}
+
 	//会社情報削除
 	@RequestMapping("/cidelete")
 	public String deleteCompany(@RequestParam("id") String id, Model model){
@@ -141,6 +194,7 @@ public class MasterUserController extends WorkdaysProperties{
 		return "contractlist";
 	}
 
+	//契約情報削除
 	@RequestMapping("/cddelete")
 	public String deletContract(@RequestParam("id") String id, Model model){
 		ciService.deleteContract(Integer.valueOf(id));
@@ -148,6 +202,42 @@ public class MasterUserController extends WorkdaysProperties{
 		model.addAttribute("ciList", ciList);
 		return "contractlist";
 	}
+
+		//契約情報更新
+		@PostMapping("/updateContract")
+		public String UpdateContract(@RequestParam String inputvalue, String userid, String name, Model model){	
+			ContractData cd = ciService.findContractByCompanyID(Integer.parseInt(userid));
+			System.out.println(name);
+			System.out.println(inputvalue);
+	
+			switch (name) {
+				case "register":
+				  cd.setRegister(Date.valueOf(inputvalue));
+				  break;
+				case "startContract":
+				  cd.setStartContract(Date.valueOf(inputvalue));
+				  break;
+				case "endContract":
+				  cd.setEndContract(Date.valueOf(inputvalue));
+				  break;
+				case "limitedUser":
+				  cd.setLimitedUser(Integer.valueOf(inputvalue));
+				  break;
+				case "userRank":
+				  cd.setUserRank(inputvalue);
+				  break;
+				case "taxInclude":
+				  cd.setTaxInclude(Integer.valueOf(inputvalue));
+				  break;
+				case "taxExclude":
+				  cd.setTaxExclude(Integer.valueOf(inputvalue));
+				  break;
+				} 
+			contractRepository.save(cd);
+			List<ContractData> ciList = ciService.searchAllContractData();
+			model.addAttribute("ciList", ciList);
+			return "contractlist";
+		}
 	
 	
 	   

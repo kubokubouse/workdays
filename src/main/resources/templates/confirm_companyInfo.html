@@ -12,22 +12,22 @@
 
   <tr>
     <th>企業名</th>
-    <td>[[${companyInfo.company_name}]] </td>
+    <td>[[${companyInfo.companyName}]] </td>
   </tr>
 
   <tr>
     <th>登録日</th>
-    <td>[[${companyInfo.start_contract}]] </td>
+    <td>[[${companyInfo.startContract}]] </td>
   </tr>
 
   <tr>
     <th>更新日</th>
-    <td>[[${companyInfo.topup_contract}]] </td>
+    <td>[[${companyInfo.topupContract}]] </td>
   </tr>
 
   <tr>
     <th>終了予定日</th>
-    <td>[[${companyInfo.end_contract}]] </td>
+    <td>[[${companyInfo.endContract}]] </td>
   </tr>
 
   <tr>
@@ -52,7 +52,7 @@
 
   <tr>
     <th>上限ユーザー</th>
-    <td>[[${companyInfo.limited_user}]] </td>
+    <td>[[${companyInfo.limitedUser}]] </td>
   </tr>
 
 </table>
@@ -62,15 +62,15 @@
   <form  th:action="@{/ci_regist}" th:object="${companyInfo}"method="post" >
     <label for="name"></label>
     <input type="hidden" th:field="*{companyID}">
-    <input type="hidden" th:field="*{start_contract}">
-    <input type="hidden" th:field="*{topup_contract}">
-    <input type="hidden" th:field="*{end_contract}">
-    <input type="hidden" th:field="*{company_name}">
+    <input type="hidden" th:field="*{startContract}">
+    <input type="hidden" th:field="*{topupContract}">
+    <input type="hidden" th:field="*{endContract}">
+    <input type="hidden" th:field="*{companyName}">
     <input type="hidden" th:field="*{person}">
     <input type="hidden" th:field="*{tel}">
     <input type="hidden" th:field="*{mail}">
     <input type="hidden" th:field="*{homepage}">
-    <input type="hidden" th:field="*{limited_user}">
+    <input type="hidden" th:field="*{limitedUser}">
     <input type="submit" value="登録">
   </form>
 </div>

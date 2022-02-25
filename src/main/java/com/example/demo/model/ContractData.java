@@ -35,21 +35,21 @@ public class ContractData
 	  private Date register;
 
 	  @Column
-	  private Date start_contract;
+	  private Date startContract;
 	  
 	 @Column
-	 private Date end_contract;
+	 private Date endContract;
 
 	  @Column
-	  private Integer limited_user;
+	  private Integer limitedUser;
 
 	  @Column
-	  private String user_rank;
+	  private String userRank;
 
 	  @Column
-	  private Integer tax_include;
+	  private Integer taxInclude;
 	  
 	 @Column
-	 private Integer tax_exclude;
+	 private Integer taxExclude;
 
 }

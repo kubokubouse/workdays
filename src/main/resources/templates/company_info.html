@@ -17,10 +17,10 @@
     <tr>
       <th>企業名</th>
       <td>
-        <label for="company_name"></label>
+        <label for="companyName"></label>
         <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{company_name}">
-       <div class="invalid-feedback" th:errors="*{company_name}"></div>
+        th:errorclass="is-invalid" th:field="*{companyName}">
+       <div class="invalid-feedback" th:errors="*{companyName}"></div>
       </td>
     </tr>
 
@@ -29,8 +29,8 @@
       <td>
         <label for="start_contract"></label>
         <input type="date" class="register-control"
-        th:errorclass="is-invalid" th:field="*{start_contract}">
-        <div class="invalid-feedback" th:errors="*{start_contract}"></div>
+        th:errorclass="is-invalid" th:field="*{startContract}">
+        <div class="invalid-feedback" th:errors="*{startContract}"></div>
       </td>
     </tr>
 
@@ -39,8 +39,8 @@
       <td>
         <label for="topup_contract"></label>
         <input type="date" class="register-control"
-        th:errorclass="is-invalid" th:field="*{topup_contract}">
-       <div class="invalid-feedback" th:errors="*{topup_contract}"></div>
+        th:errorclass="is-invalid" th:field="*{topupContract}">
+       <div class="invalid-feedback" th:errors="*{topupContract}"></div>
       </td>
     </tr>
 
@@ -49,8 +49,8 @@
       <td>
         <label for="end_contract"></label>
         <input type="date" class="register-control"
-        th:errorclass="is-invalid" th:field="*{end_contract}">
-       <div class="invalid-feedback" th:errors="*{end_contract}"></div>
+        th:errorclass="is-invalid" th:field="*{endContract}">
+       <div class="invalid-feedback" th:errors="*{endContract}"></div>
       </td>
     </tr>
 
@@ -102,8 +102,8 @@
       <td>
         <label for="limited_user"></label>
         <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{limited_user}">
-       <div class="invalid-feedback" th:errors="*{limited_user}"></div>
+        th:errorclass="is-invalid" th:field="*{limitedUser}">
+       <div class="invalid-feedback" th:errors="*{limitedUser}"></div>
       </td>
     </tr>
 
@@ -115,7 +115,7 @@
   </div>
 </form>
 </main>
-
+  <p><a href="/masteruser">メニュー画面へ戻る</a></p> 
   <p><a href="/">ログアウト</a></p>
 
 </body>

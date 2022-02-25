@@ -23,6 +23,15 @@ public class CompanyInfoService {
     public CompanyInfo findByCompanyID(int id){
     	return companyInfoRepository.findById(id);
 	}
+
+	public ContractData findContractByCompanyID(int id){
+    	return contractDataRepository.findById(id);
+	}
+
+	public List<CompanyInfo> findByCompanyName(String companyName) {
+		List<CompanyInfo> ci = companyInfoRepository.findByCompanyName(companyName);
+		return ci;
+	}
     
 	public List<CompanyInfo> searchAllCompanyInfo() {
 		List<CompanyInfo> companyList = companyInfoRepository.findAll();

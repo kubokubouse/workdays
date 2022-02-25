@@ -89,7 +89,32 @@ a:hover::after{
 </style>
 
 <script>
-  
+  $(function(){
+    
+    // 値が更新されたときの処理
+    $('input').change(function(){
+      var inputvalue = $(this).val();
+      var userid = $(this).attr('companyid');
+      var name = $(this).attr('name');
+      $.ajax({
+        url: "/updateCompanyInfo",
+        type: "POST",
+        data: {
+          inputvalue : inputvalue,
+          userid : userid,
+          name : name
+        }
+      }).done(function (result) {
+        // 通信成功時のコールバック
+        alert("更新成功")
+      }).fail(function () {
+        // 通信失敗時のコールバック
+        alert("更新失敗");
+      }).always(function (result) {
+        // 常に実行する処理
+      });
+    });
+  })
 </script>
 
 </head>
@@ -99,7 +124,6 @@ a:hover::after{
       <label class="text-danger" th:text="${error}"></label>
     </div>
     <h1>契約会社一覧</h1>
-    <form th:action="@{/userlistUpdate}" th:object="${ciList}" th:method="post">
 
       <br/>
 
@@ -126,42 +150,42 @@ a:hover::after{
           <tr th:each="user, st : ${ciList}" >
 
             <td>
-              <input type="text" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >
+              <input type="text" th:companyid="${user.companyID}" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >
             </td>
             
             <td>
-              <input type="text" th:id="${user.company_name}" class="form-control" th:name="company_name" th:value="${user.company_name}" >
+              <input type="text" th:companyid="${user.companyID}" th:id="${user.companyName}" class="form-control" th:name="companyName" th:value="${user.companyName}" >
             </td>
             
             <td>
-              <input type="text" class="form-control" th:name="start_contract" th:value="${user.start_contract}" >
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="startContract" th:value="${user.startContract}" >
             </td>
             <td>
-              <input type="text" class="form-control" th:name="topup_contract" th:value="${user.topup_contract}">
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="topupContract" th:value="${user.topupContract}">
             </td>
             <td>
-              <input type="text" class="form-control" th:name="end_contract" th:value="${user.end_contract}">
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="endContract" th:value="${user.endContract}">
             </td>
             <td>
-              <input type="text" class="form-control" th:name="person" th:value="${user.person}">
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="person" th:value="${user.person}">
             </td>
             <td>
-              <input type="text" class="form-control" th:name="tel" th:value="${user.tel}">
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="tel" th:value="${user.tel}">
             </td>
             <td>
-              <input type="text" class="form-control" th:name="mail" th:value="${user.mail}">
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="mail" th:value="${user.mail}">
             </td>
             <td>
-              <input type="text" class="form-control" th:name="homepage" th:value="${user.homepage}">
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="homepage" th:value="${user.homepage}">
             </td>
 
             <td>
-              <input type="text" class="form-control" th:name="limited_user" th:value="${user.limited_user}">
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="limitedUser" th:value="${user.limitedUser}">
             </td>
             
             <div th:if="${user.banned==0}">
               <td>
-                <select name="banned">
+                <select name="banned" th:companyid="${user.companyID}">
                   <option value="0" selected>許可</option>
                   <option value="1">禁止</option>
                   
@@ -191,12 +215,12 @@ a:hover::after{
           </tr>
         </tbody>
       </table>
-    </form>
     
     
 
 
   </div>
+  <p><a href="/masteruser">メニュー画面へ戻る</a></p>
   <p><a href="/">ログアウト</a></p>
 </body>
 </html>
