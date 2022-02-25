@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
 import java.io.FileOutputStream;
-import java.io.File;
+import java.io.*;
+import java.nio.*;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,9 @@ import com.example.demo.service.HolidayService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.UserListParam;
+import com.example.demo.model.IndividualData;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.IndividualDataRepository;
 import com.example.demo.WorkdaysProperties;
 
 
@@ -34,11 +37,13 @@ import com.example.demo.WorkdaysProperties;
 public class AdminController extends WorkdaysProperties{
 
     private final UserRepository repository;
+    private final IndividualDataRepository idRepository;
 
     @Autowired
     HolidayService holidayService;
-    public AdminController(UserRepository repository){
+    public AdminController(UserRepository repository, IndividualDataRepository idRepo){
         this.repository = repository;
+        this.idRepository = idRepo;
     }
 
 	@Autowired
@@ -46,6 +51,8 @@ public class AdminController extends WorkdaysProperties{
 	
 	@Autowired
     UserService userService;
+
+    
 
 	@GetMapping("/logout")
 	public String logout(){
@@ -59,7 +66,6 @@ public class AdminController extends WorkdaysProperties{
 	public String menue(@ModelAttribute User user){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        session.setAttribute("companyId", superUser.getCompanyID());
         
         if (superUser == null) {
             return "accessError";
@@ -70,7 +76,7 @@ public class AdminController extends WorkdaysProperties{
 
     //会員登録ページに移行
 	@GetMapping("/register")
-	public String register(@ModelAttribute User user){
+	public String register(@ModelAttribute IndividualData idData, BindingResult result, Model model){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
         if (superUser == null) {
@@ -81,10 +87,11 @@ public class AdminController extends WorkdaysProperties{
 
     //会員情報入力→確認画面へ
 	@PostMapping("/")
-	public String confirm(@Validated @ModelAttribute User user,BindingResult result){
+	public String confirm(@Validated @ModelAttribute IndividualData idData,BindingResult result){
 		//メアドに重複があった場合重複画面に飛ぶ
-		User usedEmailuser=userService.findEmail(user.getEmail());
-		if(usedEmailuser!=null){
+        IndividualData iData = idRepository.findByMailAndCompanyID(
+            idData.getMail(), (Integer)session.getAttribute("companyId"));
+		if(iData!=null){
 			return "usedemail";
 		}
         
@@ -97,16 +104,21 @@ public class AdminController extends WorkdaysProperties{
 
 	//会員情報をDBに登録
 	@PostMapping("/regist")
-    public String regist(@Validated @ModelAttribute User user, BindingResult result, Model model){
+    public String regist(@Validated @ModelAttribute IndividualData idData, BindingResult result, Model model){
 		
-		model.addAttribute("user", repository.findAll());
+		model.addAttribute("user", idRepository.findAll());
         if (result.hasErrors()){
 			return "confirm";
 		}
-        user.setBanned(0);
-		// COMMENTテーブル：コメント登録
-		repository.save(user);
-		// ルートパス("/") にリダイレクトします
+
+        //個別ユーザーテーブルに登録
+        int companyID = Integer.parseInt((String)session.getAttribute("companyId"));
+        idData.setCompanyID(companyID);
+        idData.setRegistered(1);
+        idData.setBanned(0);
+
+        idRepository.save(idData);
+
 		return "superuser";
     }
 
@@ -119,57 +131,55 @@ public class AdminController extends WorkdaysProperties{
             return "accessError";
         }
 
-		UserListParam userListParam = userService.searchAllUser();
-		model.addAttribute("userListParam", userListParam);
-		return "/userlist";
+		List<IndividualData> iList = userService.searchAllIndividualData();
+		model.addAttribute("userListParam", iList);
+		return "userlist";
 	}
 
 	@RequestMapping(value="/userdelete")
 	public String deleteuser(@RequestParam String userid, Model model){
 		System.out.println(userid);
-		userService.delete(Integer.parseInt(userid));
-		UserListParam userListParam = userService.searchAllUser();
-		model.addAttribute("userListParam", userListParam);
-		return "/userlist";
+		userService.deleteIndividualData(userid);
+		List<IndividualData> iList = userService.searchAllIndividualData();
+		model.addAttribute("userListParam", iList);
+		return "userlist";
 	}
 
 
 	@PostMapping("/UserAjaxServlet")
 	public String AjaxServlet(@RequestParam String inputvalue, String name,String userid, Model model){	
-		User user=userService.findId(Integer.parseInt(userid));
+
+        int companyId = (Integer)session.getAttribute("companyId");
+		IndividualData iData = idRepository.findByMailAndCompanyID(
+            name, companyId);
         System.out.println(name);
         System.out.println(inputvalue);
 
 		switch (name) {
-			case "lastname":
-			  user.setLastname(inputvalue);
+			case "number":
+			  iData.setNumber(inputvalue);
 			  break;
-			case "firsttname":
-			  user.setFirstname(inputvalue);
+			case "name":
+              iData.setName(name);
 			  break;
-			  case "email":
-			  user.setEmail(inputvalue);
-			  break;
-			case "password":
-			  user.setPassword(inputvalue);
+			  case "mail":
+			  iData.setMail(inputvalue);
 			  break;
 			case "company1":
-			  user.setCompany1(inputvalue);
+			  iData.setCompany1(inputvalue);
 			  break;
-			case "company2":
-			  user.setCompany2(inputvalue);
+            case "company2":
+			  iData.setCompany2(inputvalue);
 			  break;
-			case "company3":
-			  user.setCompany3(inputvalue);
-			  break;
-            case "banned":
-			  user.setBanned(Integer.parseInt(inputvalue));
+            case "company3":
+			  iData.setCompany3(inputvalue);
 			  break;
 			} 
-		userService.update(user);
-		UserListParam userListParam = userService.searchAllUser();
-		model.addAttribute("userListParam", userListParam);
-		return "/userlist";
+		userService.updateIndividualData(iData);
+		
+		List<IndividualData> iList = userService.searchAllIndividualData();
+		model.addAttribute("userListParam", iList);
+		return "userlist";
 	}
 
 	//ファイルアップロード画面表示
@@ -199,7 +209,7 @@ public class AdminController extends WorkdaysProperties{
         try {
         // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
-            uploadFile = getInputFolder(companyId);
+            uploadFile = new File(getInputFolder(companyId).getPath() + fileName);
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
                 new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -269,6 +279,79 @@ public class AdminController extends WorkdaysProperties{
         return "templatelist";
     }
 
-    
+    //一括アップロード
+    @GetMapping("/alluserupload")
+    public String allUserUpload() {
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        if (superUser != null) {
+            return "alluserupload";
+        }
+		return "accessError";
+	}
+
+    //ファイルアップロード処理
+    @RequestMapping("/uploadalluser")
+    public String uploadalluser(@RequestParam("file") MultipartFile multipartFile,
+    @ModelAttribute IndividualData idData, Model model) {
+
+        // ファイルが空の場合は異常終了
+        if(multipartFile.isEmpty()){
+        // 異常終了時の処理
+            model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
+            return "templateupload";   
+        }
+
+        //格納先のフルパス ※事前に格納先フォルダ「UploadTest」をCドライブ直下に作成しておく
+        String filePath = WorkdaysProperties.basePath + "/upload.csv";
+
+        try {
+            byte[] bytes = multipartFile.getBytes();
+            BufferedOutputStream uploadFileStream =
+                new BufferedOutputStream(new FileOutputStream(filePath));
+            uploadFileStream.write(bytes);
+            uploadFileStream.close();  
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // アップロードファイルから値を読み込んで保存する
+        BufferedReader br = null;
+        File uploadFile = new File(filePath);
+        try {
+            
+            br = new BufferedReader(new FileReader(uploadFile));
+            // readLineで一行ずつ読み込む
+            String line; // 読み込み行
+            String[] data; // 分割後のデータを保持する配列
+            while ((line = br.readLine()) != null) {
+                // lineをカンマで分割し、配列dataに設定
+                    data = line.split(",");
+                     
+                for (String value : data) {
+                    idData.setNumber(value);
+                    idData.setName(value);
+                    idData.setMail(value);
+                    idData.setCompany1(value);
+                    idData.setCompany2(value);
+                    idData.setCompany3(value);
+                    idData.setBanned(Integer.valueOf(value));                                        
+                }
+                idData.setRegistered(0);
+
+                idRepository.save(idData);
+                
+                br.close();
+                uploadFile.delete();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
+            return "uploadalluser";
+        } 
+        model.addAttribute("error", "ファイルがアップロードされました");
+        return "uploadalluser";
+    }
+  
 
 }

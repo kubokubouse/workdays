@@ -11,52 +11,41 @@
   </header>
 
   <main id="contents">
-    <form id="entryForm" th:action="@{/}" th:object="${user}"method="post" novalidate>
+    <form id="entryForm" th:action="@{/}" th:object="${idData}" method="post" novalidate>
     <table class="entryTable" border="1">
 
+      <tr>
+        <th>社員番号</th>
+        <td>
+          <label for="number"></label>
+          <input type="text" class="register-control"
+          th:errorclass="is-invalid" th:field="*{number}">
+         <div class="invalid-feedback" th:errors="*{number}"></div>
+         </td>
+      </tr>
+
     <tr>
-      <th>氏 </th>
+      <th>氏名</th>
       <td>
         <label for="lastname"></label>
         <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{lastname}">
-       <div class="invalid-feedback" th:errors="*{lastname}"></div>
+        th:errorclass="is-invalid" th:field="*{name}">
+       <div class="invalid-feedback" th:errors="*{name}"></div>
       </td>
     </tr>
-
-    <tr>
-      <th>名 </th>
-      <td>
-        <label for="firstname"></label>
-        <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{firstname}">
-        <div class="invalid-feedback" th:errors="*{firstname}"></div>
-      </td>
-    </tr>
-
     <tr>
       <th>メールアドレス </th>
       <td>
         <label for="email"></label>
       <input type="text" class="register-control"
-      th:errorclass="is-invalid" th:field="*{email}">
-       <div class="invalid-feedback" th:errors="*{email}"></div>
+      th:errorclass="is-invalid" th:field="*{mail}">
+       <div class="invalid-feedback" th:errors="*{mail}"></div>
         <small>※半角で入力してください</small>
       </td>
     </tr>
     <tr>
-      <th>パスワード </th>
-      <td>
-        <label for="password"></label>
-        <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{password}">
-       <div class="invalid-feedback" th:errors="*{password}"></div>
-        <small>※半角英数</small>
-      </td>
-    </tr>
-
     <tr>
-      <th>会社1 </th>
+      <th>会社1</th>
       <td>
         <label for="password"></label>
         <input type="text" class="register-control"
@@ -64,9 +53,8 @@
        <div class="invalid-feedback" th:errors="*{company1}"></div>
       </td>
     </tr>
-
     <tr>
-      <th>会社2 </th>
+      <th>会社2</th>
       <td>
         <label for="password"></label>
         <input type="text" class="register-control"
@@ -74,9 +62,8 @@
        <div class="invalid-feedback" th:errors="*{company2}"></div>
       </td>
     </tr>
-
     <tr>
-      <th>会社3 </th>
+      <th>会社3</th>
       <td>
         <label for="password"></label>
         <input type="text" class="register-control"
@@ -85,9 +72,8 @@
       </td>
     </tr>
 
-
-
   </table>
+  
   <div class="send">
     <input type="reset" value="クリア">
     <input type="submit" value="登録">
