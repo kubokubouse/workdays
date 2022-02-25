@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.model.Otherpa;
 import com.example.demo.model.Holiday;
+import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.StringListParam;
@@ -37,6 +38,7 @@ import com.example.demo.model.YearMonth;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.HolidayService;
+import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.CompanyInfoService;
@@ -61,6 +63,8 @@ public class HomeController extends WorkdaysProperties{
     WorkdaysService workdaysService;
 	@Autowired
     HolidayService holidayService;
+	@Autowired
+    IndividualService individualService;
     public HomeController(UserRepository repository){
         this.repository = repository;
     }
@@ -167,6 +171,9 @@ public class HomeController extends WorkdaysProperties{
 		if(users.getBanned()==1){
 			return "banned";
 		}
+		//メアドから個別ユーザーのリストを作成する
+		List <IndividualData>iDataList=individualService.findMail(login.getEmail());
+		model.addAttribute("iDataList", iDataList);
 
 		session.setAttribute("Data",users);
 		Calendar cal = Calendar.getInstance();
@@ -326,8 +333,7 @@ public class HomeController extends WorkdaysProperties{
 
 		}
 		
-		String companyName = users.getCompany1();
-		List<CompanyInfo> ci = ciService.findByCompanyName(companyName);
+		List<CompanyInfo> ci = ciService.findByCompanyName(company);
 
 		String inputFilePath = getInputFolder(ci.get(0).getCompanyID()) + "/" + propertyfileName + ".xls";
 		String outputFilePath = getOutputFolder(ci.get(0).getCompanyID()).getPath();
