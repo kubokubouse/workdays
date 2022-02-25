@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Holiday;
+import com.example.demo.model.IndividualData;
 import com.example.demo.model.MasterUser;
 import com.example.demo.repository.IndividualDataRepository;
 import com.example.demo.repository.MasterUserRepository;
@@ -51,7 +52,10 @@ import com.example.demo.repository.WorkdaysRepository;
 @Service
 public class IndividualService {
     @Autowired
-    IndividualDataRepository IndividualRepository;
+    IndividualDataRepository individualRepository;
 
-    
+    public List <IndividualData> findMail(String mail){
+    	return individualRepository.findByMail(mail);
+    }
+
 }

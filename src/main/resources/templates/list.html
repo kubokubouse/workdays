@@ -186,9 +186,10 @@ a:hover::after{
     </div>
     <h1>[[${workingListParam.month}]]月勤怠表</h1>
     <form th:action="@{/companyselect}" th:object="${users}" >
-    <input type="radio" name="company" th:value=${users.company1}> [[${users.company1}]]
-    <input type="radio" name="company" th:value=${users.company2}> [[${users.company2}]]
-    <br>
+    </div>
+    <div th:each="iData, st:${iDataList}"><input type="radio" name="company" th:value=${iData.company1}> [[${iData.company1}]]<input type="radio" name="company" th:value=${iData.company2}> [[${iData.company2}]]<input type="radio" name="company" th:value=${iData.company3}> [[${iData.company3}]]
+    </div>
+    
     <input type="submit" class="btn btn-primary" value="Excelファイル出力">
   </form>
     
