@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.demo.model.SuperUserLogin;
 
 public interface SuperUserRepository extends JpaRepository<SuperUserLogin, String> {
-	SuperUserLogin findByIdAndPass(String id, String pass);
+	SuperUserLogin findByEmailAndPass(String mail, String pass);
 }

@@ -30,7 +30,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Holiday;
+import com.example.demo.model.IndividualData;
 import com.example.demo.model.MasterUser;
+import com.example.demo.repository.IndividualDataRepository;
 import com.example.demo.repository.MasterUserRepository;
 import com.example.demo.model.StringList;
 import com.example.demo.model.StringListParam;
@@ -68,6 +70,9 @@ public class UserService{
 	@Autowired
 	MasterUserRepository masterRepository;
 
+	@Autowired
+	IndividualDataRepository iDataRepository;
+
     @Value("${worklist.path}")
     private String path;
 
@@ -78,8 +83,8 @@ public class UserService{
 	}
 
 	//管理者用ログイン処理
-	public SuperUserLogin findIdAndPass(String id, String pass) {
-		return suserRepository.findByIdAndPass(id, pass);
+	public SuperUserLogin findEmailAndPass(String email, String pass) {
+		return suserRepository.findByEmailAndPass(email, pass);
 	}
 	//マスターユーザーログイン処理
 	public MasterUser findIdPass(String id, String password) {
@@ -461,4 +466,15 @@ public class UserService{
 		 wb.close();
 		}
 	}
+
+	//個別ユーザーテーブルから全データを取得
+	public List<IndividualData> searchAllIndividualData() {
+		List<IndividualData> idList = iDataRepository.findAll();
+		return idList;
+	}
+	//個別ユーザーテーブルから選択データ削除
+	public void deleteIndividualData(String mail){
+		IndividualData id = iDataRepository.findByMail(mail);
+		iDataRepository.delete(id);
+    }
 }
