@@ -474,7 +474,8 @@ public class UserService{
 	}
 	//個別ユーザーテーブルから選択データ削除
 	public void deleteIndividualData(String mail){
-		IndividualData id = iDataRepository.findByMail(mail);
+		int companyId=(int)session.getAttribute("companyId");
+		IndividualData id = iDataRepository.findByMailAndCompanyID(mail,companyId);
 		iDataRepository.delete(id);
     }
 }
