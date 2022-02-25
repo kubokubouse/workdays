@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
 
 import com.example.demo.model.User;
+
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.SuperUserLogin;
@@ -265,4 +266,7 @@ public class AdminController extends WorkdaysProperties{
         model.addAttribute("error", deleteFileName+"が削除されました");
         return "templatelist";
     }
+
+    
+
 }
