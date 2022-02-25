@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 
 import com.example.demo.model.User;
 
+import com.example.demo.service.MailSendService;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.SuperUserLogin;
@@ -47,6 +48,9 @@ public class AdminController extends WorkdaysProperties{
 	@Autowired
     UserService userService;
 
+    @Autowired
+    MailSendService mailSendService;
+
 	@GetMapping("/logout")
 	public String logout(){
 		
@@ -54,8 +58,7 @@ public class AdminController extends WorkdaysProperties{
 	}
 
     //管理メニュー画面
-        //会員登録ページに移行
-	@GetMapping("/superuser")
+    @GetMapping("/superuser")
 	public String menue(@ModelAttribute User user){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
@@ -105,7 +108,15 @@ public class AdminController extends WorkdaysProperties{
         user.setBanned(0);
 		// COMMENTテーブル：コメント登録
 		repository.save(user);
-		// ルートパス("/") にリダイレクトします
+		//ユーザー追加と同時にユーザーにメール送信
+        //ユニバーサルユーザーテーブルにデータがあるなしで送るメールの中身が変わる
+        String email=user.getEmail();
+        User universalUser=userService.findEmail(email);
+        if(universalUser==null){
+           mailSendService.mailsend(email,WorkdaysProperties.userRegisterText);
+        }
+        mailSendService.mailsend(email,WorkdaysProperties.loginText);
+
 		return "superuser";
     }
 

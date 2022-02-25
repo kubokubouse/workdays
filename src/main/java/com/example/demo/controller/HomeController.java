@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
-
+import java.sql.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -372,4 +372,114 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("flag", flag);
 		return "newpassword";
 	}
+
+	//ユニバユーザー登録用リンク踏んだ奴用の処理　会員登録ページに移行
+	@GetMapping("/universalregister")
+	public String universalregister(@ModelAttribute User user, Model model,@RequestParam String email){
+
+		user.setEmail(email);
+		session.setAttribute("user",user);
+		model.addAttribute("user",user);
+		return "universalregister";
+	}
+
+    //会員情報入力→確認画面へ
+	@PostMapping("/universalregister")
+	public String universalconfirm(@Validated @ModelAttribute User user,BindingResult result){
+		
+        if (result.hasErrors()){
+			// エラーがある場合登録画面に戻る
+            return "universalregister";
+        }
+		return "universalconfirm";
+	}
+
+	//会員情報をDBに登録
+	@PostMapping("/universalregist")
+    public String univeresalregist(@Validated @ModelAttribute User user, BindingResult result, Model model){
+		
+		model.addAttribute("user", repository.findAll());
+        if (result.hasErrors()){
+			return "universalconfirm";
+		}
+		repository.save(user);
+		//エラーがなければログインに飛ぶ
+		return "/login2";
+    }
+
+	@PostMapping("/AjaxServlet")
+	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model){	
+		User users=(User)session.getAttribute("Data");
+		YearMonth yearMonth=userService.nowYearMonth();
+		int id=users.getId();
+		int intday=Integer.parseInt(day);
+		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
+		switch (name) {
+			case "start":
+			  Time time=Time.valueOf(inputvalue);
+			  workdays.setStart(time);
+			break;
+			
+			case "end":
+			 workdays.setEnd(Time.valueOf(inputvalue));
+			break;
+
+			case "halftime":
+			 workdays.setEnd(Time.valueOf(inputvalue));
+			break;
+
+			case "worktime":
+			 workdays.setEnd(Time.valueOf(inputvalue));
+			break;
+			
+			case "other1":
+			  workdays.setOther1(inputvalue);
+			  break;
+			  case "other2":
+			  workdays.setOther2(inputvalue);
+			  break;
+			  case "other3":
+			  workdays.setOther3(inputvalue);
+			  break;
+			} 
+		workdaysService.update(workdays);
+
+		System.out.println(inputvalue);
+		System.out.println(name);
+		System.out.println(day);
+		WorkingListParam workingListParam = userService.searchAll(users);
+		model.addAttribute("workingListParam", workingListParam);
+		model.addAttribute("users", users);
+
+		CellvalueGet cellgetvalue=new CellvalueGet();
+		
+		
+		List<Otherpa>opList=new ArrayList<Otherpa>();
+		Judgeused judgeused1=cellgetvalue.GetCellvalue(users.getCompany1());
+		Judgeused judgeused2=cellgetvalue.GetCellvalue(users.getCompany2());
+		Judgeused judgeused3=cellgetvalue.GetCellvalue(users.getCompany3());
+		
+		Otherpa opa_oa=new Otherpa();
+		opa_oa.setCompany1(judgeused1.getOa());
+		opa_oa.setCompany2(judgeused2.getOa());
+		opa_oa.setCompany3(judgeused3.getOa());
+
+		opList.add(opa_oa);
+		
+		Otherpa opa_ob=new Otherpa();
+		opa_ob.setCompany1(judgeused1.getOb());
+		opa_ob.setCompany2(judgeused2.getOb());
+		opa_ob.setCompany3(judgeused3.getOb());
+		opList.add(opa_ob);
+
+		Otherpa opa_oc=new Otherpa();
+		opa_oc.setCompany1(judgeused1.getOc());
+		opa_oc.setCompany2(judgeused2.getOc());
+		opa_oc.setCompany3(judgeused3.getOc());
+		opList.add(opa_oc);
+
+		model.addAttribute("opList", opList);
+		return "list";
+	}
+	
 }
