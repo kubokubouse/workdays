@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.model.Otherpa;
 import com.example.demo.model.Holiday;
 import com.example.demo.model.Login;
+import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.StringListParam;
 import com.example.demo.model.User;
 import com.example.demo.model.SuperUser;
@@ -38,6 +39,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.WorkdayMapping;
 import com.example.demo.service.WorkdaysService;
 import com.example.demo.service.CellvalueGet;
@@ -51,6 +53,8 @@ public class HomeController extends WorkdaysProperties{
     HttpSession session;
     @Autowired
     UserService userService;
+	@Autowired
+    CompanyInfoService ciService;
     @Autowired
     MailSendService mailsendService;
     @Autowired
@@ -322,9 +326,11 @@ public class HomeController extends WorkdaysProperties{
 
 		}
 		
-		WorkdaysProperties wp = new WorkdaysProperties();
-		String inputFilePath = WorkdaysProperties.inputFolder + "/" + propertyfileName + ".xls";
-		String outputFilePath = wp.getOutputFile();
+		String companyName = users.getCompany1();
+		List<CompanyInfo> ci = ciService.findByCompanyName(companyName);
+
+		String inputFilePath = getInputFolder(ci.get(0).getCompanyID()) + "/" + propertyfileName + ".xls";
+		String outputFilePath = getOutputFolder(ci.get(0).getCompanyID()).getPath();
 		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
