@@ -54,11 +54,12 @@ public class AdminController extends WorkdaysProperties{
 	}
 
     //管理メニュー画面
-        //会員登録ページに移行
+    //会員登録ページに移行
 	@GetMapping("/superuser")
 	public String menue(@ModelAttribute User user){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        session.setAttribute("companyId", superUser.getId());
         
         if (superUser == null) {
             return "accessError";
@@ -188,8 +189,6 @@ public class AdminController extends WorkdaysProperties{
     
         File uploadFile = null;
         String fileName = multipartFile.getOriginalFilename();
-        String inputFilePath = WorkdaysProperties.inputFolder + "/" + fileName;
-
 
         // ファイルが空の場合は異常終了
         if(multipartFile.isEmpty()){
@@ -199,8 +198,8 @@ public class AdminController extends WorkdaysProperties{
         }
         try {
         // アップロードファイルを置く
-            uploadFile = new File(inputFilePath);
-            uploadFile.createNewFile();
+            int companyId = (Integer)session.getAttribute("companyId");
+            uploadFile = getInputFolder(companyId);
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
                 new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -238,7 +237,8 @@ public class AdminController extends WorkdaysProperties{
         }
 
         List<String> fileNameList = new ArrayList<String>();
-        String fileFolderPath = WorkdaysProperties.inputFolder;
+        int companyId = (Integer)session.getAttribute("companyId");
+        String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
         File fileFolder = new File(fileFolderPath);
         File[] fileList = fileFolder.listFiles();
         
@@ -257,8 +257,10 @@ public class AdminController extends WorkdaysProperties{
     //ファイル一覧からファイル削除
     @RequestMapping("/filedelete")
     public String showTemplateFileList(@RequestParam("deleteFileName") String deleteFileName, Model model) {
-        String deleteFilePath = WorkdaysProperties.inputFolder + "/" + deleteFileName;
-
+        
+        int id = (Integer)session.getAttribute("companyId");
+        File folder = getInputFolder(id);
+        String deleteFilePath = folder.toPath() + "/" + deleteFileName;
         File deleteFile = new File(deleteFilePath);
         if(!deleteFile.delete()){
             model.addAttribute("error", "ファイルが削除できませんでした");
