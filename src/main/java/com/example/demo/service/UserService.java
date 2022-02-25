@@ -102,6 +102,10 @@ public class UserService{
         return userRepository.save(user);
     }
 
+	public IndividualData updateIndividualData(IndividualData id) {
+		return iDataRepository.save(id);
+	}
+
 	public void delete(int id){
 		User user=userRepository.findById(id);
         userRepository.delete(user);
