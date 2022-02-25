@@ -5,6 +5,6 @@ import java.util.List;
 import com.example.demo.model.IndividualData;
 public interface IndividualDataRepository extends JpaRepository<IndividualData, Integer> {
 	IndividualData findById(int id);
-	IndividualData findByMail(String mail);
-
+	IndividualData findByMailAndCompanyID(String mail,int companyID);
+	List<IndividualData> findByMail(String mail);
 }

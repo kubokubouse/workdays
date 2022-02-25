@@ -59,7 +59,7 @@ public class AdminController extends WorkdaysProperties{
 	public String menue(@ModelAttribute User user){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        session.setAttribute("companyId", superUser.getId());
+        session.setAttribute("companyId", superUser.getCompanyID());
         
         if (superUser == null) {
             return "accessError";
