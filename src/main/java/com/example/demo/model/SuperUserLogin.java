@@ -18,12 +18,15 @@ import lombok.NoArgsConstructor;
 
 public class SuperUserLogin {
 	@Id
-	@Column(name="id")
+	@Column(name="email")
 	@NotBlank
-	private String id;
+	private String email;
 
 
 	@Column(name="pass")
 	@NotBlank
 	private String pass;
+
+	@Column
+	private int companyID;
 }
