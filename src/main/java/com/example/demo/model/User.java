@@ -59,6 +59,10 @@ public class User
 	  @Column
 	  private Integer banned;
 
+	  
+	  @Column
+	  private String number;
+
 
 
 }
