@@ -25,6 +25,7 @@ import com.example.demo.model.User;
 
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
+import com.example.demo.service.MailSendService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.UserListParam;
@@ -53,6 +54,9 @@ public class AdminController extends WorkdaysProperties{
 	
 	@Autowired
     UserService userService;
+
+    @Autowired
+    MailSendService mailSendService;
 
     @Autowired
     IndividualService individualService;
@@ -127,7 +131,12 @@ public class AdminController extends WorkdaysProperties{
 
         
         int i=individualService.insert(companyID, mail, individualId,name,company1,company2,company3,number);
-
+        
+        User universalUser=userService.findEmail(mail);
+        if(universalUser==null){
+           mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+        }
+        mailSendService.mailsend(mail,WorkdaysProperties.loginText);
 		return "superuser";
     }
 

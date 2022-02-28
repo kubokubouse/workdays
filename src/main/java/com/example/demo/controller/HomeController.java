@@ -161,6 +161,8 @@ public class HomeController extends WorkdaysProperties{
 		
 		if (superUser != null && !sudoresult.hasErrors()) {
 			session.setAttribute("superUser", superUser);
+			int companyId=superUser.getCompanyID();
+			session.setAttribute("companyId", companyId);
 			return "superuser";
 		}
 		
@@ -410,7 +412,7 @@ public class HomeController extends WorkdaysProperties{
 
 	//会員情報をDBに登録
 	@PostMapping("/universalregist")
-    public String univeresalregist(@Validated @ModelAttribute User user, BindingResult result, Model model){
+    public String univeresalregist(@Validated @ModelAttribute User user, BindingResult result, Model model,Login login){
 		
 		model.addAttribute("user", repository.findAll());
         if (result.hasErrors()){
