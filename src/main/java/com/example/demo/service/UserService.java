@@ -476,6 +476,13 @@ public class UserService{
 		List<IndividualData> idList = iDataRepository.findAll();
 		return idList;
 	}
+	//個別ユーザーテーブルからその会社の全データを取得
+	public List<IndividualData> findCompanyID(int companyID) {
+		
+		return iDataRepository.findByCompanyID(companyID);
+		
+	}
+
 	//個別ユーザーテーブルから選択データ削除
 	public void deleteIndividualData(String mail){
 		int companyId=(int)session.getAttribute("companyId");

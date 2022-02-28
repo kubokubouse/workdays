@@ -24,10 +24,12 @@ import org.springframework.validation.BindingResult;
 import com.example.demo.model.User;
 
 import com.example.demo.service.HolidayService;
+import com.example.demo.service.IndividualService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.UserListParam;
 import com.example.demo.model.IndividualData;
+import com.example.demo.model.SuperUser;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.IndividualDataRepository;
 import com.example.demo.WorkdaysProperties;
@@ -52,6 +54,8 @@ public class AdminController extends WorkdaysProperties{
 	@Autowired
     UserService userService;
 
+    @Autowired
+    IndividualService individualService;
     
 
 	@GetMapping("/logout")
@@ -76,7 +80,7 @@ public class AdminController extends WorkdaysProperties{
 
     //会員登録ページに移行
 	@GetMapping("/register")
-	public String register(@ModelAttribute IndividualData idData, BindingResult result, Model model){
+	public String register(@ModelAttribute IndividualData idData, Model model, BindingResult result){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
         if (superUser == null) {
@@ -87,7 +91,7 @@ public class AdminController extends WorkdaysProperties{
 
     //会員情報入力→確認画面へ
 	@PostMapping("/")
-	public String confirm(@Validated @ModelAttribute IndividualData idData,BindingResult result){
+	public String confirm( @ModelAttribute IndividualData idData,Model model,BindingResult result){
 		//メアドに重複があった場合重複画面に飛ぶ
         IndividualData iData = idRepository.findByMailAndCompanyID(
             idData.getMail(), (Integer)session.getAttribute("companyId"));
@@ -99,25 +103,30 @@ public class AdminController extends WorkdaysProperties{
 			// エラーがある場合、index.htmlに戻る
             return "register";
         }
+        model.addAttribute("idData", idData);
 		return "confirm";
 	}
 
 	//会員情報をDBに登録
 	@PostMapping("/regist")
     public String regist(@Validated @ModelAttribute IndividualData idData, BindingResult result, Model model){
-		
-		model.addAttribute("user", idRepository.findAll());
+		/*model.addAttribute("user", idRepository.findAll());
         if (result.hasErrors()){
+
 			return "confirm";
-		}
+		}*/
 
-        //個別ユーザーテーブルに登録
-        int companyID = Integer.parseInt((String)session.getAttribute("companyId"));
-        idData.setCompanyID(companyID);
-        idData.setRegistered(1);
-        idData.setBanned(0);
+        int companyID = (int)session.getAttribute("companyId");
+        String mail=idData.getMail();
+        int individualId=1;
+        String name=idData.getName();
+        String company1=idData.getCompany1();
+        String company2=idData.getCompany2();
+        String company3=idData.getCompany3();
+        String number=idData.getNumber();
 
-        idRepository.save(idData);
+        
+        int i=individualService.insert(companyID, mail, individualId,name,company1,company2,company3,number);
 
 		return "superuser";
     }
@@ -130,28 +139,31 @@ public class AdminController extends WorkdaysProperties{
         if (superUser == null) {
             return "accessError";
         }
-
-		List<IndividualData> iList = userService.searchAllIndividualData();
+        int companyID=(int)session.getAttribute("companyId");
+		List<IndividualData> iList = userService.findCompanyID(companyID);
 		model.addAttribute("userListParam", iList);
 		return "userlist";
 	}
 
+    //個別ユーザー削除
+    //ここで使用されるユーザーIDはメアドのこと
 	@RequestMapping(value="/userdelete")
 	public String deleteuser(@RequestParam String userid, Model model){
 		System.out.println(userid);
 		userService.deleteIndividualData(userid);
-		List<IndividualData> iList = userService.searchAllIndividualData();
+        int companyId = (Integer)session.getAttribute("companyId");
+		List<IndividualData> iList = userService.findCompanyID(companyId);
 		model.addAttribute("userListParam", iList);
 		return "userlist";
 	}
 
-
+    //個別ユーザー更新機能
 	@PostMapping("/UserAjaxServlet")
 	public String AjaxServlet(@RequestParam String inputvalue, String name,String userid, Model model){	
 
         int companyId = (Integer)session.getAttribute("companyId");
 		IndividualData iData = idRepository.findByMailAndCompanyID(
-            name, companyId);
+            userid, companyId);
         System.out.println(name);
         System.out.println(inputvalue);
 
@@ -160,7 +172,7 @@ public class AdminController extends WorkdaysProperties{
 			  iData.setNumber(inputvalue);
 			  break;
 			case "name":
-              iData.setName(name);
+              iData.setName(inputvalue);
 			  break;
 			  case "mail":
 			  iData.setMail(inputvalue);
@@ -177,7 +189,7 @@ public class AdminController extends WorkdaysProperties{
 			} 
 		userService.updateIndividualData(iData);
 		
-		List<IndividualData> iList = userService.searchAllIndividualData();
+		List<IndividualData> iList = userService.findCompanyID(companyId);
 		model.addAttribute("userListParam", iList);
 		return "userlist";
 	}
