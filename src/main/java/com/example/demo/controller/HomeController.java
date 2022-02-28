@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import java.sql.Time;
+import java.time.LocalTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -145,7 +147,6 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("workingListParam", workingListParam);
 		return jstr;
 	}
-
 	//ログイン時の処理　spring用
 	@RequestMapping("/login2")
 	@CrossOrigin(origins = "*")
@@ -157,7 +158,7 @@ public class HomeController extends WorkdaysProperties{
 
 			//管理者の場合は管理者ページに移行
 		SuperUserLogin superUser = userService.findEmailAndPass(id, pass);
-		session.setAttribute("companyId", superUser.getCompanyID());
+		
 		if (superUser != null && !sudoresult.hasErrors()) {
 			session.setAttribute("superUser", superUser);
 			return "superuser";
@@ -427,10 +428,12 @@ public class HomeController extends WorkdaysProperties{
 		int id=users.getId();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
+		System.out.println(inputvalue);
+		LocalTime lt=LocalTime.parse(inputvalue);
+		Time time=new Time( lt.getHour(),lt.getMinute(),lt.getSecond());
 		switch (name) {
 			case "start":
-			  Time time=Time.valueOf(inputvalue);
-			  workdays.setStart(time);
+			 workdays.setStart(time);
 			break;
 			
 			case "end":
@@ -457,9 +460,7 @@ public class HomeController extends WorkdaysProperties{
 			} 
 		workdaysService.update(workdays);
 
-		System.out.println(inputvalue);
-		System.out.println(name);
-		System.out.println(day);
+		
 		WorkingListParam workingListParam = userService.searchAll(users);
 		model.addAttribute("workingListParam", workingListParam);
 		model.addAttribute("users", users);
