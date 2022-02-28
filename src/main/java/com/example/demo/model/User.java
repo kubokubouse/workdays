@@ -60,8 +60,7 @@ public class User
 	  private Integer banned;
 
 	  
-	  @Column
-	  private String number;
+	
 
 
 
