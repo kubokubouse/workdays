@@ -24,12 +24,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "individual_data")
 public class IndividualData
 {
 	 @Id
 	 @Column
-	 @NotEmpty
 	 private int companyID;
 
 	 @Column
