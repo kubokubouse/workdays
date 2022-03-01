@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>トップページ</title>
+<title>エラー</title>
 <link th:href="@{/css/donestyle.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2>勤怠表をダウンロードします</h2>
-<p th:text="${outputFileName}" class="fileName"></p>
+<h2>勤怠表を出力できませんでした</h2>
 
-<a th:href="@{${filePath}}" class = "button" download> ダウンロード</a>
+<tr th:each="errors : ${errors}">
+  <td th:text="${errors}"></td></tr>
 
 <p><a href="/logout">ログアウト</a></p>
 </body>

@@ -23,24 +23,26 @@ import java.time.LocalDateTime;
 
 public class WorkdayMapping {
     
-    public void outputExcel(String inputFilePath, String outputFilePath,
+    public List<String> outputExcel(String inputFilePath, String outputFilePath,
         Map stHourMap, Map stMinMap, Map endHourMap, Map endMinMap,
             Map lunchTimeHourMap, Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map other1Map,Map other2Map,Map other3Map) {
 
-                
+    List<String> errorList = new ArrayList<String>();
     File inputFileObject = new File(inputFilePath);
     
 
     if (!inputFileObject.exists()) {
         System.out.println("ファイルが存在しません：" + inputFilePath);
-        return;
+        errorList.add("ファイルが存在しません：" + inputFilePath);
+        return errorList;
     }
     
     //ファイルのコピーが成功したときは０が戻り値となる
     int copyFiles = copyFile(inputFilePath, outputFilePath);
 
     if (copyFiles != 0) {
-        return;
+        errorList.add("ファイルの読み込みに失敗しました");
+        return errorList;
     }
        
     //シート名を取得
@@ -294,8 +296,10 @@ public class WorkdayMapping {
                 
         } catch (IOException io){
         io.printStackTrace();
-        return;
+        errorList.add("ファイルの出力に失敗しました");
+        return errorList;
         }
+        return errorList;
     }
 
     private Integer copyFile (String inputFilePath, String outputFilePath) {

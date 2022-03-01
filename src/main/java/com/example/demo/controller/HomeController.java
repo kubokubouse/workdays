@@ -289,15 +289,7 @@ public class HomeController extends WorkdaysProperties{
 	//会社選択時の処理
 	@RequestMapping(value="/companyselect")
 	public String CompanySelect (@RequestParam String company, Model model) {
-		System.out.println(company);
-		String[] values = company.split(":");
-		int companyID=Integer.parseInt(values[0]);
-		String companyName=values[1];
 			
-			
-		   
-		String propertyfileName = companyName;
-		
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("user",users);
 		//苗字と名前合わせてname
@@ -341,18 +333,37 @@ public class HomeController extends WorkdaysProperties{
 			index++;
 
 		}
+				
+		//個別ユーザーTLから個人IDと会社IDを拾ってくる
+		System.out.println(company);
+		String[] values = company.split(":");
+		int companyID = Integer.parseInt(values[0]);
+		String companyName=values[1];
 		
+		String mail = users.getEmail();
+		int individualID = Integer.valueOf(userService.findIndividualID(mail, companyID));
 		
-		List<CompanyInfo> ci = ciService.findByCompanyName(companyName);
+		//会社ID_input/会社名.xls
+		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "\\" + companyName + ".xls";
+		//会社ID_output/個別ID_出力会社.xls
+		String outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
+			+ "\\" + individualID + "_" + companyName + ".xls";
 
-		String inputFilePath = getInputFolder(ci.get(0).getCompanyID()) + "/" + propertyfileName + ".xls";
-		String outputFilePath = getOutputFolder(ci.get(0).getCompanyID()).getPath();
+		System.out.println("input: " + inputFilePath);
+		System.out.println("output: " + outputFilePath);
 		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
-		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
+		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map
 		);
+
+		// if (errors.size() != 0 || errors.isEmpty()) {
+		// 	model.addAttribute("errors", errors);
+		// 	return "outputerror";
+		// }
+
+		model.addAttribute("filePath", outputFilePath);
 
 		return "done";
 	}	
