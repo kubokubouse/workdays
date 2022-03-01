@@ -483,6 +483,12 @@ public class UserService{
 		
 	}
 
+	//個別ユーザーテーブルから個人ID取得
+	public String findIndividualID(String mail, int companyId) {
+		IndividualData id = iDataRepository.findByMailAndCompanyID(mail,companyId);
+		return id.getNumber();
+	}
+
 	//個別ユーザーテーブルから選択データ削除
 	public void deleteIndividualData(String mail){
 		int companyId=(int)session.getAttribute("companyId");
