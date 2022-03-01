@@ -5,7 +5,7 @@ import java.io.File;
 public class WorkdaysProperties {
 
     public static String basePath = "C:/pleiades/workdays/workdays/src/main/resources/";
-    // public static String basePath = "C:/久保さん/"
+    // public static String basePath = "C:/久保さん/cloneproject/workdays/src/main/resources
     public static String outputFileName = "勤怠表.xls";
     public static String cccExcelFile = "/apache/htdocs/image/test.xlsx";
     public static String fromMailAdress="r-kubo@connectcrew.co.jp";
