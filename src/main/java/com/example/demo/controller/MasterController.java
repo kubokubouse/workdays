@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 
 import com.example.demo.model.Login;
 import com.example.demo.model.User;
+import com.example.demo.model.UserListParam;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
 import com.example.demo.service.HolidayService;
@@ -141,6 +142,13 @@ public class MasterController {
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
 		return "/superuserlist";
+	}
+
+	@GetMapping("/alluserlist")
+	public String alluserlsit(Model model){
+		UserListParam userListParam = userService.searchAllUser();
+		model.addAttribute("userListParam", userListParam);
+		return "/universaluserlist";
 	}
 }
 
