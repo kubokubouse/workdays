@@ -302,7 +302,7 @@ public class WorkdayMapping {
         return errorList;
     }
 
-    private Integer copyFile (String inputFilePath, String outputFilePath) {
+    public Integer copyFile (String inputFilePath, String outputFilePath) {
         
         File outputFileObject = new File(outputFilePath);
         

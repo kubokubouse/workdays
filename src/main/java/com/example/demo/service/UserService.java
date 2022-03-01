@@ -480,7 +480,11 @@ public class UserService{
 	public List<IndividualData> findCompanyID(int companyID) {
 		
 		return iDataRepository.findByCompanyID(companyID);
-		
+	}
+
+	//個別ユーザーテーブルから削除
+	public void deleteIndividualData (IndividualData id) {
+		iDataRepository.delete(id);
 	}
 
 	//個別ユーザーテーブルから個人ID取得
@@ -495,4 +499,9 @@ public class UserService{
 		IndividualData id = iDataRepository.findByMailAndCompanyID(mail,companyId);
 		iDataRepository.delete(id);
     }
+
+	//個別ユーザーテーブルにデータ登録
+	public IndividualData InsertIndividualData(IndividualData id){
+		return iDataRepository.saveAndFlush(id);
+	}
 }
