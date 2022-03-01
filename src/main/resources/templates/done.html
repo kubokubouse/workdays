@@ -9,7 +9,7 @@
 <h2>勤怠表をダウンロードします</h2>
 <p th:text="${outputFileName}" class="fileName"></p>
 
-<a href="../OutputFiles/勤怠表.xlsx" class = "button" download> ダウンロード</a>
+<a th:href="@{${filePath}}" class = "button" download> ダウンロード</a>
 
 <p><a href="/logout">ログアウト</a></p>
 </body>
