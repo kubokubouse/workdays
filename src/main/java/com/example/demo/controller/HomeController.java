@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.model.Otherpa;
 import com.example.demo.model.Holiday;
+import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
 import com.example.demo.model.CompanyInfo;
@@ -67,6 +68,9 @@ public class HomeController extends WorkdaysProperties{
     HolidayService holidayService;
 	@Autowired
     IndividualService individualService;
+	@Autowired
+    CompanyInfoService companyInfoService;
+
     public HomeController(UserRepository repository){
         this.repository = repository;
     }
@@ -178,7 +182,25 @@ public class HomeController extends WorkdaysProperties{
 		//メアドから個別ユーザーのリストを作成する
 		List <IndividualData>iDataList=individualService.findMail(login.getEmail());
 		model.addAttribute("iDataList", iDataList);
+		
+		
+		//個別ユーザーから会社IDを取得し会社のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+		
+		for(IndividualData iData:iDataList){
+			IdUser idUser=new IdUser();
+			CompanyInfo companyInfo= companyInfoService.findByCompanyID(iData.getCompanyID());
+			idUser.setCompany1(iData.getCompany1());// companyInfo.getCompanyName();
+			idUser.setCompany2(iData.getCompany2());
+			idUser.setCompany3(iData.getCompany3());
+			idUser.setBanned(iData.getBanned());
+			idUser.setCompanyID(iData.getCompanyID());
+			idUser.setCompanyName(companyInfo.getCompanyName());
+			idUserList.add(idUser);
 
+		}
+		model.addAttribute("idUserList", idUserList);
+		System.out.println(idUserList);
 		session.setAttribute("Data",users);
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
