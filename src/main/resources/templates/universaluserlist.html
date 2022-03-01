@@ -119,7 +119,7 @@ a:hover::after{
       var userid = $(this).attr('userid');
       var name = $(this).attr('name');
       $.ajax({
-        url: "/UserAjaxServlet",
+        url: "/UniversalUserAjaxServlet",
         type: "POST",
         data: {
           inputvalue : inputvalue,
@@ -152,53 +152,52 @@ a:hover::after{
       <label class="text-danger" th:text="${error}"></label>
     </div>
     <h1>ユーザー一覧</h1>
-    <form th:action="@{/userlistUpdate}" th:object="${userListParam}" th:method="post">
+   
 
       <br/>
 
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>社員番号</th>
-            <th>氏名</th>
+            <th>苗字</th>
+            <th>名前</th>
             <th>メールアドレス</th>
-            <th>会社1</th>
-            <th>会社2</th>
-            <th>会社3</th>
+            <th>利用可否</th>
+            
 
           </tr>
         </thead>
         
         <tbody>
-          <tr th:each="user, st : ${userListParam}" >
+          <tr th:each="user, st : ${userDataList}" >
 
-            <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="number" th:value="${user.number}" >
-            </td>
+            
+            
+            
             
             <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="name" th:value="${user.name}" >
-            </td>
-            
-            <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="mail" th:value="${user.mail}" >
+                [[${user.lastname}]]
             </td>
 
             <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="company1" th:value="${user.company1}">
+                [[${user.firstname}]]
             </td>
 
             <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="company2" th:value="${user.company2}">
+                [[${user.email}]]
             </td>
-
             <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="company3" th:value="${user.company3}">
-            </td>
-
-            <td>
-              <a th:href="@{/userdelete(userid=${user.mail})}" input type="hidden" >削除</a>
-            </td>
+                <select name="banned" th:userid="${user.id}">
+                <div th:if="${user.banned==0}">
+                    <option value="0" selected>許可</option>
+                    <option value="1" >禁止</option>
+                </div>
+                <div th:if="${user.banned==1}">
+                  <option value="0" >許可</option>
+                  <option value="1" selected>禁止</option>
+                </div>
+                </select>
+              </td>
             
             
           </tr>
