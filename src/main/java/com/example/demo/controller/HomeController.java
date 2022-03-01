@@ -199,8 +199,10 @@ public class HomeController extends WorkdaysProperties{
 			idUserList.add(idUser);
 
 		}
+
 		model.addAttribute("idUserList", idUserList);
 		System.out.println(idUserList);
+		
 		session.setAttribute("Data",users);
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
