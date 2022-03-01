@@ -353,10 +353,15 @@ public class HomeController extends WorkdaysProperties{
 		System.out.println("output: " + outputFilePath);
 		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
-		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
+		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map
 		);
+
+		if (errors.size() != 0 || errors.isEmpty()) {
+			model.addAttribute("errors", errors);
+			return "outputerror";
+		}
 
 		return "done";
 	}	
