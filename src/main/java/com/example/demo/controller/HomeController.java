@@ -382,10 +382,10 @@ public class HomeController extends WorkdaysProperties{
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map
 		);
 
-		// if (errors.size() != 0 || errors.isEmpty()) {
-		// 	model.addAttribute("errors", errors);
-		// 	return "outputerror";
-		// }
+		if (errors.size() != 0 || errors.isEmpty()) {
+			model.addAttribute("errors", errors);
+			return "outputerror";
+		}
 
 		model.addAttribute("filePath", outputFilePath);
 
