@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 
 import com.example.demo.model.Login;
 import com.example.demo.model.User;
+import com.example.demo.model.UserData;
 import com.example.demo.model.UserListParam;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
@@ -144,10 +145,34 @@ public class MasterController {
 		return "/superuserlist";
 	}
 
+	//ユニバーサルユーザー一覧表示
 	@GetMapping("/alluserlist")
 	public String alluserlsit(Model model){
 		UserListParam userListParam = userService.searchAllUser();
 		model.addAttribute("userListParam", userListParam);
+		List<UserData> userDataList=userListParam.getUserDataList();
+		model.addAttribute("userDataList",userDataList);
+		
+		return "/universaluserlist";
+	}
+	//Ajaxで値を取得しDBに登録
+	@PostMapping("/UniversalUserAjaxServlet")
+	public String UniversalUserAjaxServlet(@RequestParam String inputvalue, String userid, String name, Model model){	
+		User user = userService.findId(Integer.parseInt(userid));
+        System.out.println(name);
+        System.out.println(inputvalue);
+
+		switch (name) {
+			case "banned":
+			  user.setBanned(Integer.parseInt(inputvalue));
+			break;
+			
+		} 
+		userService.update(user);
+		UserListParam userListParam = userService.searchAllUser();
+		model.addAttribute("userListParam", userListParam);
+		List<UserData> userDataList=userListParam.getUserDataList();
+		model.addAttribute("userDataList",userDataList);
 		return "/universaluserlist";
 	}
 }
