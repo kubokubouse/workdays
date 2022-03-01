@@ -218,7 +218,6 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("users", users);
 
 		//備考1,2,3に会社名を添付する処理をする
-
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
 		CellvalueGet cellgetvalue=new CellvalueGet();
 		
@@ -291,7 +290,13 @@ public class HomeController extends WorkdaysProperties{
 	@RequestMapping(value="/companyselect")
 	public String CompanySelect (@RequestParam String company, Model model) {
 		System.out.println(company);
-		String propertyfileName = company;
+		String[] values = company.split(":");
+		int companyID=Integer.parseInt(values[0]);
+		String companyName=values[1];
+			
+			
+		   
+		String propertyfileName = companyName;
 		
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("user",users);
@@ -337,7 +342,8 @@ public class HomeController extends WorkdaysProperties{
 
 		}
 		
-		List<CompanyInfo> ci = ciService.findByCompanyName(company);
+		
+		List<CompanyInfo> ci = ciService.findByCompanyName(companyName);
 
 		String inputFilePath = getInputFolder(ci.get(0).getCompanyID()) + "/" + propertyfileName + ".xls";
 		String outputFilePath = getOutputFolder(ci.get(0).getCompanyID()).getPath();
@@ -345,7 +351,8 @@ public class HomeController extends WorkdaysProperties{
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
-			 totalHourMap, totalMinMap, other1Map,other2Map,other3Map);
+			totalHourMap, totalMinMap, other1Map,other2Map,other3Map
+		);
 
 		return "done";
 	}	
@@ -418,7 +425,20 @@ public class HomeController extends WorkdaysProperties{
         if (result.hasErrors()){
 			return "universalconfirm";
 		}
+		
+		
+		//メアドから個別ユーザーテーブルに登録されている会社名×3を取得する
+		//処理の結果リストが取得されることになっている（＝メアドから複数のユーザーが取得される）ことになっているが
+		//実際に取得されるユーザーは一人だけである（個別ユーザーテーブルにユーザーが登録されかつ同じメアドが個別テーブルに存在しない場合のみユニバーサルユーザーテーブルに登録させるメールが届く＝この処理が行われるので）
+		List<IndividualData> individualData=individualService.findMail(user.getEmail());
+		for(IndividualData iData:individualData){
+			user.setCompany1(iData.getCompany1());
+			user.setCompany2(iData.getCompany2());
+			user.setCompany3(iData.getCompany3());
+		}
+		user.setBanned(0);
 		repository.save(user);
+
 		//エラーがなければログインに飛ぶ
 		return "/login2";
     }
