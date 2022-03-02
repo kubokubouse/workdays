@@ -187,7 +187,7 @@ a:hover::after{
     <h1>[[${workingListParam.month}]]月勤怠表</h1>
     <form th:action="@{/companyselect}" th:object="${users}" >
     </div>
-    <div th:each="idUser, st:${idUserList}"><div th:if="${idUser.banned==0}">[[${idUser.companyName}]]: <input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]<input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company2}|"> [[${idUser.company2}]]<input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"}> [[${idUser.company3}]]</div>
+    <div th:each="idUser, st:${idUserList}"><div th:if="${idUser.banned==0}">[[${idUser.companyName}]]: <div th:unless="${idUser.company1==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]</div><div th:unless="${idUser.company2==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company2}|"> [[${idUser.company2}]]</div><div th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"}> [[${idUser.company3}]]</div></div>
     </div>
     
     <input type="submit" class="btn btn-primary" value="Excelファイル出力">
@@ -260,6 +260,7 @@ a:hover::after{
     </form>
   </div>
   <div class="tabs">
+    <p><a href="/">ログアウト</a></p>
     <!-- <p><a href="/sendmail">メール送信</a></p>
     <p><a href="/beforemonth">先月へ</a></p>
     <p><a href="/nextmonth">来月分へ</a></p>
