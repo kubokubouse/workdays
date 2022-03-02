@@ -7,8 +7,14 @@
 </head>
 <body>
 
-    <h2>アップロードするファイルを指定してください</h2>
+    <h2>アップロードするファイルを以下の点に注意して指定してください</h2>
 
+    <div class="caution">
+        <p>※csvファイル形式であること</p>
+        <p>※ヘッダーとして１列目に以下が全角で記入されていること</p>
+        <p>社員番号,氏名,メールアドレス,会社１,会社２,会社３,利用可否</p>
+        <p>（※利用可の場合は可と入力されていること）</p>
+    </div>
     
     <form th:action="@{/uploadalluser}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
         <input type="file" name="file">
@@ -74,6 +80,10 @@
 
     .tab {
         margin-top: 50px;
+    }
+
+    .caution {
+        margin-top: 25px;
     }
 
 </style>
