@@ -228,7 +228,7 @@ public class AdminController extends WorkdaysProperties{
         try {
         // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
-            uploadFile = new File(getInputFolder(companyId).getPath() + fileName);
+            uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
                 new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -468,7 +468,7 @@ public class AdminController extends WorkdaysProperties{
             //ユーザーが既に登録されているか確認
                 User universalUser=userService.findEmail(mail);
                 if(universalUser==null){
-            //      mailSendService.mailsend(mailString,WorkdaysProperties.userRegisterText);
+                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
                     id.setRegistered(1);
                 } else {
                     id.setRegistered(0);
