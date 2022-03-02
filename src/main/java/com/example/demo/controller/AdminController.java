@@ -1,11 +1,9 @@
 package com.example.demo.controller;
 
-import java.io.FileOutputStream;
 import java.io.*;
 import java.nio.*;
-import java.io.BufferedOutputStream;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import javax.servlet.http.HttpSession;
 
 
@@ -130,7 +128,7 @@ public class AdminController extends WorkdaysProperties{
         String number=idData.getNumber();
 
         
-        int i=individualService.insert(companyID, mail, individualId,name,company1,company2,company3,number);
+        int i=individualService.insert(companyID, mail, individualId,name,0,1,company1,company2,company3);
         
         User universalUser=userService.findEmail(mail);
         if(universalUser==null){
@@ -230,7 +228,7 @@ public class AdminController extends WorkdaysProperties{
         try {
         // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
-            uploadFile = new File(getInputFolder(companyId).getPath() + fileName);
+            uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
                 new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -300,7 +298,7 @@ public class AdminController extends WorkdaysProperties{
         return "templatelist";
     }
 
-    //一括アップロード
+    //ユーザー一括アップロード画面表示
     @GetMapping("/alluserupload")
     public String allUserUpload() {
 
@@ -311,19 +309,28 @@ public class AdminController extends WorkdaysProperties{
 		return "accessError";
 	}
 
-    //ファイルアップロード処理
+    //ユーザー一括アップロード処理
     @RequestMapping("/uploadalluser")
     public String uploadalluser(@RequestParam("file") MultipartFile multipartFile,
-    @ModelAttribute IndividualData idData, Model model) {
+    Model model) throws IOException {
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        int companyID = superUser.getCompanyID();
+
+        //全ユーザー削除
+        List<IndividualData> idList = userService.findCompanyID(companyID);
+        for (IndividualData id : idList) {
+            userService.deleteIndividualData(id);
+        }
 
         // ファイルが空の場合は異常終了
         if(multipartFile.isEmpty()){
         // 異常終了時の処理
             model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
-            return "templateupload";   
+            return "alluserupload";   
         }
 
-        //格納先のフルパス ※事前に格納先フォルダ「UploadTest」をCドライブ直下に作成しておく
+        //格納先のフルパス
         String filePath = WorkdaysProperties.basePath + "/upload.csv";
 
         try {
@@ -339,40 +346,154 @@ public class AdminController extends WorkdaysProperties{
         // アップロードファイルから値を読み込んで保存する
         BufferedReader br = null;
         File uploadFile = new File(filePath);
-        try {
-            
+
+        if(!uploadFile.exists()) {
+        // 異常終了時の処理
+            model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
+            return "alluserupload";  
+        }
+
+        int i = 0;
+        List<IndividualData> newIdList = new ArrayList<IndividualData>();
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        try {            
             br = new BufferedReader(new FileReader(uploadFile));
             // readLineで一行ずつ読み込む
             String line; // 読み込み行
             String[] data; // 分割後のデータを保持する配列
             while ((line = br.readLine()) != null) {
+
+                if (i == 0) {
+                    //カンマで分割した内容を配列に格納する
+                    String[] header = line.split(",");
+
+                    // Listの中でヘッダー項目が何か
+                    String number = header[0];
+                    //マッピングする
+                    map.put(number, 0);
+
+                    String name = header[1];
+                    map.put(name, 1);
+
+                    String mail = header[2];
+                    map.put(mail, 2);
+
+                    String company1 = header[3];
+                    map.put(company1, 3);
+                    
+                    String company2 = header[4];
+                    map.put(company2, 4);
+
+                    String company3 = header[5];
+                    map.put(company3, 5);
+
+                    String banned = header[6];
+                    map.put(banned, 6);
+
+                } else {
+
+                    IndividualData idData = new IndividualData();
+
                 // lineをカンマで分割し、配列dataに設定
                     data = line.split(",");
-                     
-                for (String value : data) {
-                    idData.setNumber(value);
-                    idData.setName(value);
-                    idData.setMail(value);
-                    idData.setCompany1(value);
-                    idData.setCompany2(value);
-                    idData.setCompany3(value);
-                    idData.setBanned(Integer.valueOf(value));                                        
-                }
-                idData.setRegistered(0);
 
-                idRepository.save(idData);
-                
-                br.close();
-                uploadFile.delete();
+                    //mapから何番目にデータが格納されているか取得
+                    if (map.containsKey("社員番号")){
+                        int number = map.get("社員番号");
+                        idData.setNumber(data[number]);
+                    } else {
+                        model.addAttribute("error", "ヘッダーの名前を確認してください：社員番号"); 
+                        return "alluserupload";  
+                    }
+                    if (map.containsKey("氏名")) {
+                        int name = map.get("氏名");
+                        idData.setName(data[name]);
+                    } else {
+                        model.addAttribute("error", "ヘッダーの名前を確認してください：氏名"); 
+                        return "alluserupload";  
+                    }
+
+                    if (map.containsKey("メールアドレス")){
+                        int mail = map.get("メールアドレス");
+                        idData.setMail(data[mail]);
+                    } else {
+                        model.addAttribute("error", "ヘッダーの名前を確認してください：氏名"); 
+                        return "alluserupload";  
+                    }
+
+                    if (map.containsKey("会社１")){
+                        int company1 = map.get("会社１");
+                        idData.setCompany1(data[company1]);
+                    } else {
+                        model.addAttribute("error", "ヘッダーの名前を確認してください：会社１(全角)"); 
+                        return "alluserupload";  
+                    }
+
+                    if (map.containsKey("会社２")){
+                        int company2 = map.get("会社２");
+                        idData.setCompany2(data[company2]);
+                    } else {
+                        model.addAttribute("error", "ヘッダーの名前を確認してください：会社２(全角)"); 
+                        return "alluserupload";  
+                    }
+                    if (map.containsKey("会社３")){
+                        int company3 = map.get("会社３");
+                        idData.setCompany3(data[company3]);
+                    } else {
+                        model.addAttribute("error", "ヘッダーの名前を確認してください：会社３(全角)"); 
+                        return "alluserupload";  
+                    }
+                    String banned = null;
+                    if (map.containsKey("利用可否")){
+                        int bannedIndex = map.get("利用可否");
+                        banned = data[bannedIndex];
+                    } else {
+                        model.addAttribute("error", "ヘッダーの名前を確認してください：利用可否"); 
+                        return "alluserupload";  
+                    }
+                    if (banned.equals("可")){
+                        idData.setBanned(0);
+                    } else {
+                        idData.setBanned(1);
+                    }  
+                    idData.setCompanyID(companyID);
+                    newIdList.add(idData);
+                }
+                i++;
             }
+            for (IndividualData id : newIdList) {
+
+                String mail = id.getMail();
+
+            //ユーザーが既に登録されているか確認
+                User universalUser=userService.findEmail(mail);
+                if(universalUser==null){
+                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+                    id.setRegistered(1);
+                } else {
+                    id.setRegistered(0);
+                }         
+            }
+                   
         } catch (Exception e) {
             System.out.println(e.getMessage());
             model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
-            return "uploadalluser";
-        } 
+            return "alluserupload";
+        } finally {
+            br.close();
+            uploadFile.delete();
+        }
+
+        // int companyID,String mail,int individual_id,String name,int banned,int registered, String company1,String company2,String company3,String number
+        for (IndividualData id : newIdList) {
+            int insert = individualService.insert(
+                id.getCompanyID(), id.getMail(), Integer.valueOf(id.getNumber()), id.getName(),id.getBanned(),
+                 id.getRegistered(), id.getCompany1(), id.getCompany2(), id.getCompany3()
+            );
+        }
+          
         model.addAttribute("error", "ファイルがアップロードされました");
-        return "uploadalluser";
+        return "alluserupload";
     }
   
-
 }

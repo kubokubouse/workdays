@@ -11,11 +11,11 @@ import com.example.demo.model.IndividualData;
 public interface IndividualDataRepository extends JpaRepository<IndividualData, Integer> {
 	@Transactional
 	@Modifying
-	@Query(value ="insert into individual_data(companyID,mail,individual_id,name,banned,registered,company1,company2,company3,number) values(?1,?2,?3,?4,'0','1',?5,?6,?7,?8) ",
+	@Query(value ="insert into individual_data(companyID,mail,individual_id,name,banned,registered,company1,company2,company3) values(?1,?2,?3,?4,?5,?6,?7,?8,?9) ",
 			nativeQuery = true)
 	
 	//1から順にuserid,year,month,day,id,weekdayが入る感じ　
-	int InsertIndividualData(int companyID,String mail,int individual_id,String name,String company1,String company2,String company3,String number);
+	int InsertIndividualData(int companyID,String mail,int individual_id,String name,int banned,int registered, String company1,String company2,String company3);
 	
 	IndividualData findById(int id);
 	IndividualData findByMailAndCompanyID(String mail,int companyID);

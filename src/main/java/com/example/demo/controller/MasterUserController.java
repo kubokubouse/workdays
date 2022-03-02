@@ -98,12 +98,8 @@ public class MasterUserController extends WorkdaysProperties{
 		File input = getInputFolder(ci.getCompanyID());
 		File output = getOutputFolder(ci.getCompanyID());
 
-		try {
-			input.createNewFile();
-			output.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		input.mkdir();
+		output.mkdir();
 
 		//TODO セッション管理つける
 		return "masteruser";

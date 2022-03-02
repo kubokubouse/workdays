@@ -58,7 +58,7 @@ public class IndividualService {
     	return individualRepository.findByMail(mail);
     }
    
-    public int insert(int companyID, String mail, int individual_id,String name,String company1,String company2,String company3,String number){
-        return individualRepository.InsertIndividualData(companyID, mail, individual_id,name,company1,company2,company3, number);
+    public int insert(int companyID, String mail, int individual_id,String name, int banned, int registered, String company1,String company2,String company3){
+        return individualRepository.InsertIndividualData(companyID, mail, individual_id,name, banned, registered,company1,company2,company3);
     }
 }
