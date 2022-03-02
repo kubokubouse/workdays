@@ -159,9 +159,10 @@ a:hover::after{
       <table class="table table-striped">
         <thead>
           <tr>
+            <th>メールアドレス</th>
             <th>苗字</th>
             <th>名前</th>
-            <th>メールアドレス</th>
+            <th>パスワード</th>
             <th>利用可否</th>
             
 
@@ -173,7 +174,9 @@ a:hover::after{
 
             
             
-            
+            <td>
+                [[${user.email}]]
+            </td>
             
             <td>
                 [[${user.lastname}]]
@@ -184,8 +187,10 @@ a:hover::after{
             </td>
 
             <td>
-                [[${user.email}]]
+                [[${user.password}]]
             </td>
+
+            
             <td>
                 <select name="banned" th:userid="${user.id}">
                 <div th:if="${user.banned==0}">
@@ -209,8 +214,7 @@ a:hover::after{
 
 
   </div>
-  <p><a href="/register">新規ユーザー登録はこちら</a></p>
-  <p><a href="/superuser">管理画面へ戻る</a></p>
+  <p><a href="/masteruser">管理画面へ戻る</a></p>
   <p><a href="/">ログアウト</a></p>
 </body>
 </html>
