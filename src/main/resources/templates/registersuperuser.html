@@ -14,16 +14,12 @@
     <form id="entryForm" th:action="@{/confirmsuperuser}" th:object="${superUser}"method="post" >
     <table class="entryTable" border="1">
 
-  
-    
-    <tr>
-      <th>パスワード </th>
-      <td>
-        <label for="password"></label>
-        <input type="text"  th:field="*{pass}">
-       
-        <small>※半角英数</small>
-      </td>
+      <tr>
+        <th>会社ID</th>
+        <td>
+          <label for="companyID"></label>
+          <input type="text"  th:field="*{companyID}">
+        </td>
     </tr>
 
     <tr>
@@ -35,14 +31,16 @@
         <small>※半角英数</small>
       </td>
     </tr>
-
+    
     <tr>
-      <th>会社ID</th>
+      <th>パスワード </th>
       <td>
-        <label for="companyID"></label>
-        <input type="text"  th:field="*{companyID}">
+        <label for="password"></label>
+        <input type="text"  th:field="*{pass}">
+       
+        <small>※半角英数</small>
       </td>
-  </tr>
+    </tr>
 
   </table>
   <div class="send">
