@@ -23,15 +23,16 @@
 }
 body {
   font-family: sans-serif;
+ 
 }
-
 table {
   border-collapse: collapse;
   margin: 0 auto;
   padding: 0;
-  width: 850px;
+  width: 80%;
   table-layout: fixed;
 }
+
 thead th{
   padding: 1em .8em;
   border-right: 5px solid#fff;
@@ -80,21 +81,18 @@ a:hover::after{
 }
 
 .tabs {
-  margin-left: 100px;
-  margin-top: 50px;
+  text-align: left;
+  margin-left: 20px;
+  margin-top: 10px;
 }
 
 body {
   font-family: sans-serif;
+  max-width: 80%;
+  text-align: center;
+  margin: 0 auto;
 }
 
-table {
-  border-collapse: collapse;
-  margin: 0 auto;
-  padding: 0;
-  width: 850px;
-  table-layout: fixed;
-}
 thead th{
   padding: 1em .8em;
   border-right: 5px solid#fff;
@@ -142,9 +140,8 @@ a:hover::after{
   width: 100%;
 }
 
-.tabs {
-  margin-left: 100px;
-  margin-top: 50px;
+.btn {
+  margin-top: 10px;
 }
 
 </style>
@@ -187,11 +184,19 @@ a:hover::after{
     <h1>[[${workingListParam.month}]]月勤怠表</h1>
     <form th:action="@{/companyselect}" th:object="${users}" >
     </div>
-    <div th:each="idUser, st:${idUserList}"><div th:if="${idUser.banned==0}">[[${idUser.companyName}]]: <div th:unless="${idUser.company1==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]</div><div th:unless="${idUser.company2==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company2}|"> [[${idUser.company2}]]</div><div th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"}> [[${idUser.company3}]]</div></div>
+  
+    <div class="tabs">
+      <div th:each="idUser, st:${idUserList}">
+        <div th:if="${idUser.banned==0}">[[${idUser.companyName}]]: <div th:unless="${idUser.company1==''}">
+          <input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]</div>
+          <div th:unless="${idUser.company2==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company2}|"> [[${idUser.company2}]]</div>
+          <div th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"}> [[${idUser.company3}]]</div>
+        </div>
+      </div>
+      <input type="submit" class="btn btn-primary" value="Excelファイル出力">
     </div>
-    
-    <input type="submit" class="btn btn-primary" value="Excelファイル出力">
-  </form>
+  
+    </form>
     
       <div  class="text-end">
        
@@ -259,7 +264,7 @@ a:hover::after{
       </table>
     </form>
   </div>
-  <div class="tabs">
+ 
     <p><a href="/">ログアウト</a></p>
     <!-- <p><a href="/sendmail">メール送信</a></p>
     <p><a href="/beforemonth">先月へ</a></p>
@@ -267,6 +272,6 @@ a:hover::after{
     <p><a href="/">ログアウト</a></p> -->
        <!-- <p><a href="/Excel">勤怠表のExcel化</a></p>
     <p><a href="/selectFile">テンプレを指定してExcel化</a></p> -->
-  </div>
+
 </body>
 </html>
