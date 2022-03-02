@@ -29,28 +29,8 @@
       <td>
         <label for="start_contract"></label>
         <input type="date" class="register-control"
-        th:errorclass="is-invalid" th:field="*{startContract}">
-        <div class="invalid-feedback" th:errors="*{startContract}"></div>
-      </td>
-    </tr>
-
-    <tr>
-      <th>更新日</th>
-      <td>
-        <label for="topup_contract"></label>
-        <input type="date" class="register-control"
-        th:errorclass="is-invalid" th:field="*{topupContract}">
-       <div class="invalid-feedback" th:errors="*{topupContract}"></div>
-      </td>
-    </tr>
-
-    <tr>
-      <th>終了予定日</th>
-      <td>
-        <label for="end_contract"></label>
-        <input type="date" class="register-control"
-        th:errorclass="is-invalid" th:field="*{endContract}">
-       <div class="invalid-feedback" th:errors="*{endContract}"></div>
+        th:errorclass="is-invalid" th:field="*{register}">
+        <div class="invalid-feedback" th:errors="*{register}"></div>
       </td>
     </tr>
 
@@ -98,7 +78,7 @@
     </tr>
 
     <tr>
-      <th>上限ユーザー</th>
+      <th>上限ユーザー数</th>
       <td>
         <label for="limited_user"></label>
         <input type="text" class="register-control"
