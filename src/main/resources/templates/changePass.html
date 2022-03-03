@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<title>パスワード変更</title>
+</head>
+
+<script>
+	function CheckPassword(confirm){
+		// 入力値取得
+		var input1 = document.getElementById("password").value;
+		var input2 = confirm.value;
+		// パスワード比較
+		if(input1 != input2){
+			confirm.setCustomValidity("入力値が一致しません。");
+		}else{
+			confirm.setCustomValidity('');
+		}
+	}
+</script>
+
+<body>
+<h2>現在のパスワードと新しいパスワードを入力してください。</h2>
+<form th:action="@{/updatePass}">
+    <table>
+    <tr>
+        <td>現在のパスワード</td><td>：<input type="password" name="old" required></td>
+    </tr>
+    <tr>
+        <td>新しいパスワード</td><td>：<input type="password" class="form-control" name="new" id="password" required></td>
+    </tr>
+    <tr>
+        <td>新しいパスワード（確認用）</td><td>：<input type="password" class="form-control" name="confirm" oninput="CheckPassword(this)" required></td>
+    </tr>
+    </table>
+    <p th:text="${error}" class="error"></p>
+    <p><input type="submit" class="btn" value="登録"></p>
+</form>
+
+    <p><a href="/superuser">管理画面へ戻る</a></p>
+    <p><a href="/">ログアウト</a></p>
+    
+</body>
+</html>
+
+<style>
+    body {
+        text-align: center;
+    }
+    table {
+        margin: 0 auto;
+    }
+    h2 {
+        margin-top: 30px;
+        border-bottom: solid 3px skyblue;
+        position: relative;
+      }
+      
+      h2:after {
+        position: absolute;
+        content: " ";
+        display: block;
+        border-bottom: solid 3px #ffc778;
+        bottom: -3px;
+        width: 30%;
+      }
+
+      .btn {
+        margin-top: 50px;
+        background    : #1a1aff; 
+        color         : #ffffff; 
+    }
+
+    .error {
+        color: blue;
+        font-weight: bold;
+    }
+
+
+</style>
