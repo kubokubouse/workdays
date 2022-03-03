@@ -28,6 +28,7 @@ import com.example.demo.service.CompanyInfoService;
 import com.example.demo.repository.CompanyInfoRepository;
 import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.WorkdaysProperties;
+import com.example.demo.model.MasterUser;
 
 @Controller
 public class MasterUserController extends WorkdaysProperties{
@@ -43,18 +44,26 @@ public class MasterUserController extends WorkdaysProperties{
 
     @Autowired
     CompanyInfoService ciService;
+	@Autowired
+    HttpSession session;
 
-	//メニュー　<p><a href="/masteruser">メニュー画面へ戻る</a></p>
+	//メニュー画面へ戻る
 	@GetMapping("/masteruser")
 	public String showMenue(@ModelAttribute CompanyInfo companyInfo){
-		//TODO セッション管理
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
 		return "masteruser";
 	}
 
     //会社情報登録画面
     @GetMapping("/company_info")
 	public String register_superUser(@ModelAttribute CompanyInfo companyInfo){
-	//TODO セッション管理	
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
 		return "company_info";
 	}
 
@@ -104,7 +113,6 @@ public class MasterUserController extends WorkdaysProperties{
 		input.mkdir();
 		output.mkdir();
 
-		//TODO セッション管理つける
 		return "masteruser";
     }
 
@@ -112,7 +120,10 @@ public class MasterUserController extends WorkdaysProperties{
 	@GetMapping("/companylist")
 	public String companylist(Model model){
 
-	//TODO セッション管理する
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
 
 		List<CompanyInfo> ciList = new ArrayList<CompanyInfo>();
 		ciList = ciService.searchAllCompanyInfo();
@@ -183,7 +194,10 @@ public class MasterUserController extends WorkdaysProperties{
 	@GetMapping("/contractlist")
 	public String contractlist(Model model){
 	
-		//TODO セッション管理する
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
 	
 		List<ContractData> ciList = ciService.searchAllContractData();
 		model.addAttribute("ciList", ciList);

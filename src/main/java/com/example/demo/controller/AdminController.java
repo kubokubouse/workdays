@@ -394,6 +394,7 @@ public class AdminController extends WorkdaysProperties{
         }
 
         int i = 0;
+        List<String> errorMailList = new ArrayList<String>();
         List<IndividualData> newIdList = new ArrayList<IndividualData>();
         Map<String, Integer> map = new HashMap<String, Integer>();
         try {            
@@ -459,10 +460,10 @@ public class AdminController extends WorkdaysProperties{
                         //正しいアドレスか確認
                         String checkMail = mailSendService.checkMailAddress(data[mail]);
                         if(checkMail != null) {
-                            model.addAttribute("error", "使用出来ないメールアドレスです：" + checkMail); 
-                            return "alluserupload";  
+                            errorMailList.add("使用出来ないメールアドレス：" + checkMail);   
+                        } else {
+                            idData.setMail(data[mail]);
                         }
-                        idData.setMail(data[mail]);
                     } else {
                         model.addAttribute("error", "ヘッダーの名前を確認してください：メールアドレス"); 
                         return "alluserupload";  
@@ -508,6 +509,14 @@ public class AdminController extends WorkdaysProperties{
                 }
                 i++;
             }
+
+            //ユーザー情報に使用できないメールアドレスを含んでいた場合はエラーを返す
+            if (errorMailList.size() != 0 || !errorMailList.isEmpty()) {
+                errorMailList.add("使用できないメールアドレスが含まれているためファイルのアップロードに失敗しました");
+                model.addAttribute("mail", errorMailList); 
+                return "alluserupload";
+            }
+
             for (IndividualData id : newIdList) {
 
                 String mail = id.getMail();
@@ -531,6 +540,7 @@ public class AdminController extends WorkdaysProperties{
             uploadFile.delete();
         }
 
+ 
         // int companyID,String mail,int individual_id,String name,int banned,int registered, String company1,String company2,String company3,String number
         for (IndividualData id : newIdList) {
             int insert = individualService.insert(
