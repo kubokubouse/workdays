@@ -31,7 +31,7 @@ public class ContractData
 {
 	 @Id
 	 @Column
-	 private int companyID;
+	 private Integer companyID;
 	
 	 @Column
 	  private Date register;
