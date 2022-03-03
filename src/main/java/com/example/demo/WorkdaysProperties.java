@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import java.io.File;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 public class WorkdaysProperties {
 
@@ -20,6 +22,13 @@ public class WorkdaysProperties {
     public File getOutputFolder(int companyID) {
         File outputFile = new File(basePath + "//" + companyID + "_output");
         return outputFile;
+    }
+    public String getTimeStamp() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(timestamp.getTime());
+        long timeInMilliSeconds = date.getTime();
+        java.sql.Date date1 = new java.sql.Date(timeInMilliSeconds);
+        return date1.toString();
     }
     
 }

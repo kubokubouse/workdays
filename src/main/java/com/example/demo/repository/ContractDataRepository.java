@@ -7,4 +7,6 @@ import com.example.demo.model.ContractData;
 public interface ContractDataRepository extends JpaRepository<ContractData, Integer> {
 	ContractData findById(int id);
 	List<ContractData> findByCompanyID(int companyID);
+	ContractData findByCompanyIDAndContractID(int companyID,int contractID);
+	
 }

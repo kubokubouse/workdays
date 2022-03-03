@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 import java.io.FileOutputStream;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.io.File;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.validation.BindingResult;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -118,13 +121,11 @@ public class MasterController {
 	@PostMapping("/confirmcontract")
 	public String confirmcontract(@ModelAttribute ContractData contractData,Model model,BindingResult result){
 		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
-		System.out.println(contractDataList);
-		if(contractDataList==null){
-			System.out.println("成功");
-		}
+		
+		
 		 
 		if (result.hasErrors()){
-			// エラーがある場合、index.htmlに戻る
+			// エラーがある場合、登録画面に戻る
 			return "contract";
 		}
  		
@@ -135,7 +136,30 @@ public class MasterController {
 	//契約情報をDBに登録
 	@PostMapping("/registercontract")
 	public String registercontract(@Validated @ModelAttribute  ContractData contractData, BindingResult result, Model model){
-		
+		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
+		if(CollectionUtils.isEmpty(contractDataList)){
+			contractData.setContractID(1);
+		}
+
+		else{
+			int contractID=0;
+			for(ContractData contractdata:contractDataList){
+				if (contractID<contractdata.getContractID()){
+					contractID=contractdata.getContractID();
+				}
+				
+			}
+			contractID=contractID+1;
+			contractData.setContractID(contractID);
+
+		}
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(timestamp.getTime());
+        long timeInMilliSeconds = date.getTime();
+        java.sql.Date date1 = new java.sql.Date(timeInMilliSeconds);
+		String timeStamp=date1.toString();
+
+		contractData.setTopupContract(timeStamp);	
 		
 		contractRepository.save(contractData);
 		// ルートパス("/") にリダイレクトします
