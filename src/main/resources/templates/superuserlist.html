@@ -151,7 +151,7 @@ a:hover::after{
     <div th:if="${validationError}" th:each="error : ${validationError}">
       <label class="text-danger" th:text="${error}"></label>
     </div>
-    <h1>ユーザー一覧</h1>
+    <h1>管理者一覧</h1>
     
 
       <br/>
@@ -200,6 +200,6 @@ a:hover::after{
   </div>
   <p><a href="/register">新規ユーザー登録はこちら</a></p>
   <p><a href="/superuser">管理画面へ戻る</a></p>
-  <p><a href="/">ログアウト</a></p>
+  <p><a href="/master">ログアウト</a></p>
 </body>
 </html>
