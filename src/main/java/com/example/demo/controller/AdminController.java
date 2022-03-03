@@ -152,6 +152,7 @@ public class AdminController extends WorkdaysProperties{
         }
         int companyID=(int)session.getAttribute("companyId");
 		List<IndividualData> iList = userService.findCompanyID(companyID);
+        System.out.println(iList);
 		model.addAttribute("userListParam", iList);
 		return "userlist";
 	}

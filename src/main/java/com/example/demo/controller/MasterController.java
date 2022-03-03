@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 import java.io.FileOutputStream;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.io.File;
 import java.io.BufferedOutputStream;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.validation.BindingResult;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,17 +22,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
 
+import com.example.demo.model.ContractData;
 import com.example.demo.model.Login;
 import com.example.demo.model.User;
 import com.example.demo.model.UserData;
 import com.example.demo.model.UserListParam;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
+import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.SuperUserListParam;
+import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.repository.SuperUserRepository2;
 import com.example.demo.WorkdaysProperties;
 
@@ -43,6 +49,10 @@ public class MasterController {
     SuperUserRepository2 superUserRepository2;
     @Autowired
     SuperUserService superUserService;
+	@Autowired
+    CompanyInfoService companyInfoService;
+	@Autowired
+    ContractDataRepository contractRepository;
     
     @Autowired
     HttpSession session;
@@ -100,6 +110,62 @@ public class MasterController {
 		return "masteruser";
     }
 
+
+	//契約情報登録ページに遷移
+	@GetMapping("/contract")
+	public String contract(@ModelAttribute ContractData contractData,Model model,BindingResult result){
+		return "contract";
+	}
+ 
+	//契約情報送信時に確認画面に遷移
+	@PostMapping("/confirmcontract")
+	public String confirmcontract(@ModelAttribute ContractData contractData,Model model,BindingResult result){
+		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
+		
+		
+		 
+		if (result.hasErrors()){
+			// エラーがある場合、登録画面に戻る
+			return "contract";
+		}
+ 		
+		model.addAttribute("contractData", contractData);
+		return "confirmcontract";
+	}
+ 
+	//契約情報をDBに登録
+	@PostMapping("/registercontract")
+	public String registercontract(@Validated @ModelAttribute  ContractData contractData, BindingResult result, Model model){
+		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
+		if(CollectionUtils.isEmpty(contractDataList)){
+			contractData.setContractID(1);
+		}
+
+		else{
+			int contractID=0;
+			for(ContractData contractdata:contractDataList){
+				if (contractID<contractdata.getContractID()){
+					contractID=contractdata.getContractID();
+				}
+				
+			}
+			contractID=contractID+1;
+			contractData.setContractID(contractID);
+
+		}
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(timestamp.getTime());
+        long timeInMilliSeconds = date.getTime();
+        java.sql.Date date1 = new java.sql.Date(timeInMilliSeconds);
+		String timeStamp=date1.toString();
+
+		contractData.setTopupContract(timeStamp);	
+		
+		contractRepository.save(contractData);
+		// ルートパス("/") にリダイレクトします
+		return "masteruser";
+	}
+
     //ユーザー編集画面
 	@GetMapping("/superuserlist")
 	public String superuserlist(@Validated  Model model, @ModelAttribute SuperUser superuser){
@@ -129,16 +195,18 @@ public class MasterController {
 
 		switch (name) {
 			case "pass":
-			  superUser.setPass(inputvalue);
-			  break;
-			case "email":
-			  superUser.setEmail(inputvalue);
-			  break;
-			  case "companyID":
-			  superUser.setCompanyID(Integer.parseInt(inputvalue));
-			  break;
+			 superUser.setPass(inputvalue);
+			break;
 			
-			} 
+			case "email":
+			 superUser.setEmail(inputvalue);
+			break;
+			
+			case "companyID":
+			  superUser.setCompanyID(Integer.parseInt(inputvalue));
+			break;
+			
+		} 
 		superUserService.update(superUser);
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);

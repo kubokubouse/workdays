@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "contract_data")
+@IdClass(value=ContractDataKey.class)
 public class ContractData
 {
 	 @Id
@@ -54,5 +56,11 @@ public class ContractData
 	  
 	 @Column
 	 private Integer taxExclude;
+
+	 
+	 @Id
+	 @Column
+	 private Integer contractID;
+
 
 }

@@ -131,9 +131,9 @@ a:hover::after{
         <thead>
           <tr>
             <th>会社ID</th>
+            <th>更新日</th>
             <th>企業名</th>
             <th>登録日</th>
-            <th>更新日</th>
             <th>担当者名 </th>
             <th>電話番号</th>
             <th>メールアドレス</th>
@@ -151,7 +151,9 @@ a:hover::after{
             <td>
               <input type="text" th:companyid="${user.companyID}" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >
             </td>
-            
+            <td>
+              [[${user.topupContract}]]
+            </td>
             <td>
               <input type="text" th:companyid="${user.companyID}" th:id="${user.companyName}" class="form-control" th:name="companyName" th:value="${user.companyName}" >
             </td>
@@ -159,9 +161,7 @@ a:hover::after{
             <td>
               <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="register" th:value="${user.register}" >
             </td>
-            <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="topupContract" th:value="${user.topupContract}">
-            </td>
+            
             <td>
               <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="person" th:value="${user.person}">
             </td>

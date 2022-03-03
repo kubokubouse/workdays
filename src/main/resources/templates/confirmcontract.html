@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>登録確認</title>
+</head>
+<body>
+
+  <table class="entryTable" border="1">
+
+  <caption>会社情報</caption>
+
+  <tr>
+    <th>会社ID</th>
+    <td>[[${contractData.companyID}]] </td>
+  </tr>
+
+  <tr>
+    <th>開始予定日</th>
+    <td>[[${contractData.startContract}]] </td>
+  </tr>
+  <tr>
+    <th>終了予定日</th>
+    <td>[[${contractData.endContract}]] </td>
+  </tr>
+  <tr>
+    <th>登録日</th>
+    <td>[[${contractData.register}]] </td>
+  </tr>
+
+  <tr>
+    <th>上限ユーザー</th>
+    <td>[[${contractData.limitedUser}]] </td>
+  </tr>
+
+  <tr>
+    <th>ランク</th>
+    <td>[[${contractData.userRank}]] </td>
+  </tr>
+  
+  <tr>
+    <th>税抜きの金額</th>
+    <td>[[${contractData.taxExclude}]] </td>
+  </tr>
+
+  <tr>
+    <th>税込みの金額</th>
+    <td>[[${contractData.taxInclude}]]</td>
+  </tr>
+
+  
+
+  
+
+</table>
+
+<div class="footer">
+  <a href="#" id="back-link">戻る</a>
+  <form  th:action="@{/registercontract}" th:object="${contractData}"method="post" >
+    <label for="name"></label>
+    <input type="hidden" th:field="*{companyID}">
+    <input type="hidden" th:field="*{startContract}">
+    <input type="hidden" th:field="*{register}">
+    <input type="hidden" th:field="*{endContract}">
+    <input type="hidden" th:field="*{userRank}">
+    <input type="hidden" th:field="*{taxExclude}">
+    <input type="hidden" th:field="*{taxInclude}">
+    <input type="hidden" th:field="*{limitedUser}">
+    <input type="submit" value="登録">
+  </form>
+</div>
+</body>
+
+<script>
+  const backLink = document.getElementById('back-link');
+  backLink.addEventListener('click', () => {
+    history.back(-1);
+  });
+</script>
+
+</html>
+
+<style>
+
+  body {
+    font-family: sans-serif;
+    text-align: center;
+  }  
+
+  caption {
+    border-bottom: solid 3px skyblue;
+    position: relative;
+    font-family: sans-serif;
+  }
+  
+  caption:after {
+    position: absolute;
+    content: " ";
+    display: block;
+    border-bottom: solid 3px #ffc778;
+    bottom: -3px;
+    width: 30%;
+  }
+
+  th {
+    color: black;
+    background-color: #CCCCFF;
+  }
+
+  .entryTable {
+    border: 0px none;
+    margin: auto;
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+
+  .footer {
+    display:flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+  }
+</style>
