@@ -28,12 +28,14 @@ public class SuperUser{
 	private Integer id;
 	
 	@Column
+	@NotBlank
 	private String pass;
 
 	@Column
-	
+	@NotBlank
 	private String email;
 
 	@Column
+	
 	private Integer companyID;
 }
