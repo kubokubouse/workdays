@@ -76,7 +76,7 @@ public class MasterController {
 	}
     //管理者登録ページに移行
 	@GetMapping("/registersuperuser")
-	public String registerAdmin(@ModelAttribute SuperUser superUser,Model model,BindingResult result){
+	public String registerAdmin(@ModelAttribute SuperUser superUser,BindingResult result,Model model){
         
 		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
         if(masterUser==null){
@@ -88,16 +88,17 @@ public class MasterController {
 
     //データ送信時に確認画面に移行
     @PostMapping("/confirmsuperuser")
-    public String confirmsuperuser(@ModelAttribute SuperUser superUser,Model model,BindingResult result){
+    public String confirmsuperuser(@Validated @ModelAttribute SuperUser superUser,BindingResult result,Model model){
+		if (result.hasErrors()){
+			// エラーがある場合、index.htmlに戻る
+            return "registersuperuser";
+        }
         SuperUser usedEmailuser=superUserService.findEmailCompanyID(superUser.getEmail(),superUser.getCompanyID());
 		if(usedEmailuser!=null){
 			return "usedemail";
 		}
         
-        if (result.hasErrors()){
-			// エラーがある場合、index.htmlに戻る
-            return "registersuperuser";
-        }
+        
 		
 
         model.addAttribute("superUser", superUser);

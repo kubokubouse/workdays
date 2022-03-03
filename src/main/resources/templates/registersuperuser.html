@@ -18,7 +18,8 @@
         <th>会社ID</th>
         <td>
           <label for="companyID"></label>
-          <input type="text"  th:field="*{companyID}">
+          <input type="text" th:errorclass="is-invalid" th:field="*{companyID}">
+          <div class="invalid-feedback" th:errors="*{companyID}"></div>
         </td>
     </tr>
 
@@ -26,7 +27,8 @@
       <th>メールアドレス</th>
       <td>
         <label for="email"></label>
-        <input type="text"  th:field="*{email}">
+        <input type="text" th:errorclass="is-invalid" th:field="*{email}">
+        <div class="invalid-feedback" th:errors="*{email}"></div>
        
         <small>※半角英数</small>
       </td>
@@ -36,7 +38,8 @@
       <th>パスワード </th>
       <td>
         <label for="password"></label>
-        <input type="text"  th:field="*{pass}">
+        <input type="text" th:errorclass="is-invalid" th:field="*{pass}">
+        <div class="invalid-feedback" th:errors="*{pass}"></div>
        
         <small>※半角英数</small>
       </td>
