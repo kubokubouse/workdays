@@ -17,17 +17,7 @@
 
   <tr>
     <th>登録日</th>
-    <td>[[${companyInfo.startContract}]] </td>
-  </tr>
-
-  <tr>
-    <th>更新日</th>
-    <td>[[${companyInfo.topupContract}]] </td>
-  </tr>
-
-  <tr>
-    <th>終了予定日</th>
-    <td>[[${companyInfo.endContract}]] </td>
+    <td>[[${companyInfo.register}]] </td>
   </tr>
 
   <tr>
@@ -62,9 +52,7 @@
   <form  th:action="@{/ci_regist}" th:object="${companyInfo}"method="post" >
     <label for="name"></label>
     <input type="hidden" th:field="*{companyID}">
-    <input type="hidden" th:field="*{startContract}">
-    <input type="hidden" th:field="*{topupContract}">
-    <input type="hidden" th:field="*{endContract}">
+    <input type="hidden" th:field="*{register}">
     <input type="hidden" th:field="*{companyName}">
     <input type="hidden" th:field="*{person}">
     <input type="hidden" th:field="*{tel}">

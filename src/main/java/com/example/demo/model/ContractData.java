@@ -40,6 +40,9 @@ public class ContractData
 	 @Column
 	 private Date endContract;
 
+	 @Column
+	 private String topupContract;
+
 	  @Column
 	  private Integer limitedUser;
 

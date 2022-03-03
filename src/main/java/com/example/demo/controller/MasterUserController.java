@@ -83,13 +83,16 @@ public class MasterUserController extends WorkdaysProperties{
 			return "confirm_companyInfo";
 		}
         ci.setBanned(0);
+
+		//更新日は現在時刻
+		String timestamp = getTimeStamp();
+		ci.setTopupContract(timestamp);
 		companyRepository.save(ci);
 
-		//契約情報も登録する
+		//契約情報も会社IDと登録日、更新日のみを入力
 		cData.setCompanyID(ci.getCompanyID());
-		cData.setRegister(ci.getStartContract());
-		cData.setStartContract(ci.getStartContract());
-		cData.setEndContract(ci.getEndContract());
+		cData.setRegister(ci.getRegister());
+		cData.setTopupContract(timestamp);
 		cData.setLimitedUser(ci.getLimitedUser());
 
 		contractRepository.save(cData);
@@ -128,14 +131,11 @@ public class MasterUserController extends WorkdaysProperties{
 			case "companyName":
 			  ci.setCompanyName(inputvalue);
 			  break;
-			case "startContract":
-			  ci.setStartContract(Date.valueOf(inputvalue));
+			case "register":
+			  ci.setRegister(Date.valueOf(inputvalue));
 			  break;
 			  case "topupContract":
-			  ci.setTopupContract(Date.valueOf(inputvalue));
-			  break;
-			case "endContract":
-			  ci.setEndContract(Date.valueOf(inputvalue));
+			  ci.setTopupContract(getTimeStamp());
 			  break;
 			case "person":
 			  ci.setPerson(inputvalue);
