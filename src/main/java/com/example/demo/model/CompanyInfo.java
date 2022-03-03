@@ -35,14 +35,8 @@ public class CompanyInfo
 	 @Column
 	  private Date register;
 
-	  @Column
-	  private Date startContract;
-
 	 @Column
-	  private Date topupContract;
-	  
-	 @Column
-	 private Date endContract;
+	  private String topupContract;
 
 	 @Column
 	 @NotEmpty

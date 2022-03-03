@@ -134,7 +134,6 @@ a:hover::after{
             <th>企業名</th>
             <th>登録日</th>
             <th>更新日</th>
-            <th>終了予定日</th>
             <th>担当者名 </th>
             <th>電話番号</th>
             <th>メールアドレス</th>
@@ -158,13 +157,10 @@ a:hover::after{
             </td>
             
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="startContract" th:value="${user.startContract}" >
+              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="register" th:value="${user.register}" >
             </td>
             <td>
               <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="topupContract" th:value="${user.topupContract}">
-            </td>
-            <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="endContract" th:value="${user.endContract}">
             </td>
             <td>
               <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="person" th:value="${user.person}">
