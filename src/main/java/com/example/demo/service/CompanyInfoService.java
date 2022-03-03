@@ -42,6 +42,11 @@ public class CompanyInfoService {
 		List<ContractData> contractList = contractDataRepository.findAll();
 		return contractList;
 	}
+
+	public List<ContractData> findCompanyID(int companyID) {
+		List<ContractData> contractList = contractDataRepository.findByCompanyID(companyID);
+		return contractList;
+	}
     
 	public void deleteCompany(int id){
 		CompanyInfo ci = companyInfoRepository.findById(id);

@@ -19,17 +19,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
 
+import com.example.demo.model.ContractData;
 import com.example.demo.model.Login;
 import com.example.demo.model.User;
 import com.example.demo.model.UserData;
 import com.example.demo.model.UserListParam;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
+import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.SuperUserListParam;
+import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.repository.SuperUserRepository2;
 import com.example.demo.WorkdaysProperties;
 
@@ -43,6 +46,10 @@ public class MasterController {
     SuperUserRepository2 superUserRepository2;
     @Autowired
     SuperUserService superUserService;
+	@Autowired
+    CompanyInfoService companyInfoService;
+	@Autowired
+    ContractDataRepository contractRepository;
     
     @Autowired
     HttpSession session;
@@ -100,6 +107,41 @@ public class MasterController {
 		return "masteruser";
     }
 
+
+	//契約情報登録ページに遷移
+	@GetMapping("/contract")
+	public String contract(@ModelAttribute ContractData contractData,Model model,BindingResult result){
+		return "contract";
+	}
+ 
+	//契約情報送信時に確認画面に遷移
+	@PostMapping("/confirmcontract")
+	public String confirmcontract(@ModelAttribute ContractData contractData,Model model,BindingResult result){
+		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
+		System.out.println(contractDataList);
+		if(contractDataList==null){
+			System.out.println("成功");
+		}
+		 
+		if (result.hasErrors()){
+			// エラーがある場合、index.htmlに戻る
+			return "contract";
+		}
+ 		
+		model.addAttribute("contractData", contractData);
+		return "confirmcontract";
+	}
+ 
+	//契約情報をDBに登録
+	@PostMapping("/registercontract")
+	public String registercontract(@Validated @ModelAttribute  ContractData contractData, BindingResult result, Model model){
+		
+		
+		contractRepository.save(contractData);
+		// ルートパス("/") にリダイレクトします
+		return "masteruser";
+	}
+
     //ユーザー編集画面
 	@GetMapping("/superuserlist")
 	public String superuserlist(@Validated  Model model, @ModelAttribute SuperUser superuser){
@@ -129,16 +171,18 @@ public class MasterController {
 
 		switch (name) {
 			case "pass":
-			  superUser.setPass(inputvalue);
-			  break;
-			case "email":
-			  superUser.setEmail(inputvalue);
-			  break;
-			  case "companyID":
-			  superUser.setCompanyID(Integer.parseInt(inputvalue));
-			  break;
+			 superUser.setPass(inputvalue);
+			break;
 			
-			} 
+			case "email":
+			 superUser.setEmail(inputvalue);
+			break;
+			
+			case "companyID":
+			  superUser.setCompanyID(Integer.parseInt(inputvalue));
+			break;
+			
+		} 
 		superUserService.update(superUser);
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
