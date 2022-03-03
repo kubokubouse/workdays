@@ -71,13 +71,17 @@ public class MasterController {
         if(masterUser==null){
             return "masterloginfault";
         }
-
+		session.setAttribute("masterUser", masterUser);
 		return "masteruser";
 	}
     //管理者登録ページに移行
 	@GetMapping("/registersuperuser")
 	public String registerAdmin(@ModelAttribute SuperUser superUser,Model model,BindingResult result){
         
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
         
 		return "registersuperuser";
 	}
@@ -114,15 +118,22 @@ public class MasterController {
 	//契約情報登録ページに遷移
 	@GetMapping("/contract")
 	public String contract(@ModelAttribute ContractData contractData){
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
 		return "contract";
 	}
  
 	//契約情報送信時に確認画面に遷移
 	@PostMapping("/confirmcontract")
 	public String confirmcontract(@ModelAttribute ContractData contractData,BindingResult result, Model model){
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
+
 		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
-		
-		
 		 
 		if (result.hasErrors()){
 			// エラーがある場合、登録画面に戻る
@@ -169,6 +180,11 @@ public class MasterController {
     //ユーザー編集画面
 	@GetMapping("/superuserlist")
 	public String superuserlist(@Validated  Model model, @ModelAttribute SuperUser superuser){
+
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
         
         SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
@@ -216,6 +232,11 @@ public class MasterController {
 	//ユニバーサルユーザー一覧表示
 	@GetMapping("/alluserlist")
 	public String alluserlsit(Model model){
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
+		
 		UserListParam userListParam = userService.searchAllUser();
 		model.addAttribute("userListParam", userListParam);
 		List<UserData> userDataList=userListParam.getUserDataList();
