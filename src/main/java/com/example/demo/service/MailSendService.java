@@ -217,7 +217,7 @@ public class MailSendService {
       // 送信先アドレスをセット
       helper.setTo(adress);
       // 表題をセット
-      helper.setSubject("勤怠表の提出");
+      helper.setSubject("ユーザー登録のお知らせ");
 
       
     }
