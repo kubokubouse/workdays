@@ -1,10 +1,8 @@
 package com.example.demo;
 
 import java.io.File;
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public class WorkdaysProperties {
 
@@ -25,7 +23,6 @@ public class WorkdaysProperties {
         File outputFile = new File(basePath + "//" + companyID + "_output");
         return outputFile;
     }
-
     public String getTimeStamp() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Date date = new Date(timestamp.getTime());
