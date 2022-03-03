@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@IdClass(value=IndividualDataKey.class)
 public class IndividualData
 {
 	 @Id
@@ -40,6 +42,7 @@ public class IndividualData
 	 @Column
 	 private String company3;
 
+	 @Id
 	  @Column
 	  @Email
 	  private String mail;
