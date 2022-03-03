@@ -113,13 +113,13 @@ public class MasterController {
 
 	//契約情報登録ページに遷移
 	@GetMapping("/contract")
-	public String contract(@ModelAttribute ContractData contractData,Model model,BindingResult result){
+	public String contract(@ModelAttribute ContractData contractData){
 		return "contract";
 	}
  
 	//契約情報送信時に確認画面に遷移
 	@PostMapping("/confirmcontract")
-	public String confirmcontract(@ModelAttribute ContractData contractData,Model model,BindingResult result){
+	public String confirmcontract(@ModelAttribute ContractData contractData,BindingResult result, Model model){
 		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
 		
 		
