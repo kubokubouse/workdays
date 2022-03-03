@@ -57,8 +57,6 @@ public class ContractData
 	 @Column
 	 private Integer taxExclude;
 
-	 @Column
-	 private String topupContract;
 	 
 	 @Id
 	 @Column
