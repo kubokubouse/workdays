@@ -51,5 +51,9 @@ public class ContractData
 	  
 	 @Column
 	 private Integer taxExclude;
+	 
+	 @Column
+	 private Integer contractID;
+
 
 }
