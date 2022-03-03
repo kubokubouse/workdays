@@ -20,6 +20,12 @@
         <input type="file" name="file">
         <br>
         <p class="error">[[${error}]]</p>
+        <table>
+        <tr th:each="mail, st : ${mail}" >
+            <td th:text="${mail}"></td>
+        </tr>
+        </table>
+    
         <button type="submit" class="btn">アップロード</button>
     </form>
 
