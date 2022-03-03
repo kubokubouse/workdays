@@ -3,6 +3,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+ 
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -225,5 +228,28 @@ public class MailSendService {
     mailSender.send(mimeMsg);
     System.out.println("メール送れたよ");
   }
+
+  //メールアドレスかをチェックする
+  public String checkMailAddress(String address) {
+		boolean result;
+		String aText = "[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^\\$\\-\\|]";
+		String dotAtom = aText + "+" + "(\\." + aText + "+)*";
+		String regularExpression = "^" + dotAtom + "@" + dotAtom + "$";
+		result = checkMailAddress(address, regularExpression);
+		if (result) {
+      return null;
+    }	
+		System.out.println("不正なメールアドレス：" + address);
+    return address;
+	}
+
+  private static boolean checkMailAddress(String address, String regularExpression) {
+		Pattern pattern = Pattern.compile(regularExpression);
+		Matcher matcher = pattern.matcher(address);
+		if (matcher.find()) {
+			return true;
+		}
+		return false;
+	}
 
 }

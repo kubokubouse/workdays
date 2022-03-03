@@ -43,6 +43,7 @@ import com.example.demo.model.WorkingData;
 import com.example.demo.model.WorkingListParam;
 import com.example.demo.model.YearMonth;
 import com.example.demo.repository.SuperUserRepository2;
+import com.example.demo.repository.SuperUserRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WorkdaysRepository;
 
@@ -51,6 +52,9 @@ import com.example.demo.repository.WorkdaysRepository;
 public class SuperUserService {
     @Autowired
     SuperUserRepository2 superRepository2;
+
+    @Autowired
+    SuperUserRepository superUserRepository;
     
     public SuperUser findEmailCompanyID(String Email,int companyID){
         return  superRepository2.findByEmailAndCompanyID(Email, companyID);

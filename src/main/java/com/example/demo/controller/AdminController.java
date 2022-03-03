@@ -24,6 +24,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
+import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.UserListParam;
@@ -52,6 +53,9 @@ public class AdminController extends WorkdaysProperties{
 	
 	@Autowired
     UserService userService;
+
+    @Autowired
+    SuperUserService superUserService;
 
     @Autowired
     MailSendService mailSendService;
@@ -92,19 +96,20 @@ public class AdminController extends WorkdaysProperties{
 	}
 
     //会員情報入力→確認画面へ
-	@PostMapping("/")
-	public String confirm( @ModelAttribute IndividualData idData,Model model,BindingResult result){
-		//メアドに重複があった場合重複画面に飛ぶ
+	@PostMapping("/insertCompanyInfo")
+	public String confirm(@Validated @ModelAttribute IndividualData idData,BindingResult result,Model model){
+		
+        if (result.hasErrors()){
+			// エラーがある場合、index.htmlに戻る
+            return "register";
+        }
+        
+        //メアドに重複があった場合重複画面に飛ぶ
         IndividualData iData = idRepository.findByMailAndCompanyID(
             idData.getMail(), (Integer)session.getAttribute("companyId"));
 		if(iData!=null){
 			return "usedemail";
 		}
-        
-        if (result.hasErrors()){
-			// エラーがある場合、index.htmlに戻る
-            return "register";
-        }
         model.addAttribute("idData", idData);
 		return "confirm";
 	}
@@ -112,11 +117,11 @@ public class AdminController extends WorkdaysProperties{
 	//会員情報をDBに登録
 	@PostMapping("/regist")
     public String regist(@Validated @ModelAttribute IndividualData idData, BindingResult result, Model model){
-		/*model.addAttribute("user", idRepository.findAll());
+		model.addAttribute("user", idRepository.findAll());
         if (result.hasErrors()){
 
 			return "confirm";
-		}*/
+		}
 
         int companyID = (int)session.getAttribute("companyId");
         String mail=idData.getMail();
@@ -125,7 +130,6 @@ public class AdminController extends WorkdaysProperties{
         String company1=idData.getCompany1();
         String company2=idData.getCompany2();
         String company3=idData.getCompany3();
-        String number=idData.getNumber();
 
         
         int i=individualService.insert(companyID, mail, individualId,name,0,1,company1,company2,company3);
@@ -299,6 +303,41 @@ public class AdminController extends WorkdaysProperties{
         return "templatelist";
     }
 
+    //パスワード変更画面表示
+    @GetMapping("/changePass")
+	public String changePass(@ModelAttribute User user){
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        
+        if (superUser == null) {
+            return "accessError";
+        }
+		return "changePass";
+	}
+
+    //パスワード変更処理
+    @RequestMapping("/updatePass")
+    public String updatePassword(@RequestParam("old") String oldPass, @RequestParam("new") String newPass, Model model) {
+
+        SuperUserLogin superUserLogin = (SuperUserLogin)session.getAttribute("superUser");
+        String sessionPass = superUserLogin.getPass();
+        String sessionMail = superUserLogin.getEmail();
+        int companyID = (Integer)session.getAttribute("companyId");
+
+        if (!sessionPass.equals(oldPass)) {
+            model.addAttribute("error", "現在のパスワードが間違っています");
+            return "changePass";
+        }
+
+        SuperUser superUser = superUserService.findEmailCompanyID(sessionMail, companyID);
+        superUser.setPass(newPass);
+        superUserService.update(superUser);
+
+        model.addAttribute("error", "パスワードが設定されました");
+
+        return "changePass";
+    }
+
     //ユーザー一括アップロード画面表示
     @GetMapping("/alluserupload")
     public String allUserUpload() {
@@ -416,9 +455,16 @@ public class AdminController extends WorkdaysProperties{
 
                     if (map.containsKey("メールアドレス")){
                         int mail = map.get("メールアドレス");
+
+                        //正しいアドレスか確認
+                        String checkMail = mailSendService.checkMailAddress(data[mail]);
+                        if(checkMail != null) {
+                            model.addAttribute("error", "使用出来ないメールアドレスです：" + checkMail); 
+                            return "alluserupload";  
+                        }
                         idData.setMail(data[mail]);
                     } else {
-                        model.addAttribute("error", "ヘッダーの名前を確認してください：氏名"); 
+                        model.addAttribute("error", "ヘッダーの名前を確認してください：メールアドレス"); 
                         return "alluserupload";  
                     }
 
