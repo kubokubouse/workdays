@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.Time;
 import java.time.LocalTime;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,7 @@ import com.example.demo.model.Holiday;
 import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
+import com.example.demo.model.Onetime;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.StringListParam;
 import com.example.demo.model.User;
@@ -43,6 +45,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
+import com.example.demo.service.OnetimeService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.CompanyInfoService;
@@ -73,6 +76,8 @@ public class HomeController extends WorkdaysProperties{
     CompanyInfoService companyInfoService;
 	@Autowired
 	SuperUserService superUserService;
+	@Autowired
+    OnetimeService onetimeService;
 
     public HomeController(UserRepository repository){
         this.repository = repository;
@@ -422,6 +427,7 @@ public class HomeController extends WorkdaysProperties{
 		return "/newpassword";
 	}
 	
+	
 	//新規パスワードが送られてきた場合の処理
 	@PostMapping("/inputpassword")
 	public String inputpassword (@ModelAttribute User user, RePassword rePassword, Model model){
@@ -466,31 +472,72 @@ public class HomeController extends WorkdaysProperties{
 		return "universalconfirm";
 	}
 
-	//会員情報をDBに登録
-	@PostMapping("/universalregist")
-    public String univeresalregist(@Validated @ModelAttribute User user, BindingResult result, Model model,Login login){
+//ユニバーサルユーザー情報をワンタイムテーブルに登録→メールを送信
+@PostMapping("/universalregist")
+public String univeresalregist(@Validated @ModelAttribute User user, BindingResult result, Model model,Login login){
+	
+	model.addAttribute("user", repository.findAll());
+	if (result.hasErrors()){
+		return "universalconfirm";
+	}
+	
+	List <Onetime> onetimeList=onetimeService.searchAll();
+	if (CollectionUtils.isEmpty(onetimeList)) {
 		
-		model.addAttribute("user", repository.findAll());
-        if (result.hasErrors()){
-			return "universalconfirm";
+	}
+	else{
+		for(Onetime oneTime:onetimeList){
+			onetimeService.delete(oneTime);
 		}
-		
-		
-		//メアドから個別ユーザーテーブルに登録されている会社名×3を取得する
-		//処理の結果リストが取得されることになっている（＝メアドから複数のユーザーが取得される）ことになっているが
-		//実際に取得されるユーザーは一人だけである（個別ユーザーテーブルにユーザーが登録されかつ同じメアドが個別テーブルに存在しない場合のみユニバーサルユーザーテーブルに登録させるメールが届く＝この処理が行われるので）
-		List<IndividualData> individualData=individualService.findMail(user.getEmail());
-		for(IndividualData iData:individualData){
-			user.setCompany1(iData.getCompany1());
-			user.setCompany2(iData.getCompany2());
-			user.setCompany3(iData.getCompany3());
-		}
-		user.setBanned(0);
-		repository.save(user);
+	}
+	
+	
+	
+	Onetime onetime=new Onetime();
+	onetime.setEmail(user.getEmail());
+	onetime.setLastname(user.getLastname());
+	onetime.setFirstname(user.getFirstname());
+	onetime.setPassword(user.getPassword());
+	onetime.setId(1);
 
-		//エラーがなければログインに飛ぶ
+	onetimeService.insert(onetime);
+	mailsendService.mailsend(user.getEmail(),onetimeText);
+
+	
+
+
+	//エラーがなければログインに飛ぶ
+	return "/login2";
+	}
+
+	//登録完了メール踏んだ時の処理
+	@GetMapping("/registerdone")
+	public String registerdone(@Validated @ModelAttribute User user, BindingResult result, Model model,Login login) {
+		Onetime onetime=onetimeService.findId(1);
+		User users=new User();
+		users.setEmail(onetime.getEmail());
+		users.setFirstname(onetime.getFirstname());
+		users.setLastname(onetime.getLastname());
+		users.setPassword(onetime.getPassword());
+		users.setBanned(0);
+
+		List<IndividualData> individualData=individualService.findMail(onetime.getEmail());
+		for(IndividualData iData:individualData){
+			users.setCompany1(iData.getCompany1());
+			users.setCompany2(iData.getCompany2());
+			users.setCompany3(iData.getCompany3());
+		}
+
+		repository.save(users);
+
+		//ワンタイムテーブルの全データ消去
+		List <Onetime> onetimeList=onetimeService.searchAll();
+		for(Onetime oneTime:onetimeList){
+			onetimeService.delete(oneTime);
+		}
+		
 		return "/login2";
-    }
+	}
 
 	@PostMapping("/AjaxServlet")
 	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model){	

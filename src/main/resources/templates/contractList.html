@@ -143,7 +143,7 @@ a:hover::after{
         </thead>
         
         <tbody>
-          <tr th:each="user, st : ${contractDataList}" >
+          <tr th:each="user, st : ${ciList}" >
 
             <td>
               <input type="text" th:companyid="${user.companyID}" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >

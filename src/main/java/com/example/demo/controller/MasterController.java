@@ -1,10 +1,6 @@
 package com.example.demo.controller;
-import java.io.FileOutputStream;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.io.File;
-import java.io.BufferedOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
@@ -18,10 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.validation.BindingResult;
-
 import com.example.demo.model.ContractData;
 import com.example.demo.model.Login;
 import com.example.demo.model.User;
@@ -30,14 +23,12 @@ import com.example.demo.model.UserListParam;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
 import com.example.demo.service.CompanyInfoService;
-import com.example.demo.service.HolidayService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.SuperUserService;
-import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.SuperUserListParam;
 import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.repository.SuperUserRepository2;
-import com.example.demo.WorkdaysProperties;
+
 
 
 @Controller
@@ -128,13 +119,11 @@ public class MasterController {
  
 	//契約情報送信時に確認画面に遷移
 	@PostMapping("/confirmcontract")
-	public String confirmcontract(@ModelAttribute ContractData contractData,BindingResult result, Model model){
+	public String confirmcontract(@Validated @ModelAttribute ContractData contractData,BindingResult result, Model model){
 		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
         if(masterUser==null){
             return "masterloginfault";
         }
-
-		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
 		 
 		if (result.hasErrors()){
 			// エラーがある場合、登録画面に戻る
@@ -171,7 +160,7 @@ public class MasterController {
         java.sql.Date date1 = new java.sql.Date(timeInMilliSeconds);
 		String timeStamp=date1.toString();
 
-		contractData.setTopupContract(timeStamp);	
+		contractData.setTopupContract(timeStamp);
 		
 		contractRepository.save(contractData);
 		// ルートパス("/") にリダイレクトします
