@@ -26,10 +26,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "contract_data")
-@IdClass(value=ContractDataKey.class)
+//@IdClass(value=ContractDataKey.class)
 public class ContractData
 {
 	 @Id
+	 @Column
+
+	 private Integer id;
+
 	 @Column
 	 private Integer companyID;
 	
@@ -58,7 +62,7 @@ public class ContractData
 	 private Integer taxExclude;
 
 	 
-	 @Id
+	 //@Id
 	 @Column
 	 private Integer contractID;
 

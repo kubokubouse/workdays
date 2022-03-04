@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
 
+import com.example.demo.model.BeanContractData;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.ContractData;
 import com.example.demo.service.CompanyInfoService;
@@ -200,7 +201,31 @@ public class MasterUserController extends WorkdaysProperties{
         }
 	
 		List<ContractData> ciList = ciService.searchAllContractData();
+		List<BeanContractData>contractDataList=new ArrayList<BeanContractData>();
+		
+		//System.out.println(ciList);
+		for(ContractData contractdata:ciList){
+			BeanContractData beanContractData=new BeanContractData();
+			beanContractData.setRegister(contractdata.getRegister());
+			System.out.println(contractdata.getRegister());
+			beanContractData.setStartContract(contractdata.getStartContract());
+			beanContractData.setEndContract(contractdata.getEndContract());
+			beanContractData.setTopupContract(contractdata.getTopupContract());
+			beanContractData.setLimitedUser(contractdata.getLimitedUser());
+			beanContractData.setUserRank(contractdata.getUserRank());
+			beanContractData.setTaxInclude(contractdata.getTaxInclude());
+			beanContractData.setTaxExclude(contractdata.getTaxExclude());
+			beanContractData.setCompanyID(contractdata.getCompanyID());
+			beanContractData.setContractID(contractdata.getContractID());
+			
+			
+			contractDataList.add(beanContractData);
+
+
+		}
+		System.out.println(contractDataList);
 		model.addAttribute("ciList", ciList);
+		model.addAttribute("contractDataList",contractDataList);
 		return "contractlist";
 	}
 
