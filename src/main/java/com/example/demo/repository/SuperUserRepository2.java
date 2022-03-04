@@ -7,4 +7,5 @@ public interface SuperUserRepository2 extends JpaRepository<SuperUser, String> {
 	
 	SuperUser findByEmailAndCompanyID(String Email,int companyID);
     SuperUser findById(int Id);
+    SuperUser findByEmail(String email);
 }
