@@ -47,7 +47,7 @@ public class IndividualData
 	  @Email
 	  private String mail;
 
-	  @Column
+	  @Column(name="individual_id")
 	  private String number;
 
 	  @Column
@@ -56,7 +56,12 @@ public class IndividualData
 	  @Column
 	  private Integer banned;
 
+	  //運用管理用
 	  @Column
 	  private Integer registered;
+
+	  //画面表示用
+	  @Column
+	  private String regist;
 
 }

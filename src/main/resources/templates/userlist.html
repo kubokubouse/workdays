@@ -159,19 +159,20 @@ a:hover::after{
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>社員番号</th>
+            <th>管理番号</th>
             <th>氏名</th>
             <th>メールアドレス</th>
             <th>会社1</th>
             <th>会社2</th>
             <th>会社3</th>
+            <th>登録</th>
+            
 
           </tr>
         </thead>
         
         <tbody>
           <tr th:each="user, st : ${userListParam}" >
-
             <td>
               <input type="text" th:userid="${user.mail}" class="form-control" th:name="number" th:value="${user.number}" >
             </td>
@@ -197,10 +198,13 @@ a:hover::after{
             </td>
 
             <td>
+              [[${user.regist}]]
+            </td>
+
+            <td>
               <a th:href="@{/userdelete(userid=${user.mail})}" input type="hidden" >削除</a>
             </td>
-            
-            
+         
           </tr>
         </tbody>
       </table>
