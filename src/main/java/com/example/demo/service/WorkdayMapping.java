@@ -29,7 +29,11 @@ public class WorkdayMapping {
 
     List<String> errorList = new ArrayList<String>();
     File inputFileObject = new File(inputFilePath);
+    File outputFile = new File(outputFilePath);
     
+    if (outputFile.exists()) {
+        outputFile.delete();
+    }
 
     if (!inputFileObject.exists()) {
         System.out.println("ファイルが存在しません：" + inputFilePath);
