@@ -43,6 +43,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
+import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.WorkdayMapping;
@@ -70,6 +71,8 @@ public class HomeController extends WorkdaysProperties{
     IndividualService individualService;
 	@Autowired
     CompanyInfoService companyInfoService;
+	@Autowired
+	SuperUserService superUserService;
 
     public HomeController(UserRepository repository){
         this.repository = repository;
@@ -382,7 +385,7 @@ public class HomeController extends WorkdaysProperties{
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map
 		);
 
-		if (errors.size() != 0 || errors.isEmpty()) {
+		if (errors.size() != 0 || !errors.isEmpty()) {
 			model.addAttribute("errors", errors);
 			return "outputerror";
 		}
@@ -410,6 +413,10 @@ public class HomeController extends WorkdaysProperties{
 	public String renewpass (@ModelAttribute User users, RePassword rePassword, Model model, @RequestParam String email){
 		User user=userService.findEmail(email);
 		session.setAttribute("passworduser" ,user);
+		if (user == null) {
+			SuperUser superuser = superUserService.findbyEmail(email);
+			session.setAttribute("superUser", superuser);
+		}
 		int flag=0;
 		model.addAttribute("flag", flag);
 		return "/newpassword";
@@ -419,11 +426,18 @@ public class HomeController extends WorkdaysProperties{
 	@PostMapping("/inputpassword")
 	public String inputpassword (@ModelAttribute User user, RePassword rePassword, Model model){
 		User passworduser=(User)session.getAttribute("passworduser");
-		String pass=rePassword.getPassword();
+		String pass = rePassword.getPassword();
 		String confirm=rePassword.getConfirmpassword();
+		
 		if(pass.equals(confirm)){
-			passworduser.setPassword(pass);
-			userService.update(passworduser);
+			if(passworduser == null) {
+				SuperUser sUser = (SuperUser)session.getAttribute("superUser");
+				sUser.setPass(pass);
+				superUserService.update(sUser);
+			} else {
+				passworduser.setPassword(pass);
+				userService.update(passworduser);	
+			}
 			return "renewdone";
 		}
 		int flag=1;

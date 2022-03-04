@@ -8,25 +8,38 @@
 </head>
 <body>
 
-  <h1>管理者画面</h1>
+  <div class="hedder">
+    <h1>管理者画面</h1>
+  </div>
 
-  <main id="contents">
-    <h3>
-      
-      <p><a href="/register">ユーザー登録</a></p>
-      <p><a href="/userlist">ユーザー一覧</a></p>
-      <p><a href="/templateupload">ファイルアップロード</a></p>
-      <p><a href="/templatelist">ファイル一覧</a></p>
-      <p><a href="/changePass">パスワード更新</a></p>
-      <p><a href="/alluserupload">ユーザー一括アップロード</a></p>
+  <div class="contents">
+   
+    <div class="contents_1">      
+      <p><a href="/register" class="btn btn-border-shadow btn-border-shadow--color2">ユーザー登録</a></p>
+      <p><a href="/userlist" class="btn btn-border-shadow btn-border-shadow--color2">ユーザー一覧</a></p>
+      <p><a href="/alluserupload" class="btn btn-border-shadow btn-border-shadow--color2">ユーザー一括アップロード</a></p>
+    </div>
+
+    <div class="contents_2">
+      <p><a href="/templateupload" class="btn btn-border-shadow btn-border-shadow--color2">ファイルアップロード</a></p>
+      <p><a href="/templatelist" class="btn btn-border-shadow btn-border-shadow--color2">ファイル一覧</a></p>
+      <p><a href="/changePass"class="btn btn-border-shadow btn-border-shadow--color2">パスワード更新</a></p>
+    </div>
+  </div>
+
+    <div class="logout">
       <p><a href="/">ログアウト</a></p>
-    </h3>
+    </div>
 
-</main>
 </body>
 </html>
 
 <style>
+
+  body {
+    font-family: sans-serif;
+    text-align: center;
+  }
   h1 {
     border-bottom: solid 3px skyblue;
     margin-top: 30px;
@@ -41,17 +54,107 @@
     bottom: -3px;
     width: 30%;
   }
-  
-  body {
-    font-family: sans-serif;
-    text-align: center;
+
+  .contents {
+    display: flex;
+    margin-top: 30px;
+  }
+  .contents_1{
+    margin: 0 auto;
+  }
+  .contents_2{
+    margin:0 auto;
+  }
+  .btn,
+a.btn,
+button.btn {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  position: relative;
+  display: inline-block;
+  padding: 1rem 4rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  color: #212529;
+  border-radius: 0.5rem;
+}
+
+a.btn-border-shadow {
+  padding: calc(1.5rem - 12px) 3rem 1.5rem;
+
+  background: #fff;
+}
+
+a.btn-border-shadow:before {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+
+  width: 100%;
+  height: 100%;
+
+  content: "";
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+
+  border: 3px solid #000;
+  border-radius: 0.5rem;
+}
+
+a.btn-border-shadow:hover {
+  padding: calc(1.5rem - 6px) 3rem;
+}
+
+a.btn-border-shadow:hover:before {
+  top: 0;
+  left: 0;
+}
+
+a.btn-border-shadow--color2 {
+  border-radius: 100vh;
+}
+
+a.btn-border-shadow--color2:before {
+  border-radius: 100vh;
+  -webkit-box-shadow: 3px 3px 0 #78e5e5;
+  box-shadow: 3px 3px 0 #78e5e5;
+}
+
+/*  .link {
+    padding: 0.1em 0.3em;
+    position: relative;
+    display: inline-block;
+    transition: .3s;
+  	color: #03233d;
+    text-decoration: none;
   }
 
-  a {
-    display: block;
-    margin-top: 50px;
+  .link::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: '';
+    width: 0;
+    height: 1px;
+    background-color: #47a1bc;
+    transition: .3s;
   }
-  
-
+  .link:hover::after {
+    width: 100%;
+  }
+*/
+  .logout{
+    margin-top: 20px;
+  }
 
 </style>

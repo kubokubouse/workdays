@@ -60,6 +60,10 @@ public class SuperUserService {
         return  superRepository2.findByEmailAndCompanyID(Email, companyID);
 
     }
+    public SuperUser findbyEmail(String Email){
+        return  superRepository2.findByEmail(Email);
+
+    }
     public void update(SuperUser superUser){
         superRepository2.save(superUser);
     }
