@@ -15,26 +15,25 @@ import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "contract_data")
-//@IdClass(value=ContractDataKey.class)
+@IdClass(value=ContractDataKey.class)
 public class ContractData
 {
+	 /*@Id
+	 @Column
+	
+	 private int id;*/
 	 @Id
-	 @Column
-
-	 private Integer id;
 
 	 @Column
+	 @NotNull(message = "会社IDを入力してください")
 	 private Integer companyID;
 	
 	 @Column
@@ -62,7 +61,7 @@ public class ContractData
 	 private Integer taxExclude;
 
 	 
-	 //@Id
+	 @Id
 	 @Column
 	 private Integer contractID;
 
