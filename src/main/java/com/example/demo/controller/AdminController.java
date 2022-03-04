@@ -152,8 +152,18 @@ public class AdminController extends WorkdaysProperties{
         }
         int companyID=(int)session.getAttribute("companyId");
 		List<IndividualData> iList = userService.findCompanyID(companyID);
+
+        //ユニバーサルユーザーテーブルに登録済みの場合は済と表示する
+        for (IndividualData id : iList) {
+            if (id.getRegistered() == 0) {
+                id.setRegist("済");
+            } else {
+                id.setRegist("");
+            }
+        }
         System.out.println(iList);
 		model.addAttribute("userListParam", iList);
+
 		return "userlist";
 	}
 
