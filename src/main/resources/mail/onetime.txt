@@ -1,0 +1,2 @@
+下記のリンクにアクセスすると登録処理は完了します
+http://localhost:8080/registerdone

@@ -13,7 +13,18 @@
   <main id="contents">
     <form id="entryForm" th:action="@{/universalregister}" th:object="${user}"method="post" novalidate>
     <table class="entryTable" border="1">
-
+      <tr>
+        <th>メールアドレス </th>
+      <td><label for="email"></label>
+    
+      <input type="text" class="login-control"
+    th:errorclass="is-invalid" th:field="*{email}">
+    <div class="invalid-feedback" th:errors="*{email}">
+            </div>
+    
+        <small>※半角で入力してください</small>
+      </td>
+    </tr>
     <tr>
       <th>氏 </th>
       <td>
@@ -52,7 +63,7 @@
 
   </table>
   <div class="send">
-    <input type="hidden" th:field="*{email}"th:value=${user.email}>
+    
     <input type="reset" value="クリア">
     <input type="submit" value="登録">
   </div>
