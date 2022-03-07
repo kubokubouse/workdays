@@ -1,11 +1,9 @@
 package com.example.demo.controller;
 
 import java.io.*;
-import java.nio.*;
 import java.util.ArrayList;
 import java.util.*;
 import javax.servlet.http.HttpSession;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,15 +17,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
 
-import com.example.demo.model.User;
+
 
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
+import com.example.demo.model.User;
 import com.example.demo.model.SuperUserLogin;
-import com.example.demo.model.UserListParam;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.SuperUser;
 import com.example.demo.repository.UserRepository;
@@ -137,6 +135,7 @@ public class AdminController extends WorkdaysProperties{
         User universalUser=userService.findEmail(mail);
         if(universalUser==null){
            mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+           return "superuser";
         }
         mailSendService.mailsend(mail,WorkdaysProperties.loginText);
 		return "superuser";

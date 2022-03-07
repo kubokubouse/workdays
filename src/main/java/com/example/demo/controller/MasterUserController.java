@@ -1,11 +1,9 @@
 package com.example.demo.controller;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.Date;
 import java.io.File;
-import java.io.BufferedOutputStream;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
@@ -17,11 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.BindingResult;
 
+import com.example.demo.model.MasterUser;
 import com.example.demo.model.BeanContractData;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.ContractData;
@@ -29,7 +28,6 @@ import com.example.demo.service.CompanyInfoService;
 import com.example.demo.repository.CompanyInfoRepository;
 import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.WorkdaysProperties;
-import com.example.demo.model.MasterUser;
 
 @Controller
 public class MasterUserController extends WorkdaysProperties{
@@ -223,6 +221,14 @@ public class MasterUserController extends WorkdaysProperties{
 
 
 		}
+		System.out.println(contractDataList);
+
+		//会社IDと契約IDで昇順にする
+		contractDataList.sort(Comparator.comparing(BeanContractData::getCompanyID)
+		.thenComparing(Comparator.comparing(BeanContractData::getContractID)));
+
+
+
 		model.addAttribute("ciList", ciList);
 		model.addAttribute("contractDataList",contractDataList);
 		return "contractlist";
