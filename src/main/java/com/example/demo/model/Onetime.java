@@ -1,4 +1,8 @@
 package com.example.demo.model;
+
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,4 +26,6 @@ public class Onetime {
     private String firstname;
     @Column
     private String password;
+    @Column
+    private Date datetime;
 }
