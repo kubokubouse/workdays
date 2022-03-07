@@ -166,7 +166,7 @@ public class MasterController {
 
 		System.out.println(contractData);
 
-		int companyID=contractData.getCompanyID();
+		/*int companyID=contractData.getCompanyID();
 		Date register=contractData.getRegister();
 		Date start_contract=contractData.getStartContract();
 		Date end_contract=contractData.getEndContract();
@@ -176,6 +176,7 @@ public class MasterController {
 		int tax_exclude=contractData.getTaxExclude();
 		String topup_contract=timeStamp;
 		int contractID=contractData.getContractID();
+		*/
 		//companyInfoService.insert(companyID,register,start_contract,end_contract,limited_user,user_rank,tax_include,tax_exclude,topup_contract, contractID);
 		
 		contractRepository.save(contractData);
