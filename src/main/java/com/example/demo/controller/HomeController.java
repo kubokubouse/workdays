@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +87,9 @@ public class HomeController extends WorkdaysProperties{
     //トップページがログイン画面になる
 	@GetMapping("/")
 	public String login(@ModelAttribute Login login){
-		session.removeAttribute("Data");
+	 session.removeAttribute("Data");
+		
+	
 		
 		//return "login";
 		return "login2";
@@ -499,6 +502,22 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	onetime.setFirstname(user.getFirstname());
 	onetime.setPassword(user.getPassword());
 	onetime.setId(1);
+	Date date = new Date();
+	Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+	onetime.setDatetime(date);
+	
+	
+	//Date型の持つ日時を表示
+    /*System.out.println(date);
+	long longer=date.getTime();
+
+	System.out.println(longer);
+	long longer2=longer+300;
+	
+    System.out.println("result="+longer2+longer);*/
+	
+	
 
 	onetimeService.insert(onetime);
 	mailsendService.mailsend(user.getEmail(),onetimeText);
@@ -514,21 +533,50 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	@GetMapping("/registerdone")
 	public String registerdone(@Validated @ModelAttribute User user, BindingResult result, Model model,Login login) {
 		Onetime onetime=onetimeService.findId(1);
-		User users=new User();
-		users.setEmail(onetime.getEmail());
-		users.setFirstname(onetime.getFirstname());
-		users.setLastname(onetime.getLastname());
-		users.setPassword(onetime.getPassword());
-		users.setBanned(0);
+		long ontimelong=onetime.getDatetime().getTime();
+		
+		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+    	calendar.setTime(date);
+		onetime.setDatetime(date);
+		long nowlong=onetime.getDatetime().getTime();
+		
+		System.out.println("now="+date);
+		System.out.println("before="+onetime.getDatetime());
+		System.out.println();
+		System.out.println(nowlong-ontimelong);
+		if((nowlong-ontimelong)/1000<180){
+			User users=new User();
+			users.setEmail(onetime.getEmail());
+			users.setFirstname(onetime.getFirstname());
+			users.setLastname(onetime.getLastname());
+			users.setPassword(onetime.getPassword());
+			users.setBanned(0);
 
-		List<IndividualData> individualData=individualService.findMail(onetime.getEmail());
-		for(IndividualData iData:individualData){
-			users.setCompany1(iData.getCompany1());
-			users.setCompany2(iData.getCompany2());
-			users.setCompany3(iData.getCompany3());
+			System.out.println(onetime.getDatetime());
+
+			List<IndividualData> individualData=individualService.findMail(onetime.getEmail());
+			for(IndividualData iData:individualData){
+				users.setCompany1(iData.getCompany1());
+				users.setCompany2(iData.getCompany2());
+				users.setCompany3(iData.getCompany3());
+			}
+			repository.save(users);
+
+		}
+		else{
+			List <Onetime> onetimeList=onetimeService.searchAll();
+			for(Onetime oneTime:onetimeList){
+				onetimeService.delete(oneTime);
+			}
+		
+			return "registerdelay";
+
 		}
 
-		repository.save(users);
+
+
+		
 
 		//ワンタイムテーブルの全データ消去
 		List <Onetime> onetimeList=onetimeService.searchAll();

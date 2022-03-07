@@ -44,7 +44,8 @@ public class MasterController {
     CompanyInfoService companyInfoService;
 	@Autowired
     ContractDataRepository contractRepository;
-    
+
+	
     @Autowired
     HttpSession session;
 
@@ -139,7 +140,8 @@ public class MasterController {
 	public String registercontract(@Validated @ModelAttribute  ContractData contractData, BindingResult result, Model model){
 		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
 		if(CollectionUtils.isEmpty(contractDataList)){
-			contractData.setContractID(1);
+			int contractID=1;
+			contractData.setContractID(contractID);
 		}
 
 		else{
@@ -161,9 +163,23 @@ public class MasterController {
 		String timeStamp=date1.toString();
 
 		contractData.setTopupContract(timeStamp);
+
+		System.out.println(contractData);
+
+		int companyID=contractData.getCompanyID();
+		Date register=contractData.getRegister();
+		Date start_contract=contractData.getStartContract();
+		Date end_contract=contractData.getEndContract();
+		int limited_user=contractData.getLimitedUser();
+		String user_rank=contractData.getUserRank();
+		int tax_include=contractData.getTaxInclude();
+		int tax_exclude=contractData.getTaxExclude();
+		String topup_contract=timeStamp;
+		int contractID=contractData.getContractID();
+		//companyInfoService.insert(companyID,register,start_contract,end_contract,limited_user,user_rank,tax_include,tax_exclude,topup_contract, contractID);
 		
 		contractRepository.save(contractData);
-		// ルートパス("/") にリダイレクトします
+		
 		return "masteruser";
 	}
 

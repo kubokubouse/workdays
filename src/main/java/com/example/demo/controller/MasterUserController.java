@@ -203,7 +203,7 @@ public class MasterUserController extends WorkdaysProperties{
 		List<ContractData> ciList = ciService.searchAllContractData();
 		List<BeanContractData>contractDataList=new ArrayList<BeanContractData>();
 		
-		/*System.out.println(ciList);
+		System.out.println(ciList);
 		for(ContractData contractdata:ciList){
 			BeanContractData beanContractData=new BeanContractData();
 			beanContractData.setRegister(contractdata.getRegister());
@@ -222,8 +222,7 @@ public class MasterUserController extends WorkdaysProperties{
 			contractDataList.add(beanContractData);
 
 
-		}*/
-		System.out.println(contractDataList);
+		}
 		model.addAttribute("ciList", ciList);
 		model.addAttribute("contractDataList",contractDataList);
 		return "contractlist";
