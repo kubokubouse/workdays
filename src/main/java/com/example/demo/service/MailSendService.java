@@ -12,7 +12,6 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
 import com.example.demo.WorkdaysProperties;
-import com.example.demo.model.Workdays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
