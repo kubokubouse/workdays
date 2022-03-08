@@ -11,7 +11,8 @@ public interface ContractDataRepository extends JpaRepository<ContractData, Inte
 			nativeQuery = true)
 	int insert(int companyID,Date register,Date start_contract,Date end_contract,int limited_user,String user_rank,int tax_include, int tax_exclude,String topup_contract, int contractID);
 	
-	ContractData findById(int id);
+	//契約情報を会社IDと契約IDで一意にする以上IDだけで一つの契約情報を絞り込むことはシステム上できない（契約を一つしかしていない会社なら実際は特定できるけどシステムがそれを許さない）
+	//ContractData findById(int id);
 	List<ContractData> findByCompanyID(int companyID);
 	ContractData findByCompanyIDAndContractID(int companyID,int contractID);
 	
