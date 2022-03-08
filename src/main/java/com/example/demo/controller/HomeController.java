@@ -584,8 +584,10 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			onetimeService.delete(oneTime);
 		}
 		
-		return "/login2";
+		return "registerdone";
 	}
+
+
 
 	@PostMapping("/AjaxServlet")
 	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model){	

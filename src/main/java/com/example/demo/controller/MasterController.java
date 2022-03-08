@@ -23,6 +23,7 @@ import com.example.demo.model.UserListParam;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
 import com.example.demo.service.CompanyInfoService;
+import com.example.demo.service.ContractService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.model.SuperUserListParam;
@@ -44,6 +45,8 @@ public class MasterController {
     CompanyInfoService companyInfoService;
 	@Autowired
     ContractDataRepository contractRepository;
+	@Autowired
+	ContractService contractService;
 
 	
     @Autowired
@@ -90,9 +93,6 @@ public class MasterController {
 			return "usedemail";
 		}
         
-        
-		
-
         model.addAttribute("superUser", superUser);
 		return "confirmsuperuser";
 	}
@@ -138,7 +138,7 @@ public class MasterController {
 	//契約情報をDBに登録
 	@PostMapping("/registercontract")
 	public String registercontract(@Validated @ModelAttribute  ContractData contractData, BindingResult result, Model model){
-		List<ContractData> contractDataList=companyInfoService.findCompanyID(contractData.getCompanyID());
+		List<ContractData> contractDataList=contractService.findCompanyID(contractData.getCompanyID());
 		if(CollectionUtils.isEmpty(contractDataList)){
 			int contractID=1;
 			contractData.setContractID(contractID);
@@ -165,19 +165,6 @@ public class MasterController {
 		contractData.setTopupContract(timeStamp);
 
 		System.out.println(contractData);
-
-		/*int companyID=contractData.getCompanyID();
-		Date register=contractData.getRegister();
-		Date start_contract=contractData.getStartContract();
-		Date end_contract=contractData.getEndContract();
-		int limited_user=contractData.getLimitedUser();
-		String user_rank=contractData.getUserRank();
-		int tax_include=contractData.getTaxInclude();
-		int tax_exclude=contractData.getTaxExclude();
-		String topup_contract=timeStamp;
-		int contractID=contractData.getContractID();
-		*/
-		//companyInfoService.insert(companyID,register,start_contract,end_contract,limited_user,user_rank,tax_include,tax_exclude,topup_contract, contractID);
 		
 		contractRepository.save(contractData);
 		

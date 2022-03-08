@@ -3,7 +3,6 @@ import java.sql.Date;
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 
@@ -25,6 +24,7 @@ import com.example.demo.model.BeanContractData;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.ContractData;
 import com.example.demo.service.CompanyInfoService;
+import com.example.demo.service.ContractService;
 import com.example.demo.repository.CompanyInfoRepository;
 import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.WorkdaysProperties;
@@ -45,6 +45,8 @@ public class MasterUserController extends WorkdaysProperties{
     CompanyInfoService ciService;
 	@Autowired
     HttpSession session;
+	@Autowired
+	ContractService contractService;
 
 	//メニュー画面へ戻る
 	@GetMapping("/masteruser")
@@ -198,38 +200,8 @@ public class MasterUserController extends WorkdaysProperties{
             return "masterloginfault";
         }
 	
-		List<ContractData> ciList = ciService.searchAllContractData();
-		List<BeanContractData>contractDataList=new ArrayList<BeanContractData>();
-		
-		System.out.println(ciList);
-		for(ContractData contractdata:ciList){
-			BeanContractData beanContractData=new BeanContractData();
-			beanContractData.setRegister(contractdata.getRegister());
-			System.out.println(contractdata.getRegister());
-			beanContractData.setStartContract(contractdata.getStartContract());
-			beanContractData.setEndContract(contractdata.getEndContract());
-			beanContractData.setTopupContract(contractdata.getTopupContract());
-			beanContractData.setLimitedUser(contractdata.getLimitedUser());
-			beanContractData.setUserRank(contractdata.getUserRank());
-			beanContractData.setTaxInclude(contractdata.getTaxInclude());
-			beanContractData.setTaxExclude(contractdata.getTaxExclude());
-			beanContractData.setCompanyID(contractdata.getCompanyID());
-			beanContractData.setContractID(contractdata.getContractID());
-			
-			
-			contractDataList.add(beanContractData);
-
-
-		}
-		System.out.println(contractDataList);
-
-		//会社IDと契約IDで昇順にする
-		contractDataList.sort(Comparator.comparing(BeanContractData::getCompanyID)
-		.thenComparing(Comparator.comparing(BeanContractData::getContractID)));
-
-
-
-		model.addAttribute("ciList", ciList);
+		//並びが昇順になっている契約情報一覧の取得
+		List<BeanContractData>contractDataList=contractService.createBeanContractList();
 		model.addAttribute("contractDataList",contractDataList);
 		return "contractlist";
 	}
@@ -237,45 +209,50 @@ public class MasterUserController extends WorkdaysProperties{
 	//契約情報削除
 	@RequestMapping("/cddelete")
 	public String deletContract(@RequestParam("id") String id, Model model){
-		ciService.deleteContract(Integer.valueOf(id));
-		List<ContractData> ciList = ciService.searchAllContractData();
-		model.addAttribute("ciList", ciList);
+		String[] values = id.split(":");
+		int companyID = Integer.parseInt(values[0]);
+		int contractID=Integer.parseInt(values[1]);
+		contractService.deleteContract(companyID,contractID);
+
+		List<BeanContractData>contractDataList=contractService.createBeanContractList();
+		model.addAttribute("contractDataList",contractDataList);
 		return "contractlist";
 	}
 
 		//契約情報更新
 		@PostMapping("/updateContract")
-		public String UpdateContract(@RequestParam String inputvalue, String userid, String name, Model model){	
-			ContractData cd = ciService.findContractByCompanyID(Integer.parseInt(userid));
-			System.out.println(name);
-			System.out.println(inputvalue);
+		public String UpdateContract(@RequestParam String inputvalue, String userid, String name, Model model){
+			String[] values = userid.split(":");
+			int companyID = Integer.parseInt(values[0]);
+			int contractID=Integer.parseInt(values[1]);	
+			ContractData cd = contractService.findCompanyIDContractID(companyID,contractID);
 	
 			switch (name) {
 				case "register":
 				  cd.setRegister(Date.valueOf(inputvalue));
-				  break;
+				break;
 				case "startContract":
 				  cd.setStartContract(Date.valueOf(inputvalue));
-				  break;
+				break;
 				case "endContract":
 				  cd.setEndContract(Date.valueOf(inputvalue));
-				  break;
+				break;
 				case "limitedUser":
 				  cd.setLimitedUser(Integer.valueOf(inputvalue));
-				  break;
+				break;
 				case "userRank":
 				  cd.setUserRank(inputvalue);
-				  break;
+				break;
 				case "taxInclude":
 				  cd.setTaxInclude(Integer.valueOf(inputvalue));
-				  break;
+				break;
 				case "taxExclude":
 				  cd.setTaxExclude(Integer.valueOf(inputvalue));
-				  break;
-				} 
+				break;
+			} 
 			contractRepository.save(cd);
-			List<ContractData> ciList = ciService.searchAllContractData();
-			model.addAttribute("ciList", ciList);
+			List<BeanContractData>contractDataList=contractService.createBeanContractList();
+			model.addAttribute("contractDataList",contractDataList);
 			return "contractlist";
 		}
 	
