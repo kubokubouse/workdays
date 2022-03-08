@@ -5,12 +5,8 @@ import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -26,44 +22,44 @@ import lombok.NoArgsConstructor;
 @IdClass(value=ContractDataKey.class)
 public class ContractData
 {
-	 /*@Id
-	 @Column
+	/*@Id
+	@Column
 	
-	 private int id;*/
-	 @Id
+	private int id;*/
+	@Id
 
-	 @Column
-	 @NotNull(message = "会社IDを入力してください")
-	 private Integer companyID;
+	@Column
+	@NotNull(message = "会社IDを入力してください")
+	private Integer companyID;
 	
-	 @Column
-	  private Date register;
+	@Column
+	private Date register;
 
-	  @Column
-	  private Date startContract;
+	@Column
+	private Date startContract;
 	  
-	 @Column
-	 private Date endContract;
+	@Column
+	private Date endContract;
 
-	 @Column
-	 private String topupContract;
+	@Column
+	private String topupContract;
 
-	  @Column
-	  private Integer limitedUser;
+	@Column
+	private Integer limitedUser;
 
-	  @Column
-	  private String userRank;
+	@Column
+	private String userRank;
 
-	  @Column
-	  private Integer taxInclude;
+	@Column
+	private Integer taxInclude;
 	  
-	 @Column
-	 private Integer taxExclude;
+	@Column
+	private Integer taxExclude;
 
 	 
-	 @Id
-	 @Column
-	 private Integer contractID;
+	@Id
+	@Column
+	private Integer contractID;
 
 
 }
