@@ -30,7 +30,7 @@
         <label for="start_contract"></label>
         <input type="date" class="register-control"
         th:errorclass="is-invalid" th:field="*{startContract}">
-        <div class="invalid-feedback" th:errors="*{startContract}"></div>
+        <small th:text="${error1}" class="error"></small>
       </td>
     </tr>
 
@@ -40,7 +40,7 @@
           <label for="end_contract"></label>
           <input type="date" class="register-control"
           th:errorclass="is-invalid" th:field="*{endContract}">
-         <div class="invalid-feedback" th:errors="*{endContract}"></div>
+          <small th:text="${error2}" class="error"></small>
         </td>
     </tr>
 
@@ -50,7 +50,7 @@
         <label for="register"></label>
         <input type="date" class="register-control"
         th:errorclass="is-invalid" th:field="*{register}">
-       <div class="invalid-feedback" th:errors="*{register}"></div>
+        <small th:text="${error3}" class="error"></small>
       </td>
     </tr>
 
@@ -84,7 +84,7 @@
       <input type="text" class="register-control"
       th:errorclass="is-invalid" th:field="*{taxExclude}">
        <div class="invalid-feedback" th:errors="*{taxExclude}"></div>
-        <small>※半角で入力してください</small>
+      
       </td>
     </tr>
 
