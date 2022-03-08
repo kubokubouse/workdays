@@ -1,5 +1,8 @@
 package com.example.demo.model;
 
+
+
+
 import java.sql.Date;
 
 import javax.persistence.Column;
@@ -8,6 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,12 +38,15 @@ public class ContractData
 	private Integer companyID;
 	
 	@Column
+	
 	private Date register;
 
 	@Column
+	
 	private Date startContract;
 	  
 	@Column
+	
 	private Date endContract;
 
 	@Column

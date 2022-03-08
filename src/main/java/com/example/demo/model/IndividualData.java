@@ -36,6 +36,7 @@ public class IndividualData
 	 @Id
 	  @Column
 	  @Email
+	  @NotEmpty(message = "メールアドレスを入力してください")
 	  private String mail;
 
 	  @Column(name="individual_id")

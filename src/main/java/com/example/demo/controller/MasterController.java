@@ -125,7 +125,18 @@ public class MasterController {
         if(masterUser==null){
             return "masterloginfault";
         }
-		 
+		if(contractData.getRegister()==null){
+			model.addAttribute("error1", "日付が未入力です");
+			
+		}
+		if(contractData.getStartContract()==null){
+			model.addAttribute("error2", "日付が未入力です");
+			
+		}
+		if(contractData.getEndContract()==null){
+			model.addAttribute("error3", "日付が未入力です");
+		}
+
 		if (result.hasErrors()){
 			// エラーがある場合、登録画面に戻る
 			return "contract";
@@ -196,12 +207,8 @@ public class MasterController {
 
     @PostMapping("/SuperUserAjaxServlet")
 	public String AjaxServlet(@RequestParam String inputvalue, String name,String superuserid, Model model){	
-		System.out.println(name);
-        System.out.println(inputvalue);
-        System.out.println(superuserid);
+	
         SuperUser superUser=superUserService.findId(superuserid);
-        System.out.println(name);
-        System.out.println(inputvalue);
 
 		switch (name) {
 			case "pass":
