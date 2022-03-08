@@ -152,33 +152,33 @@ a:hover::after{
               [[${user.topupContract}]]
             </td>
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="register" th:value="${user.register}">
+              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="register" th:value="${user.register}">
             </td>
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="startContract" th:value="${user.startContract}" >
+              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="startContract" th:value="${user.startContract}" >
             </td>
             
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="endContract" th:value="${user.endContract}">
+              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="endContract" th:value="${user.endContract}">
             </td>
            
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="limitedUser" th:value="${user.limitedUser}">
+              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|"class="form-control" th:name="limitedUser" th:value="${user.limitedUser}">
             </td>
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="userRank" th:value="${user.userRank}">
+              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="userRank" th:value="${user.userRank}">
             </td>
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="taxInclude" th:value="${user.taxInclude}">
+              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="taxInclude" th:value="${user.taxInclude}">
             </td>
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="taxExclude" th:value="${user.taxExclude}">
+              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="taxExclude" th:value="${user.taxExclude}">
             </td>
             
 
             <td>
               <form th:action="@{/cddelete}" th:companyid="${user.companyID}">
-                <input type="hidden" name="id" th:value="${user.companyID}" />
+                <input type="hidden" name="id" th:value="|${user.companyID}:${user.contractID}|" />
                 <input type="submit" value="削除">
 
               </form>
