@@ -77,6 +77,11 @@ public class MasterUserController extends WorkdaysProperties{
             model.addAttribute("error", "既に使用されています");
 			return "company_info";
 		}
+
+		if(companyInfo.getRegister()==null){
+			model.addAttribute("error2", "日付が未入力です");
+			return "company_info";
+		}
         
         if (result.hasErrors()){
             return "company_info";

@@ -30,7 +30,7 @@
         <label for="start_contract"></label>
         <input type="date" class="register-control"
         th:errorclass="is-invalid" th:field="*{register}">
-        <div class="invalid-feedback" th:errors="*{register}"></div>
+        <small th:text="${error2}" class="error"></small>
       </td>
     </tr>
 
@@ -62,7 +62,7 @@
       <input type="text" class="register-control"
       th:errorclass="is-invalid" th:field="*{mail}">
        <div class="invalid-feedback" th:errors="*{mail}"></div>
-        <small>※半角で入力してください</small>
+        
       </td>
     </tr>
 
