@@ -24,7 +24,7 @@ public class IndividualData
 	 private int companyID;
 
 	 @Column
-	 @NotEmpty
+	 @NotEmpty(message = "会社名を入力してください")
 	 private String company1;
 
 	 @Column
@@ -40,9 +40,11 @@ public class IndividualData
 	  private String mail;
 
 	  @Column(name="individual_id")
+	  @NotEmpty(message = "管理番号を入力してください")
 	  private String number;
 
 	  @Column
+	  @NotEmpty(message = "氏名を入力してください")
 	  private String name;
 
 	  @Column

@@ -97,7 +97,7 @@ public class MasterController {
 		return "confirmsuperuser";
 	}
 
-    //会員情報をDBに登録
+    //管理者情報をDBに登録
 	@PostMapping("/registsuperuser")
     public String registsuperuser(@Validated @ModelAttribute SuperUser superUser, BindingResult result, Model model){
 		
