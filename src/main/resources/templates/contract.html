@@ -18,7 +18,7 @@
       <th>会社ID</th>
       <td>
         <label for="companyID"></label>
-        <input type="text" class="register-control"
+        <input type="number" class="register-control"
         th:errorclass="is-invalid" th:field="*{companyID}">
        <div class="invalid-feedback" th:errors="*{companyID}"></div>
       </td>
@@ -60,7 +60,7 @@
       <th>上限ユーザー数</th>
       <td>
         <label for="limitedUser"></label>
-        <input type="text" class="register-control"
+        <input type="number" class="register-control"
         th:errorclass="is-invalid" th:field="*{limitedUser}">
        <div class="invalid-feedback" th:errors="*{limitedUser}"></div>
       </td>
@@ -81,7 +81,7 @@
       <th>税抜きの金額 </th>
       <td>
         <label for="taxExclude"></label>
-      <input type="text" class="register-control"
+      <input type="number" class="register-control"
       th:errorclass="is-invalid" th:field="*{taxExclude}">
        <div class="invalid-feedback" th:errors="*{taxExclude}"></div>
       
@@ -93,7 +93,7 @@
       <th>税込みの金額</th>
       <td>
         <label for="taxInclude"></label>
-        <input type="text" class="register-control"
+        <input type="number" class="register-control"
         th:errorclass="is-invalid" th:field="*{taxInclude}">
        <div class="invalid-feedback" th:errors="*{taxInclude}"></div>
       </td>
