@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -26,14 +27,15 @@ public class SuperUser{
 	private Integer id;
 	
 	@Column
-	@NotBlank
+	@NotBlank(message = "パスワードを入力してください")
 	private String pass;
 
 	@Column
-	@NotBlank
+	@NotBlank(message = "メールアドレスを入力してください")
+	@Email
 	private String email;
 
 	@Column
-	@NotNull
+	@NotNull(message = "会社IDを入力してください")
 	private Integer companyID;
 }
