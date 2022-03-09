@@ -525,8 +525,8 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	
 
 
-	//エラーがなければログインに飛ぶ
-	return "/login2";
+	//エラーがなければ仮登録完了ページに遷移
+	return "/onetime";
 	}
 
 	//登録完了メール踏んだ時の処理
@@ -596,24 +596,22 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		int id=users.getId();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
-		System.out.println(inputvalue);
-		LocalTime lt=LocalTime.parse(inputvalue);
-		Time time=new Time( lt.getHour(),lt.getMinute(),lt.getSecond());
+
 		switch (name) {
 			case "start":
-			 workdays.setStart(time);
+			 workdays.setStart(userService.toTime(inputvalue));//StringをlocalTimeに変換した後Timeに変換するメソッド
 			break;
 			
 			case "end":
-			 workdays.setEnd(Time.valueOf(inputvalue));
+			 workdays.setEnd(userService.toTime(inputvalue));
 			break;
 
 			case "halftime":
-			 workdays.setEnd(Time.valueOf(inputvalue));
+			 workdays.setEnd(userService.toTime(inputvalue));
 			break;
 
 			case "worktime":
-			 workdays.setEnd(Time.valueOf(inputvalue));
+			 workdays.setEnd(userService.toTime(inputvalue));
 			break;
 			
 			case "other1":
