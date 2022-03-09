@@ -30,23 +30,23 @@ public class User
 
 
 	 @Column
-	 @NotBlank
+	 @NotBlank(message = "苗字を入力してください")
 	 @Size(max = 60)
 	  private String lastname;
 
 	 @Column
-	 @NotBlank
+	 @NotBlank(message = "名前を入力してください")
 	 @Size(max = 60)
 	  private String firstname;
 
 	  @Column
-	  @NotBlank
+	  @NotBlank(message = "メールアドレスを入力してください")
 	  @Email
 	  private String email;
 
 
 	  @Column
-	  @NotBlank
+	  @NotBlank @NotBlank(message = "パスワードを入力してください")
 	  private String password;
 
 	  @Column
