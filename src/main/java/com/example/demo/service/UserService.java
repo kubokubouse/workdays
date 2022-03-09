@@ -259,7 +259,13 @@ public class UserService{
 		yearMonth.setLastmonth(lastmonth);
 		return yearMonth;
 	}
-  
+
+	public Time toTime(String inputvalue){
+		LocalTime lt=LocalTime.parse(inputvalue);
+		Time time=new Time( lt.getHour(),lt.getMinute(),lt.getSecond());
+		return time;
+	}
+	
 	//名前と苗字とユーザーidからExcelを作る
     public void toExcel(String lastname,String firstname, int id) throws EncryptedDocumentException, IOException{
 		//苗字と名前合わせてname
