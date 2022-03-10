@@ -166,6 +166,7 @@ a:hover::after{
             <th>会社2</th>
             <th>会社3</th>
             <th>登録</th>
+            <th>削除</th>
             
 
           </tr>
@@ -198,13 +199,22 @@ a:hover::after{
             </td>
 
             <td>
-              [[${user.regist}]]
+              <div th:if="${user.registered==0}">[[${user.regist}]]</div>
+              <div th:if="${user.registered==1}">
+                <form th:action="@{/remail}" >
+                  <input type="hidden" name="mail" th:value="${user.mail}" />
+                  <input type="submit" value="メール再送信">
+                </form>
+              </div>
             </td>
 
             <td>
-              <a th:href="@{/userdelete(userid=${user.mail})}" input type="hidden" >削除</a>
+              <form th:action="@{/userdelete}" >
+                <input type="hidden" name="id" th:value="${user.mail}" />
+                <input type="submit" value="削除">
+
+              </form>
             </td>
-         
           </tr>
         </tbody>
       </table>
