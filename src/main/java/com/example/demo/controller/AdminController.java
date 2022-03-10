@@ -132,6 +132,7 @@ public class AdminController extends WorkdaysProperties{
         
         int i=individualService.insert(companyID, mail, individualId,name,0,1,company1,company2,company3);
         
+        //登録されたメアドにユニバーサルユーザー登録orログインのメールを送る
         User universalUser=userService.findEmail(mail);
         if(universalUser==null){
            mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
@@ -169,7 +170,7 @@ public class AdminController extends WorkdaysProperties{
     //個別ユーザー削除
     //ここで使用されるユーザーIDはメアドのこと
 	@RequestMapping(value="/userdelete")
-	public String deleteuser(@RequestParam String userid, Model model){
+	public String deleteuser(@RequestParam("id") String userid, Model model){
 		System.out.println(userid);
 		userService.deleteIndividualData(userid);
         int companyId = (Integer)session.getAttribute("companyId");
@@ -213,6 +214,13 @@ public class AdminController extends WorkdaysProperties{
 		List<IndividualData> iList = userService.findCompanyID(companyId);
 		model.addAttribute("userListParam", iList);
 		return "userlist";
+	}
+
+    @RequestMapping(value="/remail")
+	public String superuserdelete(@RequestParam("mail") String mail, Model model){
+		
+		mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+		return "/remail";
 	}
 
 	//ファイルアップロード画面表示
