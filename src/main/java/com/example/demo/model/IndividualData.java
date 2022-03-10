@@ -40,7 +40,6 @@ public class IndividualData
 	  private String mail;
 
 	  @Column(name="individual_id")
-	  @NotEmpty(message = "管理番号を入力してください")
 	  private String number;
 
 	  @Column
