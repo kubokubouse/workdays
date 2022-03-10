@@ -32,6 +32,7 @@ import com.example.demo.model.Holiday;
 import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
+import com.example.demo.model.Mail;
 import com.example.demo.model.Onetime;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.StringListParam;
@@ -405,15 +406,19 @@ public class HomeController extends WorkdaysProperties{
 	
 	//パスワード忘れた人用の処理 メール送信画面へ飛ぶ
 	@GetMapping("/forgetpassword")
-	public String forgetpassword (@ModelAttribute User user){
+	public String forgetpassword (@ModelAttribute Mail mail){
 		
 		return "repass";
 	}
 
-	//送信されたメアドに対してリンクを送る
+	//パスワード忘れた人が送信してきたメアドに対してリンクを送る
 	@PostMapping("/repassmail")
-	public String repassmail (@ModelAttribute User user){
-		mailsendService.send(user.getEmail());
+	public String repassmail (@Validated @ModelAttribute Mail mail, BindingResult result){
+		User users=userService.findEmail(mail.getEmail());
+		if(users==null){
+			return "/repass";
+		}
+		mailsendService.send(mail.getEmail());
 		return "maildone";
 	}
 	//リンク踏んだ奴に対する処理

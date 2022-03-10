@@ -197,9 +197,9 @@ public class MasterController {
 	}
 
     @RequestMapping(value="/superuserdelete")
-	public String superuserdelete(@RequestParam String superUserid, Model model){
+	public String superuserdelete(@RequestParam("id") String id, Model model){
 		
-		superUserService.delete(superUserid);
+		superUserService.delete(id);
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
 		return "/superUserlist";

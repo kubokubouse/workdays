@@ -13,7 +13,7 @@
 <h1>パスワード再登録処理</h1>
 </header>
 <main id=contents>
-<form id="entryform" th:action="@{/repassmail}"  th:object="${user}"method="post" >
+<form id="entryform" th:action="@{/repassmail}"  th:object="${mail}"method="post" >
 
 <table class="entryTable" border="1">
 
@@ -26,7 +26,7 @@
  <div class="invalid-feedback" th:errors="*{email}">
             </div>
 
-        <small>メールアドレスを入力してください</small>
+      
       </td>
     </tr>
 
