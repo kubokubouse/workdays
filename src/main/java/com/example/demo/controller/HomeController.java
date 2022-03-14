@@ -741,7 +741,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 
 		BoxFolder uploadFolder = new BoxFolder(api, childFolderId);
 		BoxFolder.Info info = uploadFolder.getInfo();
-		System.out.println("フォルダ：" + info.getName() + ", ID:" + info.getID());
+		System.out.println("出力フォルダ名：" + info.getName() + ", 出力フォルダID:" + info.getID());
 
 		//ファイル名の重複を確認
 		String fileId = null;
@@ -760,10 +760,10 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			FileInputStream input = new FileInputStream(clientFilePath);
 			BoxFile.Info newFileInfo = uploadFolder.uploadFile(input, clientFileName);
 		}
-		System.out.println("出力先：https://app.box.com/file/" + uploadFolder.getID());
+		System.out.println("出力先url：https://app.box.com/file/" + uploadFolder.getID());
 
 		String url = WorkdaysProperties.host + "/success";
-		System.out.println(url);
+		System.out.println("リダイレクト先：" + url);
 		response.sendRedirect(url);
 	}
 }
