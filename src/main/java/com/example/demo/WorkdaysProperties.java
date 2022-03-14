@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 
 public class WorkdaysProperties {
 
+    public static String host = "http://localhost:8080";
     public static String basePath = "C:/pleiades/workdays/workdays/src/main/resources";
     // public static String basePath = "C:/久保さん/cloneproject/workdays/src/main/resources";
     public static String outputFileName = "勤怠表.xls";

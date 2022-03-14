@@ -21,6 +21,9 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import java.net.HttpURLConnection;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -690,8 +693,13 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		return "boxDEV";
 	}
 
+	@GetMapping("/success")
+	public String success(Model model){
+		return "success";
+	}
+
 	@GetMapping("/boxDownload")
-	public String downloadBox(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+	public void downloadBox(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException, ServletException {
 		
 		String clientId = WorkdaysProperties.boxClientId;
 		String clientSecret = WorkdaysProperties.boxClientSecret;
@@ -700,10 +708,10 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		File clientFile = new File(clientFilePath);
 		String clientFileName = clientFile.getName();
 		
-		String authorizationUrl = "https://account.box.com/api/oauth2/authorize?client_id="
-			+ clientId + "&response_type=code";
+		// String authorizationUrl = "https://account.box.com/api/oauth2/authorize?client_id="
+		// 	+ clientId + "&response_type=code";
 		
-		response.sendRedirect(authorizationUrl);
+		// response.sendRedirect(authorizationUrl);
 
 		String code = request.getParameter("code");
 		System.out.println("CODE=" + code);
@@ -754,7 +762,8 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		}
 		System.out.println("出力先：https://app.box.com/file/" + uploadFolder.getID());
 
-		model.addAttribute("error", "すべてのファイル＞勤怠管理システム＞" + clientFileName + "が出力されました");
-		return "success";
+		String url = WorkdaysProperties.host + "/success";
+		System.out.println(url);
+		response.sendRedirect(url);
 	}
 }
