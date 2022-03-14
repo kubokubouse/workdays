@@ -10,7 +10,10 @@
 <h2>勤怠表をダウンロードします</h2>
 <p th:text="${outputFileName}" class="fileName"></p>
 
-<a th:href="@{${filePath}}" class = "button" download> ダウンロード</a>
+<a th:href="@{${filePath}}" class="btn_item" download> ダウンロード</a>
+
+<a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code" class="btn_item"> boxにログインして保存</a>
+
 
 <p><a href="/logout">ログアウト</a></p>
 </body>
@@ -47,21 +50,14 @@
         font-weight: bold;
     }
 
-    .button {
-        display       : inline-block;
-        border-radius : 5%;          /* 角丸       */
-        font-size     : 13pt;        /* 文字サイズ */
-        text-align    : center;      /* 文字位置   */
-        cursor        : pointer;     /* カーソル   */
-        padding       : 12px 12px;   /* 余白       */
-        background    : #1a1aff;     /* 背景色     */
-        color         : #ffffff;     /* 文字色     */
-        line-height   : 1em;         /* 1行の高さ  */
-        transition    : .3s;         /* なめらか変化 */
-        box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
-      }
-      .button:hover {
-        box-shadow    : none;        /* カーソル時の影消去 */
-      }
+    .btn_item {
+      display: inline-block;
+      padding: 10px 20px;
+      text-decoration: none;
+      background: rgb(228,226,223);
+      color: #333;
+      border: 1px solid rgb(228,226,223);
+      /* border-radius: 5px; デザインによる */
+    }
       
 </style>
