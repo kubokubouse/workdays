@@ -183,7 +183,7 @@ public class MasterController {
 	}
 
     //ユーザー編集画面
-	@GetMapping("/superuserlist")
+	@GetMapping("/superuserlist1")
 	public String superuserlist(@Validated  Model model, @ModelAttribute SuperUser superuser){
 
 		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
