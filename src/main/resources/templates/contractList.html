@@ -180,7 +180,6 @@ a:hover::after{
               <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="taxExclude" th:value="${user.taxExclude}">
             </td>
             
-
             <td>
               <form th:action="@{/cddelete}" th:companyid="${user.companyID}">
                 <input type="hidden" name="id" th:value="|${user.companyID}:${user.contractID}|" />
