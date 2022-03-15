@@ -3,13 +3,27 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.io.FileInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import java.net.HttpURLConnection;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +40,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.box.sdk.*;
+import com.box.sdk.BoxItem.Info;
+
+import javax.servlet.http.*;
 
 import com.example.demo.model.Otherpa;
 import com.example.demo.model.Holiday;
@@ -57,6 +75,7 @@ import com.example.demo.service.CellvalueGet;
 import com.example.demo.WorkdaysProperties;
 import com.google.gson.Gson;
 import com.example.demo.model.Judgeused;
+
 @Controller
 public class HomeController extends WorkdaysProperties{
 	private final UserRepository repository;
@@ -387,6 +406,8 @@ public class HomeController extends WorkdaysProperties{
 
 		System.out.println("input: " + inputFilePath);
 		System.out.println("output: " + outputFilePath);
+
+		session.setAttribute("output", outputFilePath);
 		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
@@ -666,5 +687,83 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		model.addAttribute("opList", opList);
 		return "list";
 	}
-	
+
+	@GetMapping("/boxDEV")
+	public String box(Model model){
+		return "boxDEV";
+	}
+
+	@GetMapping("/success")
+	public String success(Model model){
+		return "success";
+	}
+
+	@GetMapping("/boxDownload")
+	public void downloadBox(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException, ServletException {
+		
+		String clientId = WorkdaysProperties.boxClientId;
+		String clientSecret = WorkdaysProperties.boxClientSecret;
+		String boxSaveFolderName = WorkdaysProperties.boxSaveFolderName;
+		String clientFilePath = (String)session.getAttribute("output");
+		File clientFile = new File(clientFilePath);
+		String clientFileName = clientFile.getName();
+		
+		// String authorizationUrl = "https://account.box.com/api/oauth2/authorize?client_id="
+		// 	+ clientId + "&response_type=code";
+		
+		// response.sendRedirect(authorizationUrl);
+
+		String code = request.getParameter("code");
+		System.out.println("CODE=" + code);
+		
+		BoxAPIConnection api = new BoxAPIConnection(
+  			clientId,
+  			clientSecret,
+			code
+		);
+
+		//すべてのフォルダ(id=0)下に出力用ファイルを作成
+		BoxFolder parentFolder = new BoxFolder(api, "0");
+		Iterable<Info> childrens = parentFolder.getChildren();
+		String childFolderId = null;
+
+		//フォルダ名の重複を確認
+		for (Info info : childrens) {
+			if (info.getName().equals(boxSaveFolderName)) {
+				childFolderId = info.getID();
+				break;
+			}
+		}
+		if (childFolderId == null) {
+			BoxFolder.Info childFolderInfo = parentFolder.createFolder(boxSaveFolderName);
+			childFolderId = childFolderInfo.getID();
+		}
+
+		BoxFolder uploadFolder = new BoxFolder(api, childFolderId);
+		BoxFolder.Info info = uploadFolder.getInfo();
+		System.out.println("出力フォルダ名：" + info.getName() + ", 出力フォルダID:" + info.getID());
+
+		//ファイル名の重複を確認
+		String fileId = null;
+		for (BoxItem.Info itemInfo : uploadFolder) {
+			if(itemInfo.getName().equals(clientFileName)) {
+				//ファイルを更新
+				fileId = itemInfo.getID();
+				BoxFile updatefile = new BoxFile(api, fileId);
+				FileInputStream stream = new FileInputStream(clientFilePath);
+				updatefile.uploadNewVersion(stream);
+			}
+
+		}
+
+		if(fileId == null) {
+			FileInputStream input = new FileInputStream(clientFilePath);
+			BoxFile.Info newFileInfo = uploadFolder.uploadFile(input, clientFileName);
+		}
+		System.out.println("出力先url：https://app.box.com/file/" + uploadFolder.getID());
+
+		String url = WorkdaysProperties.host + "/success";
+		System.out.println("リダイレクト先：" + url);
+		response.sendRedirect(url);
+	}
 }

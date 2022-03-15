@@ -2,15 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>エラー</title>
-<link th:href="@{/css/donestyle.css}" rel="stylesheet"/>
+<title>トップページ</title>
 <link rel="stylesheet" href="css/stylesheet.css">
+<link th:href="@{/css/donestyle.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2>勤怠表を出力できませんでした</h2>
+<h2>勤怠表をダウンロードします</h2>
 
-<tr th:each="errors : ${errors}">
-  <td th:text="${errors}"></td></tr>
+
+<form th:action="@{/boxDownload}">
+  <input type="submit" value="boxにログイン">
+</form>
+
+<p><a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code">box</a></p>
+<p>[[${error}]]</p>
 
 <p><a href="/logout">ログアウト</a></p>
 </body>
