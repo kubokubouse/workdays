@@ -25,6 +25,9 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import java.net.HttpURLConnection;
 
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -107,10 +110,25 @@ public class HomeController extends WorkdaysProperties{
     //トップページがログイン画面になる
 	@GetMapping("/")
 	public String login(@ModelAttribute Login login){
-	 session.removeAttribute("Data");
 		
+		session.removeAttribute("Data");
+		Calendar before = Calendar.getInstance();
+		before.set(Calendar.YEAR, 2022);
+		before.set(Calendar.MONTH, 11);
+		Calendar after = Calendar.getInstance();
+		after.set(Calendar.YEAR, 2021);
+		after.set(Calendar.MONTH, 1);
+
+		int count = 0;
+
+		while (after.before(before)) {
 	
-		
+			after.add(Calendar.MONTH, 1);
+	
+			count++;
+	
+		}
+		System.out.println(count);
 		//return "login";
 		return "login2";
 	}
@@ -186,7 +204,7 @@ public class HomeController extends WorkdaysProperties{
 	@RequestMapping("/login2")
 	@CrossOrigin(origins = "*")
 	public String sucsess2(@Validated  @ModelAttribute Login login, BindingResult result,
-	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult){
+	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult, @ModelAttribute YearMonth yaerMonth){
 		
 		String id = login.getEmail();
 		String pass = login.getPassword();
@@ -259,7 +277,50 @@ public class HomeController extends WorkdaysProperties{
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
 		int month=1+cal.get(Calendar.MONTH);
-		if(year!=yearMonth.getYear()&&month>yearMonth.getMonth()){
+		
+
+		Calendar big = Calendar.getInstance();//現在の年月
+		big.set(Calendar.YEAR, year);
+		big.set(Calendar.MONTH, month);
+
+		Calendar small = Calendar.getInstance();//入力された年月
+		small.set(Calendar.YEAR, yearMonth.getYear());
+		small.set(Calendar.MONTH, yearMonth.getMonth());
+		int count = 0;
+
+		//入力された年月が現在より未来だった場合bigとsmallを入れ替えて引き算が成立するようにする
+		if(big.before(small)){
+			Calendar middle=big;
+			big=small;
+			small=middle;
+			while (small.before(big)) {
+	
+				small.add(Calendar.MONTH, 1);
+		
+				count++;
+			}
+			//2か月先以上の年月が入力されていた場合は戻る
+			if(count>1){
+				yearMonth.setYear(year);
+				yearMonth.setMonth(month);
+				model.addAttribute("error2","2か月以上先のデータは閲覧できません");
+			}
+	
+		}
+		
+		while (small.before(big)) {
+			small.add(Calendar.MONTH, 1);
+			count++;
+		}
+		//1年以上前の年月が入力されていた場合戻る
+		if(count>12){
+			yearMonth.setYear(year);
+			yearMonth.setMonth(month);
+			model.addAttribute("error2","1年以上前のデータは閲覧できません");
+		}
+
+		
+		/*if(year!=yearMonth.getYear()&&month>yearMonth.getMonth()){
 			yearMonth.setYear(year);
 			yearMonth.setMonth(month);
 			model.addAttribute("error2","1年以上前のデータは閲覧できません");
@@ -270,7 +331,7 @@ public class HomeController extends WorkdaysProperties{
 			yearMonth.setMonth(month);
 			model.addAttribute("error2","1年以上前のデータは閲覧できません");
 
-		}
+		}*/
 
 		//メアドから個別ユーザーのリストを作成する
 		User user=(User)session.getAttribute("Data");
