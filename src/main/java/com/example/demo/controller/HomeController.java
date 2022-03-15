@@ -157,7 +157,7 @@ public class HomeController extends WorkdaysProperties{
 		int userid=users.getId();
 		int year=yearMonth.getYear();
 		int month=yearMonth.getMonth();
-		int lastmonth=yearMonth.getLastmonth();
+		int lastmonth=month-1;
 		Workdays workdays =workdaysService.findUseridYearMonthDay(userid,year, month,1);
 		if (workdays==null){
 			Calendar cal = Calendar.getInstance();
@@ -235,75 +235,82 @@ public class HomeController extends WorkdaysProperties{
 		System.out.println(idUserList);
 		
 		session.setAttribute("Data",users);
-		Calendar cal = Calendar.getInstance();
-		int year=cal.get(Calendar.YEAR);
-		int calendermonth=cal.get(Calendar.MONTH);//当月11月の時calendermonth=10
-		int month=calendermonth+1;//month=11 カレンダーメソッドで拾ってくる値は実際の月-1だから1足した上で検索しないといけない
-		int userid=users.getId();
-		Workdays workdays =workdaysService.findUseridYearMonthDay(userid,year, month,1);
 		
-		if (workdays==null){
-			//もしDBにその月の勤怠データがナカッタラ→勤怠データをDBに登録
-			//id year month はこの時点で回収済み　残りは日付と曜日
-			//年と月からforで回転させる回数を出してどうにかこうにか？
-			cal.set(Calendar.YEAR, year);
-			cal.set(Calendar.MONTH, calendermonth);//カレンダーメソッドなので使うのは実際の月-1の方
-			int lastDayOfMonth = cal.getActualMaximum(Calendar.DATE);
-			for(int i=0;i<lastDayOfMonth;i++){
-				String yobi[] = {"日","月","火","水","木","金","土"};
-				cal.set(year, calendermonth, i+1);
-				String weekday=yobi[cal.get(Calendar.DAY_OF_WEEK)-1];
-				workdaysService.insertdata(userid, year, month, i+1, weekday);//int d=が左辺にあったから動かなくなったら足すこと
-			}
-			List<Holiday> holidays=holidayService.findyearmonth(year, month);
-			for(Holiday holiday:holidays) {
-				int holiday2=holiday.getDay();
-				workdays =workdaysService.findUseridYearMonthDay(userid,year, month,holiday2);
-				workdays.setHoliday(1);
-				workdaysService.update(workdays);
-			}
-
-		}
+		YearMonth yearMonth=userService.nowYearMonth();
+		session.setAttribute("yearMonth",yearMonth);
 		
-		//スタートやエンドの値を一括で変形する→workingListParm全体の値を別の箱に入れる→箱をjsonで変換する
-		WorkingListParam workingListParam = userService.searchAll(users);//リストに出す用の検索は必要
-		workingListParam.setMonth(month);
-		workingListParam.setYear(year);
+		//年月を渡し勤怠データの有無の確認→データなしなら新規追加→勤怠データをDBからリスト形式で取得
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		//WorkingListParam workingListParam = userService.searchAll(users);//リストに出す用の検索は必要
+		workingListParam.setMonth(yearMonth.getMonth());
+		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
-		model.addAttribute("users", users);
 
 		//備考1,2,3に会社名を添付する処理をする
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
-		CellvalueGet cellgetvalue=new CellvalueGet();
-		
-		
-		List<Otherpa>opList=new ArrayList<Otherpa>();
-		Judgeused judgeused1=cellgetvalue.GetCellvalue(users.getCompany1());
-		Judgeused judgeused2=cellgetvalue.GetCellvalue(users.getCompany2());
-		Judgeused judgeused3=cellgetvalue.GetCellvalue(users.getCompany3());
-		
-		Otherpa opa_oa=new Otherpa();
-		opa_oa.setCompany1(judgeused1.getOa());
-		opa_oa.setCompany2(judgeused2.getOa());
-		opa_oa.setCompany3(judgeused3.getOa());
-
-		opList.add(opa_oa);
-		
-		Otherpa opa_ob=new Otherpa();
-		opa_ob.setCompany1(judgeused1.getOb());
-		opa_ob.setCompany2(judgeused2.getOb());
-		opa_ob.setCompany3(judgeused3.getOb());
-		opList.add(opa_ob);
-
-		Otherpa opa_oc=new Otherpa();
-		opa_oc.setCompany1(judgeused1.getOc());
-		opa_oc.setCompany2(judgeused2.getOc());
-		opa_oc.setCompany3(judgeused3.getOc());
-		opList.add(opa_oc);
-
+		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
 		return "list";
 	}
+
+	//年月が指定された場合のログイン
+	@PostMapping("/yearmonth")
+	public String yearMonth(@Validated @ModelAttribute YearMonth yearMonth,  Model model){
+		Calendar cal = Calendar.getInstance();
+		int year=cal.get(Calendar.YEAR);
+		int month=1+cal.get(Calendar.MONTH);
+		if(year!=yearMonth.getYear()&&month>yearMonth.getMonth()){
+			yearMonth.setYear(year);
+			yearMonth.setMonth(month);
+			model.addAttribute("error2","1年以上前のデータは閲覧できません");
+
+		}
+		if(year>yearMonth.getYear()||yearMonth.getYear()-year>1){
+			yearMonth.setYear(year);
+			yearMonth.setMonth(month);
+			model.addAttribute("error2","1年以上前のデータは閲覧できません");
+
+		}
+
+		//メアドから個別ユーザーのリストを作成する
+		User user=(User)session.getAttribute("Data");
+		List <IndividualData>iDataList=individualService.findMail(user.getEmail());
+		model.addAttribute("iDataList", iDataList);
+		
+		//個別ユーザーから会社IDを取得し会社のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+		
+		for(IndividualData iData:iDataList){
+			IdUser idUser=new IdUser();
+			CompanyInfo companyInfo= companyInfoService.findByCompanyID(iData.getCompanyID());
+			idUser.setCompany1(iData.getCompany1());// companyInfo.getCompanyName();
+			idUser.setCompany2(iData.getCompany2());
+			idUser.setCompany3(iData.getCompany3());
+			idUser.setBanned(iData.getBanned());
+			idUser.setCompanyID(iData.getCompanyID());
+			idUser.setCompanyName(companyInfo.getCompanyName());
+			idUserList.add(idUser);
+
+		}
+
+		model.addAttribute("idUserList", idUserList);
+
+		//指定された月のデータをリスト化
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		workingListParam.setMonth(yearMonth.getMonth());
+		workingListParam.setYear(yearMonth.getYear());
+		model.addAttribute("workingListParam", workingListParam);
+		model.addAttribute("users", user);
+
+		//備考仕様の有無を確認
+		List<Otherpa>opList=workdaysService.oplist(user);
+		model.addAttribute("opList", opList);
+		session.setAttribute("yearMonth",yearMonth);
+	
+		return "list";
+	}
+
+
 
 
 
@@ -437,7 +444,7 @@ public class HomeController extends WorkdaysProperties{
 	public String repassmail (@Validated @ModelAttribute Mail mail, BindingResult result){
 		User users=userService.findEmail(mail.getEmail());
 		if(users==null){
-			return "/repass";
+			return "repass";
 		}
 		mailsendService.send(mail.getEmail());
 		return "maildone";
@@ -453,7 +460,7 @@ public class HomeController extends WorkdaysProperties{
 		}
 		int flag=0;
 		model.addAttribute("flag", flag);
-		return "/newpassword";
+		return "newpassword";
 	}
 	
 	
@@ -552,7 +559,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 
 
 	//エラーがなければ仮登録完了ページに遷移
-	return "/onetime";
+	return "onetime";
 	}
 
 	//登録完了メール踏んだ時の処理
@@ -618,7 +625,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	@PostMapping("/AjaxServlet")
 	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model){	
 		User users=(User)session.getAttribute("Data");
-		YearMonth yearMonth=userService.nowYearMonth();
+		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
 		int id=users.getId();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
@@ -652,38 +659,14 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			} 
 		workdaysService.update(workdays);
 
-		
-		WorkingListParam workingListParam = userService.searchAll(users);
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		workingListParam.setMonth(yearMonth.getMonth());
+		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
 		model.addAttribute("users", users);
 
-		CellvalueGet cellgetvalue=new CellvalueGet();
-		
-		
-		List<Otherpa>opList=new ArrayList<Otherpa>();
-		Judgeused judgeused1=cellgetvalue.GetCellvalue(users.getCompany1());
-		Judgeused judgeused2=cellgetvalue.GetCellvalue(users.getCompany2());
-		Judgeused judgeused3=cellgetvalue.GetCellvalue(users.getCompany3());
-		
-		Otherpa opa_oa=new Otherpa();
-		opa_oa.setCompany1(judgeused1.getOa());
-		opa_oa.setCompany2(judgeused2.getOa());
-		opa_oa.setCompany3(judgeused3.getOa());
-
-		opList.add(opa_oa);
-		
-		Otherpa opa_ob=new Otherpa();
-		opa_ob.setCompany1(judgeused1.getOb());
-		opa_ob.setCompany2(judgeused2.getOb());
-		opa_ob.setCompany3(judgeused3.getOb());
-		opList.add(opa_ob);
-
-		Otherpa opa_oc=new Otherpa();
-		opa_oc.setCompany1(judgeused1.getOc());
-		opa_oc.setCompany2(judgeused2.getOc());
-		opa_oc.setCompany3(judgeused3.getOc());
-		opList.add(opa_oc);
-
+		//備考仕様の有無を確認
+		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
 		return "list";
 	}
