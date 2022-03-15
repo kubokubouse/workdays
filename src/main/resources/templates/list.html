@@ -181,9 +181,12 @@ a:hover::after{
     <div th:if="${validationError}" th:each="error : ${validationError}">
       <label class="text-danger" th:text="${error}"></label>
     </div>
-    <h1>[[${workingListParam.month}]]月勤怠表</h1>
-    <form th:action="@{/companyselect}" th:object="${users}" >
-    </div>
+    <h1>[[${workingListParam.year}]]年[[${workingListParam.month}]]月勤怠表 </h1>
+    
+   
+    
+  </div>
+  <form th:action="@{/companyselect}" th:object="${users}" >
   
     <div class="tabs">
       <div th:each="idUser, st:${idUserList}">
@@ -197,8 +200,17 @@ a:hover::after{
     </div>
   
     </form>
-    
-      <div  class="text-end">
+    <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
+      <input type="number" class="login-control"
+      th:errorclass="is-invalid" th:field="*{year}">年
+      <div class="invalid-feedback" th:errors="*{year}"></div>
+      <input type="number" class="login-control"
+      th:errorclass="is-invalid" th:field="*{month}">月
+      <div class="invalid-feedback" th:errors="*{month}"></div>
+      <input type="submit" value="変更"><small>*過去一年分のみ確認できます</small><small th:if="${error2}">*[[${error2}]]</small>
+    </form>
+
+    <div  class="text-end">
        
       </div><br />
       <table class="table table-striped">
