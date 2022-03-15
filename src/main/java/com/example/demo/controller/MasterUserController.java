@@ -208,7 +208,7 @@ public class MasterUserController extends WorkdaysProperties{
 		//並びが昇順になっている契約情報一覧の取得
 		List<BeanContractData>contractDataList=contractService.createBeanContractList();
 		model.addAttribute("contractDataList",contractDataList);
-		return "contractlist";
+		return "contractList";
 	}
 
 	//契約情報削除
@@ -221,7 +221,7 @@ public class MasterUserController extends WorkdaysProperties{
 
 		List<BeanContractData>contractDataList=contractService.createBeanContractList();
 		model.addAttribute("contractDataList",contractDataList);
-		return "contractlist";
+		return "contractList";
 	}
 
 		//契約情報更新
@@ -258,7 +258,7 @@ public class MasterUserController extends WorkdaysProperties{
 			contractRepository.save(cd);
 			List<BeanContractData>contractDataList=contractService.createBeanContractList();
 			model.addAttribute("contractDataList",contractDataList);
-			return "contractlist";
+			return "contractList";
 		}
 	
 	
