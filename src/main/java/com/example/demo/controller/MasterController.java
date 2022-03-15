@@ -193,7 +193,7 @@ public class MasterController {
         
         SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
-		return "/superuserlist";
+		return "superuserlist";
 	}
 
     @RequestMapping(value="/superuserdelete")
@@ -202,7 +202,7 @@ public class MasterController {
 		superUserService.delete(id);
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
-		return "/superUserlist";
+		return "superUserlist";
 	}
 
     @PostMapping("/SuperUserAjaxServlet")
@@ -227,7 +227,7 @@ public class MasterController {
 		superUserService.update(superUser);
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
-		return "/superuserlist";
+		return "superuserlist";
 	}
 
 	//ユニバーサルユーザー一覧表示
@@ -243,7 +243,7 @@ public class MasterController {
 		List<UserData> userDataList=userListParam.getUserDataList();
 		model.addAttribute("userDataList",userDataList);
 		
-		return "/universaluserlist";
+		return "universaluserlist";
 	}
 	//Ajaxで値を取得しDBに登録
 	@PostMapping("/UniversalUserAjaxServlet")
@@ -263,7 +263,7 @@ public class MasterController {
 		model.addAttribute("userListParam", userListParam);
 		List<UserData> userDataList=userListParam.getUserDataList();
 		model.addAttribute("userDataList",userDataList);
-		return "/universaluserlist";
+		return "universaluserlist";
 	}
 }
 

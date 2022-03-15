@@ -444,7 +444,7 @@ public class HomeController extends WorkdaysProperties{
 	public String repassmail (@Validated @ModelAttribute Mail mail, BindingResult result){
 		User users=userService.findEmail(mail.getEmail());
 		if(users==null){
-			return "/repass";
+			return "repass";
 		}
 		mailsendService.send(mail.getEmail());
 		return "maildone";
@@ -460,7 +460,7 @@ public class HomeController extends WorkdaysProperties{
 		}
 		int flag=0;
 		model.addAttribute("flag", flag);
-		return "/newpassword";
+		return "newpassword";
 	}
 	
 	
@@ -559,7 +559,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 
 
 	//エラーがなければ仮登録完了ページに遷移
-	return "/onetime";
+	return "onetime";
 	}
 
 	//登録完了メール踏んだ時の処理
