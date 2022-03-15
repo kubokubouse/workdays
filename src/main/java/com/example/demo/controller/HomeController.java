@@ -753,14 +753,12 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 				FileInputStream stream = new FileInputStream(clientFilePath);
 				updatefile.uploadNewVersion(stream);
 			}
-
 		}
 
 		if(fileId == null) {
 			FileInputStream input = new FileInputStream(clientFilePath);
 			BoxFile.Info newFileInfo = uploadFolder.uploadFile(input, clientFileName);
 		}
-		System.out.println("出力先url：https://app.box.com/file/" + uploadFolder.getID());
 
 		String url = WorkdaysProperties.host + "/success";
 		System.out.println("リダイレクト先：" + url);
