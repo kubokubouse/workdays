@@ -256,9 +256,11 @@ public class UserService{
 		YearMonth  yearMonth=new YearMonth();
 		yearMonth.setMonth(month);
 		yearMonth.setYear(year);
-		yearMonth.setLastmonth(lastmonth);
+		//yearMonth.setLastmonth(lastmonth);
 		return yearMonth;
 	}
+
+	
 
 	public Time toTime(String inputvalue){
 		LocalTime lt=LocalTime.parse(inputvalue);
