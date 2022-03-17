@@ -260,7 +260,26 @@ public class UserService{
 		return yearMonth;
 	}
 
-	
+	//00：00形式のStringを合計oo分のintに変換する
+	public int allminutes(String time){
+		int tenhour=Integer.parseInt(time.substring(0, 1));
+		int hour=Integer.parseInt(time.substring(1, 2));
+		int tenminutes=Integer.parseInt(time.substring(3, 4));
+		int minutes=Integer.parseInt(time.substring(4, 5));
+		int aminutes=(tenhour*10+hour)*60+tenminutes*10+minutes;
+		return aminutes;
+		
+	}
+	//intの分をStringの00:00形式に変換する
+	public String wminutes(int aminutes){
+		int tenhour=aminutes/600;
+		int hour=aminutes%600/60;
+		int tenminutes=aminutes%600%60/10;
+		int minutes=aminutes%600%60%10%10;
+		String time=Integer.toString(tenhour)+Integer.toString(hour)+":"+Integer.toString(tenminutes)+Integer.toString(minutes);
+		return time;
+
+	}
 
 	public Time toTime(String inputvalue){
 		LocalTime lt=LocalTime.parse(inputvalue);

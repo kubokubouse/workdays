@@ -6,14 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.model.Holiday;
 
-public interface HolidayRepository extends JpaRepository<Holiday, String>
-	{
+public interface HolidayRepository extends JpaRepository<Holiday, String>{
 
-		//@Query(value = "SELECT *from personaldata where email ="+"'"+ "ryowhite@icloud.com"+"'"+ "and password="+"'"+"1211"+"'", nativeQuery = true)
-		List<Holiday> findByYearAndMonth(int year,int month);
-
-
-
-
+	//@Query(value = "SELECT *from personaldata where email ="+"'"+ "ryowhite@icloud.com"+"'"+ "and password="+"'"+"1211"+"'", nativeQuery = true)
+	List<Holiday> findByYearAndMonth(int year,int month);
+	List<Holiday> findByYear(int year);
+	Holiday findById(int id);
 
 }

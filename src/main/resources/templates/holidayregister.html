@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/stylesheet.css">
+<title>祝日の変更</title>
+</head>
+
+<body>
+  <header>
+    <h1>祝日の変更</h1>
+  </header>
+
+  <main id="contents">
+    <form id="entryForm" th:action="@{/holidayregister}" th:object="${oneholiday}" method="post" novalidate>
+    <table class="entryTable" border="1">
+
+      <tr>
+        <th>日付</th>
+        <td>[[${oneholiday.year}]]年
+          <label for="number"></label>
+          <input type="number" class="register-control"
+          th:errorclass="is-invalid" th:field="*{month}" th:value="${oneholiday.month}" >
+         <div class="invalid-feedback" th:errors="*{month}"></div>月
+         <label for="number"></label>
+         <input type="number" class="register-control"
+         th:errorclass="is-invalid" th:field="*{day}" th:value="${oneholiday.day}" >
+        <div class="invalid-feedback" th:errors="*{day}"></div>日
+        
+         </td>
+      </tr>
+    <tr>
+      <th>名称</th>
+      <td>
+        <label for="lastname"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{name}" th:value="${oneholiday.name}">
+       <div class="invalid-feedback" th:errors="*{name}"></div>
+      </td>
+    </tr>
+    
+
+  </table>
+  
+  <div class="send">
+    <input type="hidden" th:field="*{year}">
+    <input type="reset" value="クリア">
+    <input type="submit" value="登録">
+  </div>
+</form>
+</main>
+
+  <p><a href="/holidaylist">祝日一覧へ戻る</a></p>
+  <p><a href="/master">ログアウト</a></p>
+
+</body>
+</html>
+
+<style>
+
+  body {
+    font-family: sans-serif;
+    margin: center;
+    text-align: center;
+  }
+
+  h1 {
+    border-bottom: solid 3px skyblue;
+    position: relative;
+    font-family: sans-serif;
+  }
+  
+  h1:after {
+    position: absolute;
+    content: " ";
+    display: block;
+    border-bottom: solid 3px #ffc778;
+    bottom: -3px;
+    width: 30%;
+  }
+
+  .entryTable {
+    margin: auto;
+    border: 0px none;
+    text-align: center;
+  }
+
+  th {
+    background-color: #CCCCFF;
+    color: black;
+  }
+  
+  td {
+  padding-left: 10px;
+  text-align: left;
+  }
+  
+  .send {
+    margin-top: 20px;
+  }
+
+  a {
+    display: block;
+    padding-top: 10px;
+  }
+</style>
