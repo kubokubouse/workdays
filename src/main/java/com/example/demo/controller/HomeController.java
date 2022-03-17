@@ -156,9 +156,6 @@ public class HomeController extends WorkdaysProperties{
 	}
 
 	
-	
-
-	
 	//ログイン時の処理 	reactで必要な分　返却値はjsonの文
 	@RequestMapping("/login")
 	@ResponseBody
@@ -246,7 +243,6 @@ public class HomeController extends WorkdaysProperties{
 			idUser.setCompanyID(iData.getCompanyID());
 			idUser.setCompanyName(companyInfo.getCompanyName());
 			idUserList.add(idUser);
-
 		}
 
 		model.addAttribute("idUserList", idUserList);
@@ -278,7 +274,6 @@ public class HomeController extends WorkdaysProperties{
 		int year=cal.get(Calendar.YEAR);
 		int month=1+cal.get(Calendar.MONTH);
 		
-
 		Calendar big = Calendar.getInstance();//現在の年月
 		big.set(Calendar.YEAR, year);
 		big.set(Calendar.MONTH, month);
@@ -286,8 +281,8 @@ public class HomeController extends WorkdaysProperties{
 		Calendar small = Calendar.getInstance();//入力された年月
 		small.set(Calendar.YEAR, yearMonth.getYear());
 		small.set(Calendar.MONTH, yearMonth.getMonth());
+		
 		int count = 0;
-
 		//入力された年月が現在より未来だった場合bigとsmallを入れ替えて引き算が成立するようにする
 		if(big.before(small)){
 			Calendar middle=big;
@@ -305,7 +300,6 @@ public class HomeController extends WorkdaysProperties{
 				yearMonth.setMonth(month);
 				model.addAttribute("error2","2か月以上先のデータは閲覧できません");
 			}
-	
 		}
 		
 		while (small.before(big)) {
@@ -318,20 +312,6 @@ public class HomeController extends WorkdaysProperties{
 			yearMonth.setMonth(month);
 			model.addAttribute("error2","1年以上前のデータは閲覧できません");
 		}
-
-		
-		/*if(year!=yearMonth.getYear()&&month>yearMonth.getMonth()){
-			yearMonth.setYear(year);
-			yearMonth.setMonth(month);
-			model.addAttribute("error2","1年以上前のデータは閲覧できません");
-
-		}
-		if(year>yearMonth.getYear()||yearMonth.getYear()-year>1){
-			yearMonth.setYear(year);
-			yearMonth.setMonth(month);
-			model.addAttribute("error2","1年以上前のデータは閲覧できません");
-
-		}*/
 
 		//メアドから個別ユーザーのリストを作成する
 		User user=(User)session.getAttribute("Data");
@@ -351,7 +331,6 @@ public class HomeController extends WorkdaysProperties{
 			idUser.setCompanyID(iData.getCompanyID());
 			idUser.setCompanyName(companyInfo.getCompanyName());
 			idUserList.add(idUser);
-
 		}
 
 		model.addAttribute("idUserList", idUserList);
@@ -370,10 +349,6 @@ public class HomeController extends WorkdaysProperties{
 	
 		return "list";
 	}
-
-
-
-
 
 	@RequestMapping(value = "/listUpdate", method = RequestMethod.POST)
 	  public String listUpdate(@Validated @ModelAttribute WorkingListParam workingListParam, BindingResult result, Model model) {
@@ -458,7 +433,6 @@ public class HomeController extends WorkdaysProperties{
 		}
 				
 		//個別ユーザーTLから個人IDと会社IDを拾ってくる
-		System.out.println(company);
 		String[] values = company.split(":");
 		int companyID = Integer.parseInt(values[0]);
 		String companyName=values[1];
@@ -524,7 +498,6 @@ public class HomeController extends WorkdaysProperties{
 		return "newpassword";
 	}
 	
-	
 	//新規パスワードが送られてきた場合の処理
 	@PostMapping("/inputpassword")
 	public String inputpassword (@ModelAttribute User user, RePassword rePassword, Model model){
@@ -551,7 +524,6 @@ public class HomeController extends WorkdaysProperties{
 	//ユニバユーザー登録用リンク踏んだ奴用の処理　会員登録ページに移行
 	@GetMapping("/universalregister")
 	public String universalregister(@ModelAttribute User user, Model model,@RequestParam String email){
-
 		user.setEmail(email);
 		session.setAttribute("user",user);
 		model.addAttribute("user",user);
@@ -588,8 +560,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		}
 	}
 	
-	
-	
 	Onetime onetime=new Onetime();
 	onetime.setEmail(user.getEmail());
 	onetime.setLastname(user.getLastname());
@@ -601,7 +571,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
     calendar.setTime(date);
 	onetime.setDatetime(date);
 	
-	
 	//Date型の持つ日時を表示
     /*System.out.println(date);
 	long longer=date.getTime();
@@ -610,15 +579,8 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	long longer2=longer+300;
 	
     System.out.println("result="+longer2+longer);*/
-	
-	
-
 	onetimeService.insert(onetime);
 	mailsendService.mailsend(user.getEmail(),onetimeText);
-
-	
-
-
 	//エラーがなければ仮登録完了ページに遷移
 	return "onetime";
 	}
@@ -668,10 +630,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 
 		}
 
-
-
-		
-
 		//ワンタイムテーブルの全データ消去
 		List <Onetime> onetimeList=onetimeService.searchAll();
 		for(Onetime oneTime:onetimeList){
@@ -684,16 +642,25 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 
 
 	@PostMapping("/AjaxServlet")
-	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model){	
+	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model,@ModelAttribute YearMonth yaerMonth){	
 		User users=(User)session.getAttribute("Data");
 		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
 		int id=users.getId();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
-
+		System.out.println(inputvalue);
 		switch (name) {
 			case "start":
-			 workdays.setStart(userService.toTime(inputvalue));//StringをlocalTimeに変換した後Timeに変換するメソッド
+				//開始終了休憩時間をそれぞれ分単位にして引き算する（終了-開始-休憩＝労働時間）
+				int sminutes=userService.allminutes(inputvalue);
+				int hminutes=userService.allminutes(workdays.getHalftime().toString());
+				int eminutes=userService.allminutes(workdays.getEnd().toString());
+				int wminutes=eminutes-hminutes-sminutes;
+			    //分になった労働時間を00:00形式に変換
+				String worktime=userService.wminutes(wminutes);
+				//Stringからtime形式に変換しDBに登録
+				workdays.setWorktime(userService.toTime(worktime));
+				workdays.setStart(userService.toTime(inputvalue));//StringをlocalTimeに変換した後Timeに変換するメソッド
 			break;
 			
 			case "end":

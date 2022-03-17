@@ -240,7 +240,7 @@ a:hover::after{
           <input type=hidden th:field="${workingListParam.year}">
            <input type=hidden th:field="${workingListParam.month}">
         <tbody>
-          <tr th:each="workingday, st : *{workingDataList}" th:classappend="|${workingday.weekday=='土'?'tr_color2':'tr_color0'}  ${workingday.weekday=='日'?'tr_color2':'tr_color0'}|">
+          <tr th:each="workingday, st : *{workingDataList}" th:classappend="|${workingday.holiday==1?'tr_color2':'tr_color0'} ${workingday.weekday=='土'?'tr_color2':'tr_color0'}  ${workingday.weekday=='日'?'tr_color2':'tr_color0'}|">
             <td>
               <label th:text="${workingday.day}"></label>
               <input type="hidden" th:field="*{workingDataList[__${st.index}__].day}">
