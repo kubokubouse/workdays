@@ -145,9 +145,16 @@ a:hover::after{
     <div th:if="${validationError}" th:each="error : ${validationError}">
       <label class="text-danger" th:text="${error}"></label>
     </div>
-    <h1>祝日設定</h1>
+    <h1>[[${yearMonth.year}]]年 祝日設定</h1>
     
-
+    <form th:action="@{/selectyear}" >
+    <select name="nowyear">
+      <option th:value="0">去年</option>
+      <option th:value="1" selected>現在</option>
+      <option th:value="2">来年</option>
+    </select>
+    <input type="submit" value="年変更">
+  </form>
       <br/>
 
       <table class="table table-striped">
@@ -213,6 +220,7 @@ a:hover::after{
           <input type="submit" value="全削除">
       </form>
       </p>
+  <p><a href="/holidayupload">祝日一括登録</a></p>
   <p><a href="/masteruser">管理画面へ戻る</a></p>
   <p><a href="/master">ログアウト</a></p>
 </body>
