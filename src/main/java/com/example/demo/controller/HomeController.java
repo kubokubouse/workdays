@@ -264,6 +264,27 @@ public class HomeController extends WorkdaysProperties{
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
 		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
+
+		//1か月先から1年前までのリストを作る
+		List<YearMonth>yearMonthList=new ArrayList<>();
+		YearMonth ym=userService.nowYearMonth();
+		
+		for(int i=0;i<11;i++){
+			
+			yearMonthList.add(ym);
+			System.out.println(yearMonthList);
+			int month=ym.getMonth()-1;
+			if(month==0){
+				month=12;
+				ym.setYear(ym.getYear()-1);
+			}
+			ym.setMonth(month);
+
+		}
+		
+		model.addAttribute("yearMonthList", yearMonthList);
+		System.out.println(yearMonthList);
+		model.addAttribute("yearMonth",yearMonth);
 		return "list";
 	}
 
@@ -664,11 +685,29 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			break;
 			
 			case "end":
-			 workdays.setEnd(userService.toTime(inputvalue));
+			sminutes=userService.allminutes(workdays.getStart().toString());
+			hminutes=userService.allminutes(workdays.getHalftime().toString());
+			eminutes=userService.allminutes(inputvalue);
+			wminutes=eminutes-hminutes-sminutes;
+			//分になった労働時間を00:00形式に変換
+			worktime=userService.wminutes(wminutes);
+			//Stringからtime形式に変換しDBに登録
+			workdays.setWorktime(userService.toTime(worktime));
+	
+			workdays.setEnd(userService.toTime(inputvalue));
 			break;
 
 			case "halftime":
-			 workdays.setEnd(userService.toTime(inputvalue));
+			sminutes=userService.allminutes(workdays.getStart().toString());
+			hminutes=userService.allminutes(inputvalue);
+			eminutes=userService.allminutes(workdays.getEnd().toString());
+			wminutes=eminutes-hminutes-sminutes;
+			//分になった労働時間を00:00形式に変換
+			worktime=userService.wminutes(wminutes);
+			//Stringからtime形式に変換しDBに登録
+			workdays.setWorktime(userService.toTime(worktime));
+			workdays.setHalftime(userService.toTime(inputvalue));
+			
 			break;
 
 			case "worktime":
@@ -696,6 +735,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		//備考仕様の有無を確認
 		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
+		model.addAttribute("yearMonth", yearMonth);
 		return "list";
 	}
 
