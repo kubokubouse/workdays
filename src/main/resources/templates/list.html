@@ -154,6 +154,44 @@ a:hover::after{
       var inputvalue = $(this).val();
       var day = $(this).attr('day');
       var name = $(this).attr('name');
+      var id=$(this).attr('id');
+      var wt=':worktime';
+      var st=':start';
+      var ed=':end';
+      var ht=':halftime';
+      
+      var start = document.getElementById(day+st).value;
+      var end = document.getElementById(day+ed).value;
+      var half = document.getElementById(day+ht).value;
+      
+      var sth=Number(start.substr(0,2));
+      var stm=Number(start.substr(3,2));
+
+      var edh=Number(end.substr(0,2));
+      var edm=Number(end.substr(3,2));
+
+      var hfh=Number(half.substr(0,2));
+      var hfm=Number(half.substr(3,2));
+      
+      console.log('h'+hfh);
+      console.log('m'+hfm);
+      var wtm=(edh-sth-hfh)*60+(edm-stm-hfm);
+      console.log('wtm='+wtm);
+      var tenhour=Math.floor(wtm/600);
+      console.log('th'+tenhour);
+		  var hour=Math.floor(wtm%600/60);
+      console.log('hour='+hour);
+		  var tenminutes=wtm%600%60;
+      console.log('tm1='+tenminutes);
+      var tenminutes=Math.floor(tenminutes/10);
+      console.log('tm2='+tenminutes);
+		  var minutes=Math.floor(wtm%600%60%10%10);
+      console.log('minutes='+minutes);
+		  var time=String(tenhour)+String(hour)+":"+String(tenminutes)+String(minutes);
+      
+      var resultForm = document.getElementById(day+wt);
+      resultForm.value = time;
+
       $.ajax({
         url: "/AjaxServlet",
         type: "POST",
@@ -190,10 +228,10 @@ a:hover::after{
   
     <div class="tabs">
       <div th:each="idUser, st:${idUserList}">
-        <div th:if="${idUser.banned==0}">【[[${idUser.companyName}]]】 <div th:unless="${idUser.company1==''}">
-          <input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]</div>
+        <div th:if="${idUser.banned==0}">【[[${idUser.companyName}]]】 
+          <div th:unless="${idUser.company1==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]</div>
           <div th:unless="${idUser.company2==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company2}|"> [[${idUser.company2}]]</div>
-          <div th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"}> [[${idUser.company3}]]</div>
+          <div th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"> [[${idUser.company3}]]</div>
         </div>
       </div>
       <input type="submit" class="btn btn-primary" value="Excelファイル出力">
@@ -201,12 +239,25 @@ a:hover::after{
   
     </form>
     <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
-      <input type="number" class="login-control"
-      th:errorclass="is-invalid" th:field="*{year}">年
-      <div class="invalid-feedback" th:errors="*{year}"></div>
-      <input type="number" class="login-control"
-      th:errorclass="is-invalid" th:field="*{month}">月
-      <div class="invalid-feedback" th:errors="*{month}"></div>
+        <select name="nowyear" th:field="*{year}">
+          <option th:value="${yearMonth.year-1}">[[${yearMonth.year-1}]]年</option>
+          <option th:value="${yearMonth.year}" selected>[[${yearMonth.year}]]年</option>
+          <option th:value="${yearMonth.year+1}">[[${yearMonth.year+1}]]年</option>
+        </select>
+        <select name="nowmonth" th:field="*{month}">
+          <div th:unless="${yearMonth.month==1}"><option th:value="1">1月</option></div><div th:if="${yearMonth.month==1}"><option th:value="1" selected>1月</option></div>
+          <div th:unless="${yearMonth.month==2}"><option th:value="2">2月</option></div> <div th:if="${yearMonth.month==2}"><option th:value="2" selected>2月</option></div>
+          <div th:unless="${yearMonth.month==3}"><option th:value="3">3月</option></div><div th:if="${yearMonth.month==3}"><option th:value="3" selected>3月</option></div>
+          <div th:unless="${yearMonth.month==4}"><option th:value="4">4月</option></div><div th:if="${yearMonth.month==4}"><option th:value="4" selected>4月</option></div>
+          <div th:unless="${yearMonth.month==5}"><option th:value="5">5月</option></div><div th:if="${yearMonth.month==5}"><option th:value="5" selected>5月</option></div>
+          <div th:unless="${yearMonth.month==6}"><option th:value="6">6月</option></div><div th:if="${yearMonth.month==6}"><option th:value="6" selected>6月</option></div>
+          <div th:unless="${yearMonth.month==7}"><option th:value="7">7月</option></div><div th:if="${yearMonth.month==7}"><option th:value="7" selected>7月</option></div>
+          <div th:unless="${yearMonth.month==8}"><option th:value="8">8月</option></div><div th:if="${yearMonth.month==8}"><option th:value="8" selected>8月</option></div>
+          <div th:unless="${yearMonth.month==9}"><option th:value="9">9月</option></div><div th:if="${yearMonth.month==9}"><option th:value="9" selected>9月</option></div>
+          <div th:unless="${yearMonth.month==10}"><option th:value="10">10月</option></div><div th:if="${yearMonth.month==10}"><option th:value="10" selected>10月</option></div>
+          <div th:unless="${yearMonth.month==11}"><option th:value="11">11月</option></div><div th:if="${yearMonth.month==11}"><option th:value="11" selected>11月</option></div>
+          <div th:unless="${yearMonth.month==12}"><option th:value="12">12月</option></div><div th:if="${yearMonth.month==12}"><option th:value="12" selected>12月</option></div>
+        </select>
       <input type="submit" value="変更"><small>*過去一年分のみ確認できます</small><small th:if="${error2}">*[[${error2}]]</small>
     </form>
 
@@ -251,25 +302,25 @@ a:hover::after{
               <input type="hidden" th:field="*{workingDataList[__${st.index}__].weekday}">
             </td>
             <td>
-              <input type="text" th:day="${workingday.day}" th:id="${workingday.day}" class="form-control" th:name="start" th:value="${workingday.start}" >
+              <input type="text" th:id="|${workingday.day}:start|" th:day="${workingday.day}"  class="form-control" th:name="start" th:value="${workingday.start}" >
             </td>
             <td>
-              <input type="text" th:day="${workingday.day}" class="form-control" th:name="end" th:value="${workingday.end}">
+              <input type="text" th:id="|${workingday.day}:end|"th:day="${workingday.day}" class="form-control" th:name="end" th:value="${workingday.end}">
             </td>
             <td>
-              <input type="text" th:day="${workingday.day}" class="form-control" th:name="halftime" th:value="${workingday.halftime}">
+              <input type="text" th:id="|${workingday.day}:halftime|" th:day="${workingday.day}" class="form-control" th:name="halftime" th:value="${workingday.halftime}">
             </td>
             <td>
-              <input type="text" th:day="${workingday.day}" class="form-control" th:name="worktime" th:value="${workingday.worktime}">
+              <input type="text" th:id="|${workingday.day}:worktime|" th:day="${workingday.day}" class="form-control" th:name="worktime" th:value="${workingday.worktime}">
             </td>
             <td>
-              <input type="text" th:day="${workingday.day}" class="form-control" th:name="other1" th:value="${workingday.other1}">
+              <input type="text" th:id="|${workingday.day}:other1|" th:day="${workingday.day}" class="form-control" th:name="other1" th:value="${workingday.other1}">
             </td>
             <td>
-              <input type="text" th:day="${workingday.day}" class="form-control" th:name="other2"th:value="${workingday.other2}">
+              <input type="text" th:id="|${workingday.day}:other2|" th:day="${workingday.day}" class="form-control" th:name="other2"th:value="${workingday.other2}">
             </td>
             <td>
-              <input type="text" th:day="${workingday.day}" class="form-control" th:name="other3" th:value="${workingday.other3}">
+              <input type="text" th:id="|${workingday.day}:other3|" th:day="${workingday.day}" class="form-control" th:name="other3" th:value="${workingday.other3}">
             </td>
           </tr>
         </tbody>
