@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,13 @@ public class HolidayService
     }
     public void insert(Holiday holiday){
         holidayRepository.save(holiday);
+    }
+
+    //引数の年で検索をかけてリスト化→ソートまでしてくれるメソッド　返り値はその年の休日リスト
+    public List<Holiday>getholidayList(int year){
+        List<Holiday>holidayList=findyear(year);
+        holidayList.sort(Comparator.comparing(Holiday::getMonth)
+		.thenComparing(Comparator.comparing(Holiday::getDay)));
+        return holidayList;
     }
 }
