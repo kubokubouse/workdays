@@ -13,7 +13,7 @@
     <div class="caution">
         <p>※csvファイル形式でカンマ区切りであること</p>
         <p>※ヘッダーとして１列目に以下が全角で記入されていること</p>
-        <p>社員番号,氏名,メールアドレス,会社１,会社２,会社３,利用可否</p>
+        <p>管理番号,氏名,メールアドレス,会社１,会社２,会社３,利用可否</p>
         <p>（※利用可の場合は可と入力されていること）</p>
     </div>
     
@@ -29,6 +29,7 @@
     
         <button type="submit" class="btn">アップロード</button>
     </form>
+    <p><a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/uploaduserfrombox">boxからアップロード</a></p>
 
     <div class="tab">
         <p><a href="/templatelist">ファイル一覧</a></p>

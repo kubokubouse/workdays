@@ -7,27 +7,18 @@
 </head>
 <body>
 
-    <h2>ファイル一覧</h2>
-
-    <div class="reicon">
-    <p><a href="/templatelist" class="redirect">更新</a></p>
-    </div>
+    <h2>boxファイル一覧</h2>
 
     <table>
         <tr>
             <th>ファイル名</th>
             <th> </th>
-            <th> </th>
         </tr>
         <tr th:each="fileName, fileNameSt : ${fileName}">
-        <form th:action="@{/filedelete}">
-            <input type="hidden" name="deleteFileName" th:value="${fileName}">       
+        <form th:action="@{/boxuserresister}">
+            <input type="hidden" name="uploadfile" th:value="${fileName}">       
             <td th:text="${fileName}"></td>
-            <td><input type="submit" value="削除"></td>
-        </form>
-        <form th:action="@{/templatefiledownload}">
-            <input type="hidden" name="fileName" th:value="${fileName}">       
-            <td><input type="submit" value="ダウンロード"></td>
+            <td><input type="submit" value="アップロード"></td>
         </form>
         </tr>
     </table>
