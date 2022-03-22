@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/stylesheet.css">
+<title>アップロードファイル一覧</title>
+</head>
+<body>
+
+    <h2>boxファイル一覧</h2>
+
+    <table>
+        <tr>
+            <th>ファイル名</th>
+            <th> </th>
+        </tr>
+        <tr th:each="fileName, fileNameSt : ${fileName}">
+        <form th:action="@{/boxupload}">
+            <input type="hidden" name="uploadfile" th:value="${fileName}">       
+            <td th:text="${fileName}"></td>
+            <td><input type="submit" value="アップロード"></td>
+        </form>
+        </tr>
+    </table>
+
+    <p th:text="${error}"></p>
+
+   
+
+    <div class="tab">
+        <p><a href="/templateupload">ファイルアップロード</a></p>
+        <p><a href="/superuser">管理画面へ戻る</a></p>
+        <p><a href="/">ログアウト</a></p>
+    </div>
+
+</body>
+</html>
+
+<style>
+
+    body {
+        font-family: sans-serif;
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 30px;
+        border-bottom: solid 3px skyblue;
+        position: relative;
+      }
+      
+      h2:after {
+        position: absolute;
+        content: " ";
+        display: block;
+        border-bottom: solid 3px #ffc778;
+        bottom: -3px;
+        width: 30%;
+      }
+
+      .reicon {
+          text-align: right;
+          margin-right: 100px;
+      }
+
+      .redirect {
+        text-decoration: none;
+        display       : inline-block;
+        border-radius : 5%;          /* 角丸       */
+        font-size     : 12pt;        /* 文字サイズ */
+        text-align    : center;      /* 文字位置   */
+        cursor        : pointer;     /* カーソル   */
+        padding       : 10px 10px;   /* 余白       */
+        background    : #1a1aff;     /* 背景色     */
+        color         : #ffffff;     /* 文字色     */
+        line-height   : 1em;         /* 1行の高さ  */
+        transition    : .3s;         /* なめらか変化 */
+      }
+ 
+      table {
+          margin: 3px auto;
+      }
+
+      td, th {
+          text-align: left;
+      }
+
+      th {
+          border-bottom: dashed 2px #6594e0;
+      }
+
+      td {
+          padding-top: 30px;
+          padding-left: 10px;
+      }
+      
+    .tab {
+        margin-top: 50px;
+    }
+
+</style>

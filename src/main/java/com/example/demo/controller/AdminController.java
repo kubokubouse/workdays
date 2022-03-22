@@ -3,6 +3,9 @@ package com.example.demo.controller;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +19,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
-
-
+import com.box.sdk.*;
+import com.box.sdk.BoxItem.Info;
+import javax.servlet.ServletException;
 
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
@@ -565,9 +569,106 @@ public class AdminController extends WorkdaysProperties{
                  id.getRegistered(), id.getCompany1(), id.getCompany2(), id.getCompany3()
             );
         }
-          
+        
         model.addAttribute("error", "ファイルがアップロードされました");
         return "alluserupload";
+    }
+
+    //boxからテンプレファイル読み込み
+    @GetMapping("/boxtemplateupload")
+    public String boxTemplateUpload(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        if (superUser == null) {
+            return "accessError";
+        }
+		
+        String clientId = WorkdaysProperties.boxClientId;
+		String clientSecret = WorkdaysProperties.boxClientSecret;
+        List<String> templatelist = new ArrayList<String>();
+		
+		// String authorizationUrl = "https://account.box.com/api/oauth2/authorize?client_id="
+		// 	+ clientId + "&response_type=code";
+		
+		// response.sendRedirect(authorizationUrl);
+
+		String code = request.getParameter("code");
+		System.out.println("CODE=" + code);
+		
+		BoxAPIConnection api = new BoxAPIConnection(
+  			clientId,
+  			clientSecret,
+			code
+		);
+        session.setAttribute("api", api);
+
+		//すべてのフォルダ(id=0)下の情報を取得
+		BoxFolder parentFolder = new BoxFolder(api, "0");
+		Iterable<Info> childrens = parentFolder.getChildren();
+
+        String folderId = null;
+		//フォルダ名"WorkDays_template"を検索
+		for (Info info : childrens) {
+			if(info.getName().equals("WorkDays_template")){
+                folderId = info.getID();
+                break;
+            }
+		}
+
+        //フォルダが存在しない場合はフォルダを作成して終了
+        if(folderId == null) {
+            BoxFolder.Info childFolderInfo = parentFolder.createFolder("WorkDays_template");
+            model.addAttribute("error", "boxにWorkDays_templateフォルダが存在しません");
+            return "boxTemplatelist";
+        }
+        
+        session.setAttribute("boxFolderId", folderId);
+        //フォルダが存在する場合はファイル一覧を表示
+        BoxFolder targetFolder = new BoxFolder(api, folderId);
+        Iterable<Info> targetChildrens = targetFolder.getChildren();
+
+        for (Info info : targetChildrens) {
+            templatelist.add(info.getName());
+        }
+
+        session.setAttribute("templatelist", templatelist);
+        model.addAttribute("fileName", templatelist);
+        return "boxTemplatelist";
+	}
+
+    @GetMapping("/boxupload")
+    public String boxUpload(@RequestParam("uploadfile") String fileName, Model model) throws FileNotFoundException, IOException {
+    
+        //セッションからapiとフォルダidと会社idを取り出す
+        BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+        String folderId = (String)session.getAttribute("boxFolderId");
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        int companyid = superUser.getCompanyID();
+
+        BoxFolder targetFolder = new BoxFolder(api, folderId);
+        Iterable<Info> targetChildrens = targetFolder.getChildren();
+
+        String fileId = null;
+        for (Info info : targetChildrens) {
+            if(info.getName().equals(fileName)) {
+                fileId = info.getID();
+            }
+        }
+        //boxからファイルダウンロード処理
+        BoxFile file = new BoxFile(api, fileId);
+        BoxFile.Info info = file.getInfo();
+
+        String templateFile = getInputFolder(companyid) + "//" + info.getName();
+        File templatefile = new File(templateFile);
+        templatefile.createNewFile();
+        FileOutputStream stream = new FileOutputStream(templatefile);
+        file.download(stream);
+        stream.close();
+
+        model.addAttribute("error", "ファイルがアップロードされました");
+        List<String> templatelist = (List<String>)session.getAttribute("templatelist");
+        model.addAttribute("fileName", templatelist);
+        return "boxTemplatelist";
     }
   
 }
