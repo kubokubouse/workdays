@@ -2,15 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>エラー</title>
-<link th:href="@{/css/donestyle.css}" rel="stylesheet"/>
+<title>出力完了</title>
 <link rel="stylesheet" href="css/stylesheet.css">
 </head>
 <body>
-<h2>勤怠表を出力できませんでした</h2>
+<h2>boxに保存しました</h2>
 
-<tr th:each="errors : ${errors}">
-  <td th:text="${errors}"></td></tr>
+<p>すべてのフォルダ内のWorkDaysフォルダにファイルを保存しました。</p>
+<p><a href="https://app.box.com/folder/0" class="button">boxを開く</a></p>
 
 <p><a href="/logout">ログアウト</a></p>
 </body>
@@ -43,10 +42,10 @@
     a {
         display: block;
         margin-top: 40px;
-        text-decoration: none;
-        font-weight: bold;
     }
-
+    a.button{
+      text-decoration: none;
+    }
     .button {
         display       : inline-block;
         border-radius : 5%;          /* 角丸       */
@@ -58,7 +57,6 @@
         color         : #ffffff;     /* 文字色     */
         line-height   : 1em;         /* 1行の高さ  */
         transition    : .3s;         /* なめらか変化 */
-        box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
       }
       .button:hover {
         box-shadow    : none;        /* カーソル時の影消去 */

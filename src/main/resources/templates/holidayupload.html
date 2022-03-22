@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>ファイルアップロード</title>
+<title>祝日一括アップロード</title>
 <link th:href="@{/css/confirmstyle.css}" rel="stylesheet" />
 <link rel="stylesheet" href="css/stylesheet.css">
 </head>
@@ -11,35 +11,24 @@
     <h2>アップロードするファイルを以下の点に注意して指定してください</h2>
 
     <div class="caution">
-    <p>※ファイルのセルやシートが保護されていない状態であること</p>
-    <p>※ファイル名が.xlsで終わっていること</p>
-    <p>※ファイルに入力した値が以下の規則に基づいていること</p>
-    <p>アルファベットは小文字で記載し、続く数字は日付と同じであること</p>
-    <ul>
-        <li type="disc">開始 (時間sth1,　分stm1)</li>
-        <li type="disc">終了(時間edh1,　分edm1)</li>
-        <li type="disc">休憩(時間lth1,　分ltm1)</li>
-        <li type="disc">就業時間(時間tth1,  分ttm1)</li>
-        <li type="disc">備考１(oa1)</li>
-        <li type="disc">備考2(ob1)</li>
-        <li type="disc">備考3(oc1)</li>
-    </ul>
-    <p>例）４日の就業時間を(00:00)表記で記入する場合 </p>
-    <p class="example">tth4:ttm4</p>        
+        <p>※csvファイル形式でカンマ区切りであること</p>
+        <p>※ヘッダーとして１列目に以下が全角で記入されていること</p>
+        <p>年,月,日,祝日名</p>
+       
     </div>
     
-    <form th:action="@{/uploadFile}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
+    <form th:action="@{/uploadholiday}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
         <input type="file" name="file">
         <br>
         <p class="error">[[${error}]]</p>
+       
+    
         <button type="submit" class="btn">アップロード</button>
     </form>
 
-    <a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/boxtemplateupload" class="btn_item"> boxからアップロード</a>
-
     <div class="tab">
-        <p><a href="/templatelist">ファイル一覧</a></p>
-        <p><a href="/superuser">管理画面へ戻る</a></p>
+        
+        <p><a href="/masteruser">管理画面へ戻る</a></p>
         <p><a href="/">ログアウト</a></p>
     </div>
 
@@ -75,6 +64,10 @@
         color: blue;
         font-weight: bold;
     }
+    table {
+        margin: 0 auto;
+        color: blue;
+    }
     .upform {
         margin-top: 30px;
     }
@@ -94,6 +87,10 @@
 
     .tab {
         margin-top: 50px;
+    }
+
+    .caution {
+        margin-top: 25px;
     }
 
 </style>

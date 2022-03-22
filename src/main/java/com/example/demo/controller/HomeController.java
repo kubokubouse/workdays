@@ -3,13 +3,30 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.io.FileInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import java.net.HttpURLConnection;
+
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +43,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.box.sdk.*;
+import com.box.sdk.BoxItem.Info;
+
+import javax.servlet.http.*;
 
 import com.example.demo.model.Otherpa;
 import com.example.demo.model.Holiday;
@@ -57,6 +78,7 @@ import com.example.demo.service.CellvalueGet;
 import com.example.demo.WorkdaysProperties;
 import com.google.gson.Gson;
 import com.example.demo.model.Judgeused;
+
 @Controller
 public class HomeController extends WorkdaysProperties{
 	private final UserRepository repository;
@@ -88,10 +110,25 @@ public class HomeController extends WorkdaysProperties{
     //トップページがログイン画面になる
 	@GetMapping("/")
 	public String login(@ModelAttribute Login login){
-	 session.removeAttribute("Data");
 		
+		session.removeAttribute("Data");
+		Calendar before = Calendar.getInstance();
+		before.set(Calendar.YEAR, 2022);
+		before.set(Calendar.MONTH, 11);
+		Calendar after = Calendar.getInstance();
+		after.set(Calendar.YEAR, 2021);
+		after.set(Calendar.MONTH, 1);
+
+		int count = 0;
+
+		while (after.before(before)) {
 	
-		
+			after.add(Calendar.MONTH, 1);
+	
+			count++;
+	
+		}
+		System.out.println(count);
 		//return "login";
 		return "login2";
 	}
@@ -119,9 +156,6 @@ public class HomeController extends WorkdaysProperties{
 	}
 
 	
-	
-
-	
 	//ログイン時の処理 	reactで必要な分　返却値はjsonの文
 	@RequestMapping("/login")
 	@ResponseBody
@@ -138,7 +172,7 @@ public class HomeController extends WorkdaysProperties{
 		int userid=users.getId();
 		int year=yearMonth.getYear();
 		int month=yearMonth.getMonth();
-		int lastmonth=yearMonth.getLastmonth();
+		int lastmonth=month-1;
 		Workdays workdays =workdaysService.findUseridYearMonthDay(userid,year, month,1);
 		if (workdays==null){
 			Calendar cal = Calendar.getInstance();
@@ -167,7 +201,7 @@ public class HomeController extends WorkdaysProperties{
 	@RequestMapping("/login2")
 	@CrossOrigin(origins = "*")
 	public String sucsess2(@Validated  @ModelAttribute Login login, BindingResult result,
-	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult){
+	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult, @ModelAttribute YearMonth yaerMonth){
 		
 		String id = login.getEmail();
 		String pass = login.getPassword();
@@ -209,84 +243,133 @@ public class HomeController extends WorkdaysProperties{
 			idUser.setCompanyID(iData.getCompanyID());
 			idUser.setCompanyName(companyInfo.getCompanyName());
 			idUserList.add(idUser);
-
 		}
 
 		model.addAttribute("idUserList", idUserList);
 		System.out.println(idUserList);
 		
 		session.setAttribute("Data",users);
-		Calendar cal = Calendar.getInstance();
-		int year=cal.get(Calendar.YEAR);
-		int calendermonth=cal.get(Calendar.MONTH);//当月11月の時calendermonth=10
-		int month=calendermonth+1;//month=11 カレンダーメソッドで拾ってくる値は実際の月-1だから1足した上で検索しないといけない
-		int userid=users.getId();
-		Workdays workdays =workdaysService.findUseridYearMonthDay(userid,year, month,1);
 		
-		if (workdays==null){
-			//もしDBにその月の勤怠データがナカッタラ→勤怠データをDBに登録
-			//id year month はこの時点で回収済み　残りは日付と曜日
-			//年と月からforで回転させる回数を出してどうにかこうにか？
-			cal.set(Calendar.YEAR, year);
-			cal.set(Calendar.MONTH, calendermonth);//カレンダーメソッドなので使うのは実際の月-1の方
-			int lastDayOfMonth = cal.getActualMaximum(Calendar.DATE);
-			for(int i=0;i<lastDayOfMonth;i++){
-				String yobi[] = {"日","月","火","水","木","金","土"};
-				cal.set(year, calendermonth, i+1);
-				String weekday=yobi[cal.get(Calendar.DAY_OF_WEEK)-1];
-				workdaysService.insertdata(userid, year, month, i+1, weekday);//int d=が左辺にあったから動かなくなったら足すこと
-			}
-			List<Holiday> holidays=holidayService.findyearmonth(year, month);
-			for(Holiday holiday:holidays) {
-				int holiday2=holiday.getDay();
-				workdays =workdaysService.findUseridYearMonthDay(userid,year, month,holiday2);
-				workdays.setHoliday(1);
-				workdaysService.update(workdays);
-			}
-
-		}
+		YearMonth yearMonth=userService.nowYearMonth();
+		session.setAttribute("yearMonth",yearMonth);
 		
-		//スタートやエンドの値を一括で変形する→workingListParm全体の値を別の箱に入れる→箱をjsonで変換する
-		WorkingListParam workingListParam = userService.searchAll(users);//リストに出す用の検索は必要
-		workingListParam.setMonth(month);
-		workingListParam.setYear(year);
+		//年月を渡し勤怠データの有無の確認→データなしなら新規追加→勤怠データをDBからリスト形式で取得
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		//WorkingListParam workingListParam = userService.searchAll(users);//リストに出す用の検索は必要
+		workingListParam.setMonth(yearMonth.getMonth());
+		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
-		model.addAttribute("users", users);
 
 		//備考1,2,3に会社名を添付する処理をする
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
-		CellvalueGet cellgetvalue=new CellvalueGet();
-		
-		
-		List<Otherpa>opList=new ArrayList<Otherpa>();
-		Judgeused judgeused1=cellgetvalue.GetCellvalue(users.getCompany1());
-		Judgeused judgeused2=cellgetvalue.GetCellvalue(users.getCompany2());
-		Judgeused judgeused3=cellgetvalue.GetCellvalue(users.getCompany3());
-		
-		Otherpa opa_oa=new Otherpa();
-		opa_oa.setCompany1(judgeused1.getOa());
-		opa_oa.setCompany2(judgeused2.getOa());
-		opa_oa.setCompany3(judgeused3.getOa());
-
-		opList.add(opa_oa);
-		
-		Otherpa opa_ob=new Otherpa();
-		opa_ob.setCompany1(judgeused1.getOb());
-		opa_ob.setCompany2(judgeused2.getOb());
-		opa_ob.setCompany3(judgeused3.getOb());
-		opList.add(opa_ob);
-
-		Otherpa opa_oc=new Otherpa();
-		opa_oc.setCompany1(judgeused1.getOc());
-		opa_oc.setCompany2(judgeused2.getOc());
-		opa_oc.setCompany3(judgeused3.getOc());
-		opList.add(opa_oc);
-
+		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
+
+		//1か月先から1年前までのリストを作る
+		List<YearMonth>yearMonthList=new ArrayList<>();
+		YearMonth ym=userService.nowYearMonth();
+		
+		for(int i=0;i<11;i++){
+			
+			yearMonthList.add(ym);
+			System.out.println(yearMonthList);
+			int month=ym.getMonth()-1;
+			if(month==0){
+				month=12;
+				ym.setYear(ym.getYear()-1);
+			}
+			ym.setMonth(month);
+
+		}
+		
+		model.addAttribute("yearMonthList", yearMonthList);
+		System.out.println(yearMonthList);
+		model.addAttribute("yearMonth",yearMonth);
 		return "list";
 	}
 
+	//年月が指定された場合のログイン
+	@PostMapping("/yearmonth")
+	public String yearMonth(@Validated @ModelAttribute YearMonth yearMonth,  Model model){
+		Calendar cal = Calendar.getInstance();
+		int year=cal.get(Calendar.YEAR);
+		int month=1+cal.get(Calendar.MONTH);
+		
+		Calendar big = Calendar.getInstance();//現在の年月
+		big.set(Calendar.YEAR, year);
+		big.set(Calendar.MONTH, month);
 
+		Calendar small = Calendar.getInstance();//入力された年月
+		small.set(Calendar.YEAR, yearMonth.getYear());
+		small.set(Calendar.MONTH, yearMonth.getMonth());
+		
+		int count = 0;
+		//入力された年月が現在より未来だった場合bigとsmallを入れ替えて引き算が成立するようにする
+		if(big.before(small)){
+			Calendar middle=big;
+			big=small;
+			small=middle;
+			while (small.before(big)) {
+	
+				small.add(Calendar.MONTH, 1);
+		
+				count++;
+			}
+			//2か月先以上の年月が入力されていた場合は戻る
+			if(count>1){
+				yearMonth.setYear(year);
+				yearMonth.setMonth(month);
+				model.addAttribute("error2","2か月以上先のデータは閲覧できません");
+			}
+		}
+		
+		while (small.before(big)) {
+			small.add(Calendar.MONTH, 1);
+			count++;
+		}
+		//1年以上前の年月が入力されていた場合戻る
+		if(count>12){
+			yearMonth.setYear(year);
+			yearMonth.setMonth(month);
+			model.addAttribute("error2","1年以上前のデータは閲覧できません");
+		}
+
+		//メアドから個別ユーザーのリストを作成する
+		User user=(User)session.getAttribute("Data");
+		List <IndividualData>iDataList=individualService.findMail(user.getEmail());
+		model.addAttribute("iDataList", iDataList);
+		
+		//個別ユーザーから会社IDを取得し会社のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+		
+		for(IndividualData iData:iDataList){
+			IdUser idUser=new IdUser();
+			CompanyInfo companyInfo= companyInfoService.findByCompanyID(iData.getCompanyID());
+			idUser.setCompany1(iData.getCompany1());// companyInfo.getCompanyName();
+			idUser.setCompany2(iData.getCompany2());
+			idUser.setCompany3(iData.getCompany3());
+			idUser.setBanned(iData.getBanned());
+			idUser.setCompanyID(iData.getCompanyID());
+			idUser.setCompanyName(companyInfo.getCompanyName());
+			idUserList.add(idUser);
+		}
+
+		model.addAttribute("idUserList", idUserList);
+
+		//指定された月のデータをリスト化
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		workingListParam.setMonth(yearMonth.getMonth());
+		workingListParam.setYear(yearMonth.getYear());
+		model.addAttribute("workingListParam", workingListParam);
+		model.addAttribute("users", user);
+
+		//備考仕様の有無を確認
+		List<Otherpa>opList=workdaysService.oplist(user);
+		model.addAttribute("opList", opList);
+		session.setAttribute("yearMonth",yearMonth);
+	
+		return "list";
+	}
 
 	@RequestMapping(value = "/listUpdate", method = RequestMethod.POST)
 	  public String listUpdate(@Validated @ModelAttribute WorkingListParam workingListParam, BindingResult result, Model model) {
@@ -371,7 +454,6 @@ public class HomeController extends WorkdaysProperties{
 		}
 				
 		//個別ユーザーTLから個人IDと会社IDを拾ってくる
-		System.out.println(company);
 		String[] values = company.split(":");
 		int companyID = Integer.parseInt(values[0]);
 		String companyName=values[1];
@@ -387,6 +469,8 @@ public class HomeController extends WorkdaysProperties{
 
 		System.out.println("input: " + inputFilePath);
 		System.out.println("output: " + outputFilePath);
+
+		session.setAttribute("output", outputFilePath);
 		
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
@@ -416,7 +500,7 @@ public class HomeController extends WorkdaysProperties{
 	public String repassmail (@Validated @ModelAttribute Mail mail, BindingResult result){
 		User users=userService.findEmail(mail.getEmail());
 		if(users==null){
-			return "/repass";
+			return "repass";
 		}
 		mailsendService.send(mail.getEmail());
 		return "maildone";
@@ -432,9 +516,8 @@ public class HomeController extends WorkdaysProperties{
 		}
 		int flag=0;
 		model.addAttribute("flag", flag);
-		return "/newpassword";
+		return "newpassword";
 	}
-	
 	
 	//新規パスワードが送られてきた場合の処理
 	@PostMapping("/inputpassword")
@@ -462,7 +545,6 @@ public class HomeController extends WorkdaysProperties{
 	//ユニバユーザー登録用リンク踏んだ奴用の処理　会員登録ページに移行
 	@GetMapping("/universalregister")
 	public String universalregister(@ModelAttribute User user, Model model,@RequestParam String email){
-
 		user.setEmail(email);
 		session.setAttribute("user",user);
 		model.addAttribute("user",user);
@@ -499,8 +581,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		}
 	}
 	
-	
-	
 	Onetime onetime=new Onetime();
 	onetime.setEmail(user.getEmail());
 	onetime.setLastname(user.getLastname());
@@ -512,7 +592,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
     calendar.setTime(date);
 	onetime.setDatetime(date);
 	
-	
 	//Date型の持つ日時を表示
     /*System.out.println(date);
 	long longer=date.getTime();
@@ -521,17 +600,10 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	long longer2=longer+300;
 	
     System.out.println("result="+longer2+longer);*/
-	
-	
-
 	onetimeService.insert(onetime);
 	mailsendService.mailsend(user.getEmail(),onetimeText);
-
-	
-
-
 	//エラーがなければ仮登録完了ページに遷移
-	return "/onetime";
+	return "onetime";
 	}
 
 	//登録完了メール踏んだ時の処理
@@ -579,10 +651,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 
 		}
 
-
-
-		
-
 		//ワンタイムテーブルの全データ消去
 		List <Onetime> onetimeList=onetimeService.searchAll();
 		for(Onetime oneTime:onetimeList){
@@ -595,24 +663,51 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 
 
 	@PostMapping("/AjaxServlet")
-	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model){	
+	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model,@ModelAttribute YearMonth yaerMonth){	
 		User users=(User)session.getAttribute("Data");
-		YearMonth yearMonth=userService.nowYearMonth();
+		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
 		int id=users.getId();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
-
+		System.out.println(inputvalue);
 		switch (name) {
 			case "start":
-			 workdays.setStart(userService.toTime(inputvalue));//StringをlocalTimeに変換した後Timeに変換するメソッド
+				//開始終了休憩時間をそれぞれ分単位にして引き算する（終了-開始-休憩＝労働時間）
+				int sminutes=userService.allminutes(inputvalue);
+				int hminutes=userService.allminutes(workdays.getHalftime().toString());
+				int eminutes=userService.allminutes(workdays.getEnd().toString());
+				int wminutes=eminutes-hminutes-sminutes;
+			    //分になった労働時間を00:00形式に変換
+				String worktime=userService.wminutes(wminutes);
+				//Stringからtime形式に変換しDBに登録
+				workdays.setWorktime(userService.toTime(worktime));
+				workdays.setStart(userService.toTime(inputvalue));//StringをlocalTimeに変換した後Timeに変換するメソッド
 			break;
 			
 			case "end":
-			 workdays.setEnd(userService.toTime(inputvalue));
+			sminutes=userService.allminutes(workdays.getStart().toString());
+			hminutes=userService.allminutes(workdays.getHalftime().toString());
+			eminutes=userService.allminutes(inputvalue);
+			wminutes=eminutes-hminutes-sminutes;
+			//分になった労働時間を00:00形式に変換
+			worktime=userService.wminutes(wminutes);
+			//Stringからtime形式に変換しDBに登録
+			workdays.setWorktime(userService.toTime(worktime));
+	
+			workdays.setEnd(userService.toTime(inputvalue));
 			break;
 
 			case "halftime":
-			 workdays.setEnd(userService.toTime(inputvalue));
+			sminutes=userService.allminutes(workdays.getStart().toString());
+			hminutes=userService.allminutes(inputvalue);
+			eminutes=userService.allminutes(workdays.getEnd().toString());
+			wminutes=eminutes-hminutes-sminutes;
+			//分になった労働時間を00:00形式に変換
+			worktime=userService.wminutes(wminutes);
+			//Stringからtime形式に変換しDBに登録
+			workdays.setWorktime(userService.toTime(worktime));
+			workdays.setHalftime(userService.toTime(inputvalue));
+			
 			break;
 
 			case "worktime":
@@ -631,40 +726,93 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			} 
 		workdaysService.update(workdays);
 
-		
-		WorkingListParam workingListParam = userService.searchAll(users);
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		workingListParam.setMonth(yearMonth.getMonth());
+		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
 		model.addAttribute("users", users);
 
-		CellvalueGet cellgetvalue=new CellvalueGet();
-		
-		
-		List<Otherpa>opList=new ArrayList<Otherpa>();
-		Judgeused judgeused1=cellgetvalue.GetCellvalue(users.getCompany1());
-		Judgeused judgeused2=cellgetvalue.GetCellvalue(users.getCompany2());
-		Judgeused judgeused3=cellgetvalue.GetCellvalue(users.getCompany3());
-		
-		Otherpa opa_oa=new Otherpa();
-		opa_oa.setCompany1(judgeused1.getOa());
-		opa_oa.setCompany2(judgeused2.getOa());
-		opa_oa.setCompany3(judgeused3.getOa());
-
-		opList.add(opa_oa);
-		
-		Otherpa opa_ob=new Otherpa();
-		opa_ob.setCompany1(judgeused1.getOb());
-		opa_ob.setCompany2(judgeused2.getOb());
-		opa_ob.setCompany3(judgeused3.getOb());
-		opList.add(opa_ob);
-
-		Otherpa opa_oc=new Otherpa();
-		opa_oc.setCompany1(judgeused1.getOc());
-		opa_oc.setCompany2(judgeused2.getOc());
-		opa_oc.setCompany3(judgeused3.getOc());
-		opList.add(opa_oc);
-
+		//備考仕様の有無を確認
+		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
+		model.addAttribute("yearMonth", yearMonth);
 		return "list";
 	}
-	
+
+	@GetMapping("/boxDEV")
+	public String box(Model model){
+		return "boxDEV";
+	}
+
+	@GetMapping("/success")
+	public String success(Model model){
+		return "success";
+	}
+
+	@GetMapping("/boxDownload")
+	public void downloadBox(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException, ServletException {
+		
+		String clientId = WorkdaysProperties.boxClientId;
+		String clientSecret = WorkdaysProperties.boxClientSecret;
+		String boxSaveFolderName = WorkdaysProperties.boxSaveFolderName;
+		String clientFilePath = (String)session.getAttribute("output");
+		File clientFile = new File(clientFilePath);
+		String clientFileName = clientFile.getName();
+		
+		// String authorizationUrl = "https://account.box.com/api/oauth2/authorize?client_id="
+		// 	+ clientId + "&response_type=code";
+		
+		// response.sendRedirect(authorizationUrl);
+
+		String code = request.getParameter("code");
+		System.out.println("CODE=" + code);
+		
+		BoxAPIConnection api = new BoxAPIConnection(
+  			clientId,
+  			clientSecret,
+			code
+		);
+
+		//すべてのフォルダ(id=0)下に出力用ファイルを作成
+		BoxFolder parentFolder = new BoxFolder(api, "0");
+		Iterable<Info> childrens = parentFolder.getChildren();
+		String childFolderId = null;
+
+		//フォルダ名の重複を確認
+		for (Info info : childrens) {
+			if (info.getName().equals(boxSaveFolderName)) {
+				childFolderId = info.getID();
+				break;
+			}
+		}
+		if (childFolderId == null) {
+			BoxFolder.Info childFolderInfo = parentFolder.createFolder(boxSaveFolderName);
+			childFolderId = childFolderInfo.getID();
+		}
+
+		BoxFolder uploadFolder = new BoxFolder(api, childFolderId);
+		BoxFolder.Info info = uploadFolder.getInfo();
+		System.out.println("出力フォルダ名：" + info.getName() + ", 出力フォルダID:" + info.getID());
+
+		//ファイル名の重複を確認
+		String fileId = null;
+		for (BoxItem.Info itemInfo : uploadFolder) {
+			if(itemInfo.getName().equals(clientFileName)) {
+				//ファイルを更新
+				fileId = itemInfo.getID();
+				BoxFile updatefile = new BoxFile(api, fileId);
+				FileInputStream stream = new FileInputStream(clientFilePath);
+				updatefile.uploadNewVersion(stream);
+			}
+		}
+
+		if(fileId == null) {
+			FileInputStream input = new FileInputStream(clientFilePath);
+			BoxFile.Info newFileInfo = uploadFolder.uploadFile(input, clientFileName);
+		}
+
+		String url = WorkdaysProperties.host + "/success";
+		System.out.println("リダイレクト先：" + url);
+		response.sendRedirect(url);
+	}
 }
