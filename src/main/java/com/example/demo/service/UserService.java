@@ -10,6 +10,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.model.Holiday;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.MasterUser;
+import com.example.demo.model.Onetime;
 import com.example.demo.repository.IndividualDataRepository;
 import com.example.demo.repository.MasterUserRepository;
 import com.example.demo.model.StringList;
@@ -285,6 +287,21 @@ public class UserService{
 		LocalTime lt=LocalTime.parse(inputvalue);
 		Time time=new Time( lt.getHour(),lt.getMinute(),lt.getSecond());
 		return time;
+	}
+
+	//User型userを引数にしてontimeを返す
+	public Onetime inOnetime(User user){
+		Onetime onetime=new Onetime();
+		onetime.setEmail(user.getEmail());
+		onetime.setLastname(user.getLastname());
+		onetime.setFirstname(user.getFirstname());
+		onetime.setPassword(user.getPassword());
+		onetime.setId(1);
+		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+    	calendar.setTime(date);
+		onetime.setDatetime(date);
+		return onetime;
 	}
 	
 	//名前と苗字とユーザーidからExcelを作る
