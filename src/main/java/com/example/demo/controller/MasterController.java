@@ -296,6 +296,13 @@ public class MasterController {
 		YearMonth yearMonth=userService.nowYearMonth();
 		session.setAttribute("yearMonth",yearMonth);
 		model.addAttribute("yearMonth", yearMonth);
+
+		//2年前のデータを削除する
+		int twoyearago=yearMonth.getYear()-2;
+		List<Holiday>tyholidayList=holidayService.getholidayList(twoyearago);
+		for(Holiday holidays:tyholidayList){
+			holidayService.delete((holidays.getId()));
+		}
 		//その年の昇順ソートされたリストを入手
         List<Holiday>holidayList=holidayService.getholidayList(yearMonth.getYear());
         model.addAttribute("holidayList", holidayList);
