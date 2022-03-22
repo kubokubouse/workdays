@@ -428,10 +428,10 @@ public class HomeController extends WorkdaysProperties{
 		int individualID = Integer.valueOf(userService.findIndividualID(mail, companyID));
 		
 		//会社ID_input/会社名.xls
-		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "\\" + companyName + ".xls";
+		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "/" + companyName + ".xls";
 		//会社ID_output/個別ID_出力会社.xls
 		String outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
-			+ "\\" + individualID + "_" + companyName + ".xls";
+			+ "/" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
 
 		System.out.println("input: " + inputFilePath);
 		System.out.println("output: " + outputFilePath);
