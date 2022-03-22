@@ -21,7 +21,11 @@ public class WorkdaysProperties {
     //※boxClientIdを変更した場合はdone.htmlページのリンクも編集する事
     public static String boxClientId = "4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6";
 	public static String boxClientSecret = "wE7OWwmsH0V1Z1wYscLQUaOgTpiUqNvJ";
-    public static String boxSaveFolderName = "WorkDays";    
+    public static String boxSaveFolderName = "WorkDays";
+	 //TODO ※templateupload.htmlのリンクを修正すること
+    public static String boxTemplateDownloadUri = "https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/boxtemplateupload";
+    //TODO ※alluserupload.htmlのリンクを修正すること
+    public static String boxCSVDownloadUri = "https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/uploaduserfrombox";
     public static int limitsecond=180;
     public File getInputFolder(int companyID) {
         File inputFile = new File(basePath + "//" + companyID + "_input");
