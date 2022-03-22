@@ -225,28 +225,21 @@ public class HomeController extends WorkdaysProperties{
 		if(users.getBanned()==1){
 			return "banned";
 		}
-		//メアドから個別ユーザーのリストを作成する
+		//ログイン時に入力されたメアドを使っている個別ユーザーを特定しリストを作る
 		List <IndividualData>iDataList=individualService.findMail(login.getEmail());
 		model.addAttribute("iDataList", iDataList);
 		
 		
-		//個別ユーザーから会社IDを取得し会社のリストを作る
+		//個別ユーザーから会社IDを取得し会社名のリストを作る
 		List<IdUser>idUserList=new ArrayList<IdUser>();
 		
 		for(IndividualData iData:iDataList){
-			IdUser idUser=new IdUser();
-			CompanyInfo companyInfo= companyInfoService.findByCompanyID(iData.getCompanyID());
-			idUser.setCompany1(iData.getCompany1());// companyInfo.getCompanyName();
-			idUser.setCompany2(iData.getCompany2());
-			idUser.setCompany3(iData.getCompany3());
-			idUser.setBanned(iData.getBanned());
-			idUser.setCompanyID(iData.getCompanyID());
-			idUser.setCompanyName(companyInfo.getCompanyName());
+			IdUser idUser=individualService.getIdUser(iData);
+			
 			idUserList.add(idUser);
 		}
 
 		model.addAttribute("idUserList", idUserList);
-		System.out.println(idUserList);
 		
 		session.setAttribute("Data",users);
 		
@@ -264,26 +257,6 @@ public class HomeController extends WorkdaysProperties{
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
 		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
-
-		//1か月先から1年前までのリストを作る
-		List<YearMonth>yearMonthList=new ArrayList<>();
-		YearMonth ym=userService.nowYearMonth();
-		
-		for(int i=0;i<11;i++){
-			
-			yearMonthList.add(ym);
-			System.out.println(yearMonthList);
-			int month=ym.getMonth()-1;
-			if(month==0){
-				month=12;
-				ym.setYear(ym.getYear()-1);
-			}
-			ym.setMonth(month);
-
-		}
-		
-		model.addAttribute("yearMonthList", yearMonthList);
-		System.out.println(yearMonthList);
 		model.addAttribute("yearMonth",yearMonth);
 		return "list";
 	}
@@ -343,14 +316,7 @@ public class HomeController extends WorkdaysProperties{
 		List<IdUser>idUserList=new ArrayList<IdUser>();
 		
 		for(IndividualData iData:iDataList){
-			IdUser idUser=new IdUser();
-			CompanyInfo companyInfo= companyInfoService.findByCompanyID(iData.getCompanyID());
-			idUser.setCompany1(iData.getCompany1());// companyInfo.getCompanyName();
-			idUser.setCompany2(iData.getCompany2());
-			idUser.setCompany3(iData.getCompany3());
-			idUser.setBanned(iData.getBanned());
-			idUser.setCompanyID(iData.getCompanyID());
-			idUser.setCompanyName(companyInfo.getCompanyName());
+			IdUser idUser=individualService.getIdUser(iData);
 			idUserList.add(idUser);
 		}
 
@@ -580,28 +546,12 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			onetimeService.delete(oneTime);
 		}
 	}
-	
-	Onetime onetime=new Onetime();
-	onetime.setEmail(user.getEmail());
-	onetime.setLastname(user.getLastname());
-	onetime.setFirstname(user.getFirstname());
-	onetime.setPassword(user.getPassword());
-	onetime.setId(1);
-	Date date = new Date();
-	Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-	onetime.setDatetime(date);
-	
-	//Date型の持つ日時を表示
-    /*System.out.println(date);
-	long longer=date.getTime();
-
-	System.out.println(longer);
-	long longer2=longer+300;
-	
-    System.out.println("result="+longer2+longer);*/
+	//入力されたuserの情報をonetimeに入れる
+	Onetime onetime=userService.inOnetime(user);
+	//ワンタイムテーブルに情報を登録しメールを送る
 	onetimeService.insert(onetime);
 	mailsendService.mailsend(user.getEmail(),onetimeText);
+
 	//エラーがなければ仮登録完了ページに遷移
 	return "onetime";
 	}
@@ -618,11 +568,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		onetime.setDatetime(date);
 		long nowlong=onetime.getDatetime().getTime();
 		
-		System.out.println("now="+date);
-		System.out.println("before="+onetime.getDatetime());
-		System.out.println();
-		System.out.println(nowlong-ontimelong);
-		if((nowlong-ontimelong)/1000<180){
+		if((nowlong-ontimelong)/1000<WorkdaysProperties.limitsecond){
 			User users=new User();
 			users.setEmail(onetime.getEmail());
 			users.setFirstname(onetime.getFirstname());
@@ -659,7 +605,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		
 		return "registerdone";
 	}
-
 
 
 	@PostMapping("/AjaxServlet")
