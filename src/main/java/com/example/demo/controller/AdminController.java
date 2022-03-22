@@ -24,6 +24,20 @@ import com.box.sdk.*;
 import com.box.sdk.BoxItem.Info;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import java.nio.file.Paths;
+import javax.swing.JFileChooser;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
 
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
@@ -293,21 +307,25 @@ public class AdminController extends WorkdaysProperties{
             return "accessError";
         }
 
+        List<String> filePathList = new ArrayList<String>();
         List<String> fileNameList = new ArrayList<String>();
         int companyId = (Integer)session.getAttribute("companyId");
         String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        
         File fileFolder = new File(fileFolderPath);
         File[] fileList = fileFolder.listFiles();
         
         if (fileList != null) {
             for (File file : fileList){
                 fileNameList.add(file.getName());
+                String filePath = getInputFolder(companyId).getAbsolutePath() + "/" + file.getName();
+                filePathList.add(filePath);
             }
         } else {
             model.addAttribute("error", "ファイルが存在しません");
             return "templatelist";
         }
-        model.addAttribute("filePath", fileFolderPath + "//");
+        model.addAttribute("filePath", filePathList);
         model.addAttribute("fileName", fileNameList);
         return "templatelist";
     }
@@ -327,32 +345,79 @@ public class AdminController extends WorkdaysProperties{
         return "templatelist";
     }
 
-    //ファイル一覧からファイルダウンロード
-    @RequestMapping("/templatefiledownload")
-    public String downloadTemplateFilefromList(@RequestParam("fileName") String filename, HttpServletResponse response, Model model) throws IOException{
-    
-        int id = (Integer)session.getAttribute("companyId");
-        File file = new File(getInputFolder(id)+"//"+filename);
-        FileInputStream fi = new FileInputStream(file);
-        byte[] b = new byte[fi.available()];
-        for (int i = 0; i < b.length; i++)
-            b[i] = (byte)fi.read();
+    @GetMapping("/createApi")
+    public String createApi(HttpServletRequest request, Model model) {
+        String clientId = WorkdaysProperties.boxClientId;
+		String clientSecret = WorkdaysProperties.boxClientSecret;
 
-        response.setContentType("application/octet-stream; charset=UTF-8");
-        response.setHeader("Content-Disposition","attachment; filename=\"出力ファイル名\"");
-        response.setContentLength(b.length);
+        String code = request.getParameter("code");
+		System.out.println("CODE=" + code);
+		
+		BoxAPIConnection api = new BoxAPIConnection(
+  			clientId,
+  			clientSecret,
+			code
+		);
 
-    try{
-        ServletOutputStream os = response.getOutputStream();
-        os.write(b);
-        os.close();
-    } catch(Exception e){
-        e.printStackTrace();
-        model.addAttribute("error", "ファイルのダウンロードに失敗しました");
+        session.setAttribute("api", api);
+        model.addAttribute("error", "boxにログインしました");
+        return "templatelist";
     }
-    fi.close();
-    model.addAttribute("error", "ファイルがダウンロードされました");
-    return "templatelist";
+
+    //テンプレファイル一覧からboxへファイルダウンロード
+    @RequestMapping("/templatefiledownload")
+    public String downloadTemplateFilefromList(@RequestParam("fileName") String fileName, HttpServletRequest request, HttpServletResponse response, Model model) throws IOException{
+		
+        int id = (Integer)session.getAttribute("companyId");
+        String clientFilePath = getInputFolder(id).getAbsolutePath() + "//" + fileName;
+
+		BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+
+        if (api == null) {
+            model.addAttribute("error", "先に右上のボタンを押してboxにログインしてください");
+        return "templatelist";
+        }
+
+		//すべてのフォルダ(id=0)下に出力用ファイルを作成
+		BoxFolder parentFolder = new BoxFolder(api, "0");
+		Iterable<Info> childrens = parentFolder.getChildren();
+		String childFolderId = null;
+
+		//フォルダ名の重複を確認
+		for (Info info : childrens) {
+			if (info.getName().equals("WorkDays_template")) {
+				childFolderId = info.getID();
+				break;
+			}
+		}
+		if (childFolderId == null) {
+			BoxFolder.Info childFolderInfo = parentFolder.createFolder("WorkDays_template");
+			childFolderId = childFolderInfo.getID();
+		}
+
+		BoxFolder uploadFolder = new BoxFolder(api, childFolderId);
+		BoxFolder.Info info = uploadFolder.getInfo();
+		System.out.println("出力フォルダ名：" + info.getName() + ", 出力フォルダID:" + info.getID());
+
+		//ファイル名の重複を確認
+		String fileId = null;
+		for (BoxItem.Info itemInfo : uploadFolder) {
+			if(itemInfo.getName().equals(fileName)) {
+				//ファイルを更新
+				fileId = itemInfo.getID();
+				BoxFile updatefile = new BoxFile(api, fileId);
+				FileInputStream stream = new FileInputStream(clientFilePath);
+				updatefile.uploadNewVersion(stream);
+			}
+		}
+
+		if(fileId == null) {
+			FileInputStream input = new FileInputStream(clientFilePath);
+			BoxFile.Info newFileInfo = uploadFolder.uploadFile(input, fileName);
+		}
+  
+        model.addAttribute("error", "WorkDays_templateフォルダにファイルがダウンロードされました");
+        return "templatelist";
     }
 
     //パスワード変更画面表示
