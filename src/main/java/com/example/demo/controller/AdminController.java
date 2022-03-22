@@ -69,7 +69,7 @@ public class AdminController extends WorkdaysProperties{
 	@GetMapping("/logout")
 	public String logout(){
 		
-		return "/logout";
+		return "logout";
 	}
 
     //管理メニュー画面
