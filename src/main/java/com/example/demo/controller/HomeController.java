@@ -373,7 +373,27 @@ public class HomeController extends WorkdaysProperties{
 		return "sucsess";
 	}
 
-	//会社選択時の処理
+	//ローカルに勤怠表ダウンロード時の会社選択画面
+	@GetMapping("/choosetemplatelocal")
+	public String chooseTemplateLocal(Model model){
+
+		//会社選択
+		String email = (String)session.getAttribute("email");
+		List <IndividualData>iDataList=individualService.findMail(email);
+		//個別ユーザーから会社IDを取得し会社名のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+				
+		for(IndividualData iData:iDataList){
+			IdUser idUser=individualService.getIdUser(iData);
+					
+			idUserList.add(idUser);
+		}
+		
+		model.addAttribute("idUserList", idUserList);
+		return "choosetemplatelocal";
+	}
+
+	//会社選択後のboxダウンロード処理
 	@RequestMapping(value="/companyselect")
 	public String CompanySelect (@RequestParam String company, Model model) {
 			
@@ -430,10 +450,10 @@ public class HomeController extends WorkdaysProperties{
 		int individualID = Integer.valueOf(userService.findIndividualID(mail, companyID));
 		
 		//会社ID_input/会社名.xls
-		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "/" + companyName + ".xls";
+		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "\\" + companyName + ".xls";
 		//会社ID_output/個別ID_出力会社.xls
 		String outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
-			+ "/" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
+			+ "\\" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
 
 		System.out.println("input: " + inputFilePath);
 		System.out.println("output: " + outputFilePath);
@@ -451,6 +471,8 @@ public class HomeController extends WorkdaysProperties{
 			return "outputerror";
 		}
 
+		File file = new File(outputFilePath);
+		model.addAttribute("outputFileName", "ファイル名：" + file.getName());
 		model.addAttribute("filePath", outputFilePath);
 
 		return "done";
