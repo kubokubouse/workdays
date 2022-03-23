@@ -8,34 +8,23 @@
 <body>
 
     <h2>ファイル一覧</h2>
-
-    <div class="reicon">
-    <p><a href="/templatelist" class="redirect">更新</a></p>
-    <p><a href=" https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/createApi" class="redirect">boxにログイン</a></p>
-    </div>
    
     <table>
         <tr>
             <th>ファイル名</th>
             <th> </th>
             <th> </th>
-            <th> </th>
         </tr>
         
-    
+        <div class="data"> 
         <tr th:each="fileName, fileNameSt : ${fileName}">            
         <form th:action="@{/filedelete}">
             <input type="hidden" name="deleteFileName" th:value="${fileName}">       
             <td th:text="${fileName}"></td>
             <td><input type="submit" value="削除"></td>
         </form> 
-        
-        <form th:action="@{/templatefiledownload}">
-            <input type="hidden" name="fileName" th:value="${fileName}">       
-            <td><input type="submit" value="boxへダウンロード"></td>
-        </form>
         </tr>
-    <div class="data">
+   
         <tr th:each="filePath, filePath : ${filePath}">
         <td><a th:href="@{${filePath}}" class="btn_item" download> ダウンロード</a></td>
         </tr>
@@ -47,7 +36,7 @@
    
 
     <div class="tab">
-        <p><a href="/templateupload">ファイルアップロード</a></p>
+        <p><a href="/templatelistTransition">前の画面に戻る</a></p>
         <p><a href="/superuser">管理画面へ戻る</a></p>
         <p><a href="/">ログアウト</a></p>
     </div>
@@ -115,6 +104,10 @@
       
     .tab {
         margin-top: 50px;
+    }
+
+    .data {
+        display: inline;
     }
 
 </style>
