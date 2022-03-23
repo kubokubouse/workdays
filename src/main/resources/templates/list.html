@@ -235,7 +235,7 @@ a:hover::after{
       </div>
       <input type="submit" class="btn btn-primary" value="Excelファイル出力">
     </div>
-  
+    <a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/boxDownload"> boxにログインして勤怠表を保存</a>
     </form>
     <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
         <select name="nowyear" th:field="*{year}">
