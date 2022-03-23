@@ -9,6 +9,15 @@
 
     <h2>boxファイル一覧</h2>
 
+    <h3>アップロードするファイルを以下の点に注意して指定してください</h3>
+
+    <div class="caution">
+        <p>※csvファイル形式でカンマ区切りであること</p>
+        <p>※ヘッダーとして１列目に以下が全角で記入されていること</p>
+        <p>管理番号,氏名,メールアドレス,会社１,会社２,会社３,利用可否</p>
+        <p>（※利用可の場合は可と入力されていること）</p>
+    </div>
+
     <table>
         <tr>
             <th>ファイル名</th>
@@ -23,12 +32,16 @@
         </tr>
     </table>
 
-    <p th:text="${error}"></p>
+    <p th:text="${error}" class="error"></p>
+      <table>
+        <tr th:each="mail, st : ${mail}" >
+            <td th:text="${mail}" class="error"></td>
+        </tr>
+        </table>
 
    
 
     <div class="tab">
-        <p><a href="/templateupload">ファイルアップロード</a></p>
         <p><a href="/superuser">管理画面へ戻る</a></p>
         <p><a href="/">ログアウト</a></p>
     </div>
@@ -77,6 +90,10 @@
         transition    : .3s;         /* なめらか変化 */
       }
  
+      .error {
+        color: blue;
+        font-weight: bold;
+    }
       table {
           margin: 3px auto;
       }

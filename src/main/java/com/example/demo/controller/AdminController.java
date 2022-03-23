@@ -522,14 +522,24 @@ public class AdminController extends WorkdaysProperties{
     }
 
     //ユーザー一括アップロード画面表示
+    @GetMapping("/touserupload")
+    public String toUserUpload() {
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        if (superUser == null) {
+            return "accessError";
+        }
+		return "touserupload";
+	}
+    //ローカルからユーザー一括ファイルアップロードする画面表示
     @GetMapping("/alluserupload")
     public String allUserUpload() {
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        if (superUser != null) {
-            return "alluserupload";
+        if (superUser == null) {
+            return "accessError";
         }
-		return "accessError";
+		return "alluserupload";
 	}
 
     //ユーザー一括アップロード処理
@@ -972,9 +982,11 @@ public class AdminController extends WorkdaysProperties{
 
             //ユーザー情報に使用できないメールアドレスを含んでいた場合はエラーを返す
             if (errorMailList.size() != 0 || !errorMailList.isEmpty()) {
+                ArrayList csvFileList = (ArrayList)session.getAttribute("csvFileList");
+                model.addAttribute("fileName", csvFileList);
                 errorMailList.add("使用できないメールアドレスが含まれているためファイルのアップロードに失敗しました");
                 model.addAttribute("mail", errorMailList); 
-                return "alluserupload";
+                return "boxcsvfilelist";
             }
 
             for (IndividualData id : newIdList) {
@@ -993,8 +1005,10 @@ public class AdminController extends WorkdaysProperties{
                    
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            ArrayList csvFileList = (ArrayList)session.getAttribute("csvFileList");
+            model.addAttribute("fileName", csvFileList);
             model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
-            return "alluserupload";
+            return "boxcsvfilelist";
         } finally {
             br.close();
             uploadFile.delete();
@@ -1009,11 +1023,13 @@ public class AdminController extends WorkdaysProperties{
             );
         }
 
+        ArrayList csvFileList = (ArrayList)session.getAttribute("csvFileList");
+        model.addAttribute("fileName", csvFileList);
         model.addAttribute("error", "ファイルがアップロードされました");
-        return "alluserupload";
+        return "boxcsvfilelist";
     }
 
-    //ユーザー一括アップロード画面表示
+    //テンプレファイル一覧画面遷移
     @GetMapping("/totemplateupload")
     public String toTemplateUpload() {
 
