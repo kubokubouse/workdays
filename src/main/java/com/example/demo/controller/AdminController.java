@@ -1013,6 +1013,17 @@ public class AdminController extends WorkdaysProperties{
         return "alluserupload";
     }
 
+    //ユーザー一括アップロード画面表示
+    @GetMapping("/totemplateupload")
+    public String toTemplateUpload() {
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        if (superUser == null) {
+            return "accessError";
+        }
+		return "totemplateupload";
+	}
+
     //boxからテンプレファイル読み込み
     @GetMapping("/boxtemplateupload")
     public String boxTemplateUpload(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
@@ -1068,6 +1079,7 @@ public class AdminController extends WorkdaysProperties{
             templatelist.add(info.getName());
         }
 
+        session.setAttribute("templatelist", templatelist);
         model.addAttribute("fileName", templatelist);
         return "boxTemplatelist";
 	}
@@ -1101,7 +1113,7 @@ public class AdminController extends WorkdaysProperties{
         file.download(stream);
         stream.close();
 
-        model.addAttribute("error", "ファイルがアップロードされました");
+        model.addAttribute("error", fileName + "がアップロードされました");
         List<String> templatelist = (List<String>)session.getAttribute("templatelist");
         model.addAttribute("fileName", templatelist);
         return "boxTemplatelist";

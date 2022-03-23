@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>トップページ</title>
+<link rel="stylesheet" href="css/stylesheet.css">
+<link th:href="@{/css/donestyle.css}" rel="stylesheet"/>
+</head>
+<body>
+<h2>ファイル操作する方法を選択してください</h2>
+
+<a href="/templateupload" class="btn_item">ローカルのファイルを操作する</a>
+<a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/boxtemplateupload" class="btn_item">boxのファイルを操作する</a>
+
+<p><a href="/superuser">管理画面へ戻る</a></p>
+<p><a href="/logout">ログアウト</a></p>
+</body>
+</html>
+
+<style>
+    body {
+        font-family: sans-serif;
+        margin: center;
+        text-align: center;
+    }
+    h2 {
+        margin-top: 30px;
+        border-bottom: solid 3px skyblue;
+        position: relative;
+      }
+      
+      h2:after {
+        position: absolute;
+        content: " ";
+        display: block;
+        border-bottom: solid 3px #ffc778;
+        bottom: -3px;
+        width: 30%;
+      }
+
+      .fileName{
+        margin-top: 50px;
+      }
+    a {
+        display: block;
+        margin-top: 40px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .btn_item {
+      display: inline-block;
+      padding: 10px 20px;
+      text-decoration: none;
+      background: rgb(228,226,223);
+      color: #333;
+      border: 1px solid rgb(228,226,223);
+      /* border-radius: 5px; デザインによる */
+    }
+      
+</style>
