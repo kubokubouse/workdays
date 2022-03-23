@@ -33,6 +33,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 
+import com.example.demo.service.ContractService;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
@@ -40,6 +41,7 @@ import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.User;
 import com.example.demo.model.SuperUserLogin;
+import com.example.demo.model.ContractData;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.SuperUser;
 import com.example.demo.repository.UserRepository;
@@ -74,6 +76,9 @@ public class AdminController extends WorkdaysProperties{
 
     @Autowired
     IndividualService individualService;
+
+    @Autowired
+    ContractService contractService;
     
 
 	@GetMapping("/logout")
@@ -261,30 +266,43 @@ public class AdminController extends WorkdaysProperties{
             model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
             return "templateupload";   
         }
+        System.out.println("はい");
         try {
         // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
             uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
+
+            //会社IDから契約情報のListを作る
+            List<ContractData> contractDataList= contractService.findCompanyID(companyId);
+            ContractData newContractData=new ContractData();
+            Date today=new Date();
+            //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
+            for(ContractData contractData: contractDataList){
+                if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
+                    newContractData=contractData;
+                }
+                
+            }
+            long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
             
             //ファイルサイズの合計が一定値を上回ったらエラー返す
-            long newfilemeagsize=uploadFile.length()/1024/1024;
+            long newfilemeagsize=uploadFile.length();
             System.out.println("new="+newfilemeagsize);
             String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
         
             File fileFolder = new File(fileFolderPath);
             File[] fileList = fileFolder.listFiles();
             long foldermegasize=0;
-            
             if (fileList != null) {
                 for (File file : fileList){
-                    foldermegasize=foldermegasize+file.length()/1024/1024;
+                    foldermegasize=foldermegasize+file.length();
                 }
             }else {
                 model.addAttribute("error", "ファイルが存在しません");
                 return "templatelist";
             }
             System.out.println("all="+foldermegasize);
-            if(foldermegasize>1000){
+            if(foldermegasize+newfilemeagsize>limitmegasize){
                 model.addAttribute("error", "フォルダの容量が制限を超えます");
                 return "templatelist";
             }
