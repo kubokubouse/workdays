@@ -79,7 +79,7 @@ public class AdminController extends WorkdaysProperties{
 	@GetMapping("/logout")
 	public String logout(){
 		
-		return "/logout";
+		return "logout";
 	}
 
     //管理メニュー画面
@@ -265,6 +265,29 @@ public class AdminController extends WorkdaysProperties{
         // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
             uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
+            
+            //ファイルサイズの合計が一定値を上回ったらエラー返す
+            long newfilemeagsize=uploadFile.length()/1024/1024;
+            System.out.println("new="+newfilemeagsize);
+            String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+            long foldermegasize=0;
+            
+            if (fileList != null) {
+                for (File file : fileList){
+                    foldermegasize=foldermegasize+file.length()/1024/1024;
+                }
+            }else {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatelist";
+            }
+            System.out.println("all="+foldermegasize);
+            if(foldermegasize>1000){
+                model.addAttribute("error", "フォルダの容量が制限を超えます");
+                return "templatelist";
+            }
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
                 new BufferedOutputStream(new FileOutputStream(uploadFile));
