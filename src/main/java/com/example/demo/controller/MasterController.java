@@ -297,6 +297,13 @@ public class MasterController {
 		session.setAttribute("yearMonth",yearMonth);
 		model.addAttribute("yearMonth", yearMonth);
 
+		//タイムスタンプの二年以上前のデータは全部削除
+		List<Holiday>allHolidayList=holidayService.serchAllHoliday();
+		for(Holiday holidays:allHolidayList){
+			if(yearMonth.getYear()-holidays.getYear()>1){
+				holidayService.delete(holidays.getId());
+			}
+		}
 		//2年前のデータを削除する
 		int twoyearago=yearMonth.getYear()-2;
 		List<Holiday>tyholidayList=holidayService.getholidayList(twoyearago);

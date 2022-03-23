@@ -23,6 +23,10 @@ public class HolidayService
     public List<Holiday> findyear(int year){
         return holidayRepository.findByYear(year);
     }
+
+    public List<Holiday> serchAllHoliday(){
+        return holidayRepository.findAll();
+    }
     public void delete(int id){
         Holiday holiday=holidayRepository.findById(id);
         holidayRepository.delete(holiday);
