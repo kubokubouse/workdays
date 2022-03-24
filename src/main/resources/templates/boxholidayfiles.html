@@ -7,7 +7,15 @@
 </head>
 <body>
 
-    <h2>boxファイル一覧</h2>
+
+    <h2>アップロードするファイルを以下の点に注意して指定してください</h2>
+
+    <div class="caution">
+        <p>※csvファイル形式でカンマ区切りであること</p>
+        <p>※ヘッダーとして１列目に以下が全角で記入されていること</p>
+        <p>年,月,日,祝日名</p>
+       
+    </div>
 
     <table>
         <tr>
@@ -15,8 +23,8 @@
             <th> </th>
         </tr>
         <tr th:each="fileName, fileNameSt : ${fileName}">
-        <form th:action="@{/boxupload}">
-            <input type="hidden" name="uploadfile" th:value="${fileName}">       
+        <form th:action="@{/boxholidayresister}">
+            <input type="hidden" name="file" th:value="${fileName}">       
             <td th:text="${fileName}"></td>
             <td><input type="submit" value="アップロード"></td>
         </form>
@@ -25,11 +33,9 @@
 
     <p th:text="${error}"></p>
 
-   
-
     <div class="tab">
-        <p><a href="/templateupload">ファイルアップロード</a></p>
-        <p><a href="/superuser">管理画面へ戻る</a></p>
+        <p><a href="/holiday">祝日設定へ戻る</a></p>
+        <p><a href="/masteruser">管理画面へ戻る</a></p>
         <p><a href="/">ログアウト</a></p>
     </div>
 
@@ -77,6 +83,10 @@
         transition    : .3s;         /* なめらか変化 */
       }
  
+      .error {
+        color: blue;
+        font-weight: bold;
+    }
       table {
           margin: 3px auto;
       }

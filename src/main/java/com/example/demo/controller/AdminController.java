@@ -44,6 +44,7 @@ import com.example.demo.model.SuperUserLogin;
 import com.example.demo.model.ContractData;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.SuperUser;
+import com.example.demo.model.MasterUser;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.IndividualDataRepository;
 import com.example.demo.WorkdaysProperties;
@@ -483,10 +484,10 @@ public class AdminController extends WorkdaysProperties{
             }
         } else {
             model.addAttribute("error", "ファイルが存在しません");
-            return "templatelist";
+            return "templatedownloadBox";
         }
         model.addAttribute("fileName", fileNameList);
-        return "templatelistBox";
+        return "templatedownloadBox";
     }
 
     //テンプレファイル一覧からboxへファイルダウンロード
@@ -561,7 +562,7 @@ public class AdminController extends WorkdaysProperties{
         }
         model.addAttribute("fileName", fileNameList);
         model.addAttribute("error", "WorkDays_templateフォルダにダウンロードが完了しました");
-        return "templatelistBox";
+        return "templatedownloadBox";
     }
 
     //パスワード変更画面表示
@@ -598,6 +599,16 @@ public class AdminController extends WorkdaysProperties{
 
         return "changePass";
     }
+
+        //ユーザー一括アップロード画面表示
+    @GetMapping("/transition")
+    public String transition(@RequestParam("local") String localPath, @RequestParam("box") String boxPath, Model model) {
+
+        model.addAttribute("localPath", localPath);
+        model.addAttribute("boxPath", WorkdaysProperties.host + boxPath);
+
+		return "transition";
+	}
 
     //ユーザー一括アップロード画面表示
     @GetMapping("/touserupload")
@@ -884,7 +895,7 @@ public class AdminController extends WorkdaysProperties{
 
         if (csvFileList == null || csvFileList.size() == 0) {
             model.addAttribute("error", "boxのWorkDays_userUploadフォルダにcsvファイルが存在しません");
-            return "alluserupload";
+            return "boxcsvfilelist";
         }
 
         session.setAttribute("csvFileList", csvFileList);
@@ -1161,7 +1172,7 @@ public class AdminController extends WorkdaysProperties{
         if(folderId == null) {
             BoxFolder.Info childFolderInfo = parentFolder.createFolder("WorkDays_template");
             model.addAttribute("error", "boxのWorkDays_templateフォルダにファイルが存在しません");
-            return "boxTemplatelist";
+            return "boxuploadlist";
         }
         
         session.setAttribute("boxFolderId", folderId);
@@ -1175,7 +1186,7 @@ public class AdminController extends WorkdaysProperties{
 
         session.setAttribute("templatelist", templatelist);
         model.addAttribute("fileName", templatelist);
-        return "boxTemplatelist";
+        return "boxuploadlist";
 	}
 
     @GetMapping("/boxupload")
@@ -1210,7 +1221,7 @@ public class AdminController extends WorkdaysProperties{
         model.addAttribute("error", fileName + "がアップロードされました");
         List<String> templatelist = (List<String>)session.getAttribute("templatelist");
         model.addAttribute("fileName", templatelist);
-        return "boxTemplatelist";
+        return "boxuploadlist";
     }
   
 }

@@ -7,29 +7,20 @@
 </head>
 <body>
 
-    <h2>ファイル一覧</h2>
-   
+    <h2>boxファイル一覧</h2>
+
     <table>
         <tr>
             <th>ファイル名</th>
             <th> </th>
-            <th> </th>
         </tr>
-        
-        <div class="data"> 
-        <tr th:each="fileName, fileNameSt : ${fileName}">            
-        <form th:action="@{/filedelete}">
-            <input type="hidden" name="deleteFileName" th:value="${fileName}">       
+        <tr th:each="fileName, fileNameSt : ${fileName}">
+        <form th:action="@{/boxupload}">
+            <input type="hidden" name="uploadfile" th:value="${fileName}">       
             <td th:text="${fileName}"></td>
-            <td><input type="submit" value="削除"></td>
-        </form> 
-    
-        <form th:action="@{/templatefiledownload}">
-            <input type="hidden" name="fileName" th:value="${fileName}">       
-            <td><input type="submit" value="boxへダウンロード"></td>
+            <td><input type="submit" value="アップロード"></td>
         </form>
-    </tr>
-    </div>
+        </tr>
     </table>
 
     <p th:text="${error}"></p>
@@ -37,7 +28,6 @@
    
 
     <div class="tab">
-        <p><a href="/templatelistTransition">前の画面に戻る</a></p>
         <p><a href="/superuser">管理画面へ戻る</a></p>
         <p><a href="/">ログアウト</a></p>
     </div>
@@ -105,10 +95,6 @@
       
     .tab {
         margin-top: 50px;
-    }
-
-    .data {
-        display: inline;
     }
 
 </style>
