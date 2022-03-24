@@ -179,9 +179,15 @@ h1:after {
     <h1>[[${workingListParam.year}]]年[[${workingListParam.month}]]月勤怠表 </h1>
   </div>
 </form>
+
 <div class="output">
-<p><a href="/choosetemplatelocal"> このPCに勤怠表を保存</a></p>
-<p><a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/boxDownload"> boxにログインして勤怠表を保存</a></p>
+
+  <form th:action="@{/transition}">
+  <input type="hidden" name="local" value="/choosetemplatelocal">
+  <input type="hidden" name="box" value="/boxDownload">
+  <input type="submit" value="勤怠表を出力">
+</form>
+
 </div>
     <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
         <select name="nowyear" th:field="*{year}">
