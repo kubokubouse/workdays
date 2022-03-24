@@ -244,13 +244,50 @@ public class AdminController extends WorkdaysProperties{
 
 	//ファイルアップロード画面表示
 	@GetMapping("/templateupload")
-	public String getTemplateUpload(){
+	public String getTemplateUpload(Model model){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        if (superUser != null) {
-            return "templateupload";
+        if (superUser == null) {
+            return "accessError";
         }
-		return "accessError";
+
+        int companyId = (Integer)session.getAttribute("companyId");
+
+            //会社IDから契約情報のListを作る
+            List<ContractData> contractDataList= contractService.findCompanyID(companyId);
+            ContractData newContractData=new ContractData();
+            Date today=new Date();
+            //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
+            for(ContractData contractData: contractDataList){
+                if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
+                    newContractData=contractData;
+                }
+                
+            }
+            long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
+            
+            //ファイルサイズの合計が一定値を上回ったらエラー返す
+            String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+            long foldermegasize=0;
+            if (fileList != null) {
+                for (File file : fileList){
+                    foldermegasize=foldermegasize+file.length();
+                }
+            }else {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatelist";
+            }
+            System.out.println("all="+foldermegasize);
+            if(foldermegasize>limitmegasize){
+                model.addAttribute("error", "フォルダの容量が制限を超えています。");
+                return "templatelist";
+            }
+
+
+		return "templatelist";
 	}
     
     //ファイルアップロード処理
@@ -303,7 +340,7 @@ public class AdminController extends WorkdaysProperties{
             }
             System.out.println("all="+foldermegasize);
             if(foldermegasize+newfilemeagsize>limitmegasize){
-                model.addAttribute("error", "フォルダの容量が制限を超えます");
+                model.addAttribute("error", "フォルダの容量が制限を超えています");
                 return "templatelist";
             }
             byte[] bytes = multipartFile.getBytes();
