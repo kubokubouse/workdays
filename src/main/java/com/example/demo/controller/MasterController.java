@@ -2,9 +2,11 @@ package com.example.demo.controller;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.validation.BindingResult;
@@ -28,6 +32,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.box.sdk.BoxItem.Info;
+import com.box.sdk.BoxAPIConnection;
+import com.box.sdk.*;
 import com.example.demo.WorkdaysProperties;
 import com.example.demo.model.ContractData;
 import com.example.demo.model.Holiday;
@@ -402,14 +409,14 @@ public class MasterController {
 	}
 
 	//祝日アップロード画面へ遷移
-	@GetMapping("/holidayupload")
+	@GetMapping("/toholidayupload")
     public String holidayUpload() {
 
 		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
         if(masterUser==null){
             return "masterloginfault";
         }
-		return "holidayupload";
+		return "toholidayupload";
 	}
 	//祝日一括アップロード処理
     @RequestMapping("/uploadholiday")
@@ -546,6 +553,207 @@ public class MasterController {
         model.addAttribute("error", "ファイルがアップロードされました");
         return "holidayupload";
     }
+
+		//boxファイル経由で祝日一括アップロード処理
+		@RequestMapping("/boxuploadholiday")
+		public String getHolidayFile(HttpServletRequest request, HttpServletResponse response, Model model) {
+			String clientId = WorkdaysProperties.boxClientId;
+			String clientSecret = WorkdaysProperties.boxClientSecret;
+			List<String> csvFileList = new ArrayList<String>();
+	
+			String code = request.getParameter("code");
+			System.out.println("CODE=" + code);
+			
+			BoxAPIConnection api = new BoxAPIConnection(
+				  clientId,
+				  clientSecret,
+				code
+			);
+			session.setAttribute("api", api);
+	
+			//すべてのフォルダ(id=0)下の情報を取得
+			BoxFolder parentFolder = new BoxFolder(api, "0");
+			Iterable<Info> childrens = parentFolder.getChildren();
+	
+			String folderId = null;
+			//フォルダ名"WorkDays_template"を検索
+			for (Info info : childrens) {
+				if(info.getName().equals("WorkDays_holidayUpload")){
+					folderId = info.getID();
+					break;
+				}
+			}
+	
+			//フォルダが存在しない場合はフォルダを作成して終了
+			if(folderId == null) {
+				BoxFolder.Info childFolderInfo = parentFolder.createFolder("WorkDays_holidayUpload");
+				model.addAttribute("error", "boxのWorkDays_holidayUploadフォルダにファイルが存在しません");
+				return "boxholidayfiles";
+			}
+			
+			session.setAttribute("boxcsvFolderId", folderId);
+			//フォルダが存在する場合はファイル一覧を表示
+			BoxFolder targetFolder = new BoxFolder(api, folderId);
+			Iterable<Info> targetChildrens = targetFolder.getChildren();
+	
+			for (Info info : targetChildrens) {
+				if(info.getName().contains(".csv")){
+					csvFileList.add(info.getName());
+				}
+			}
+	
+			if (csvFileList == null || csvFileList.size() == 0) {
+				model.addAttribute("error", "boxのWorkDays_holidayUploadフォルダにcsvファイルが存在しません");
+				return "boxholidayfiles";
+			}
+	
+			session.setAttribute("csvFileList", csvFileList);
+			model.addAttribute("fileName", csvFileList);
+			return "boxholidayfiles";
+		
+		}
+
+		//boxファイルから祝日登録csvダウンロード
+		@RequestMapping("/boxholidayresister")
+		public String uploadholiday(@RequestParam("file") String fileName, Model model) throws IOException {
+	
+			BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+			String folderId = (String)session.getAttribute("boxcsvFolderId");
+			ArrayList csvFileList = (ArrayList)session.getAttribute("csvFileList");
+
+			BoxFolder targetFolder = new BoxFolder(api, folderId);
+			Iterable<Info> targetChildrens = targetFolder.getChildren();
+	
+			String fileId = null;
+			for (Info info : targetChildrens) {
+				if(info.getName().equals(fileName)) {
+					fileId = info.getID();
+				}
+			}
+			//boxからファイルダウンロード処理
+			BoxFile file = new BoxFile(api, fileId);
+			BoxFile.Info info = file.getInfo();
+	
+			String filePath = WorkdaysProperties.basePath + "//" + info.getName();
+			File uploadFile = new File(filePath);
+			uploadFile.createNewFile();
+			FileOutputStream stream = new FileOutputStream(uploadFile);
+			file.download(stream);
+			stream.close();
+
+			//祝日を全削除する年度を指定
+			YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
+	
+			//全ユーザー削除
+			List<Holiday>holidayList=holidayService.findyear(yearMonth.getYear());
+			for(Holiday holidays:holidayList){
+				holidayService.delete((holidays.getId()));
+			}
+			
+			BufferedReader br = null;
+	
+			if(!uploadFile.exists()) {
+			// 異常終了時の処理
+				model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
+				return "boxholidayfiles";  
+			}
+	
+			int i = 0;
+			List<String> errorMailList = new ArrayList<String>();
+			List<Holiday> hdList = new ArrayList<Holiday>();
+			Map<String, Integer> map = new HashMap<String, Integer>();
+			try {   
+				 //エンコード指定して読み込み      
+				 FileInputStream input = new FileInputStream(uploadFile);
+				 InputStreamReader st = new InputStreamReader(input,"UTF-8");
+				 br = new BufferedReader(st);            
+				// br = new BufferedReader(new FileReader(uploadFile));
+				// readLineで一行ずつ読み込む
+				String line; // 読み込み行
+				String[] data; // 分割後のデータを保持する配列
+				while ((line = br.readLine()) != null) {
+	
+					if (i == 0) {
+						//カンマで分割した内容を配列に格納する
+						String[] header = line.split(",");
+	
+						// Listの中でヘッダー項目が何か
+						String year = header[0];
+						//マッピングする
+						map.put(year, 0);
+	
+						String month = header[1];
+						map.put(month, 1);
+	
+						String day = header[2];
+						map.put(day, 2);
+	
+						String name = header[3];
+						map.put(name, 3);
+						
+					} else {
+	
+						Holiday holiday = new Holiday();
+	
+					// lineをカンマで分割し、配列dataに設定
+						data = line.split(",");
+	
+						//mapから何番目にデータが格納されているか取得
+						if (map.containsKey("年")){
+							int year = map.get("年");
+							holiday.setYear(Integer.parseInt(data[year]));
+						} else {
+							model.addAttribute("fileName", csvFileList);
+							model.addAttribute("error", "ヘッダーの名前を確認してください：年"); 
+							return "boxholidayfiles";  
+						}
+						if (map.containsKey("月")) {
+							int month = map.get("月");
+							holiday.setMonth(Integer.parseInt(data[month]));
+						} else {
+							model.addAttribute("error", "ヘッダーの名前を確認してください：月"); 
+							return "boxholidayfiles";  
+						}
+	
+						if (map.containsKey("日")){
+							int day = map.get("日");
+							holiday.setDay(Integer.parseInt(data[day]));
+						} else {
+							model.addAttribute("error", "ヘッダーの名前を確認してください：日"); 
+							return "boxholidayfiles";  
+						}
+	
+						if (map.containsKey("祝日名")){
+							int name = map.get("祝日名");
+							holiday.setName(data[name]);
+						} else {
+							model.addAttribute("error", "ヘッダーの名前を確認してください：祝日名"); 
+							return "boxholidayfiles";  
+						}
+	
+						//idData.setCompanyID(companyID);
+						hdList.add(holiday);
+					}
+					i++;
+				}
+	
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				model.addAttribute("fileName", csvFileList);
+				model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
+				return "boxholidayfiles";
+			} finally {
+				br.close();
+				uploadFile.delete();
+			}
+	
+			// int companyID,String mail,int individual_id,String name,int banned,int registered, String company1,String company2,String company3,String number
+			for (Holiday holiday : hdList) {
+				holidayService.insert(holiday);
+			}
+			model.addAttribute("error", "ファイルがアップロードされました");
+			return "boxholidayfiles";
+		}
 
 }
 

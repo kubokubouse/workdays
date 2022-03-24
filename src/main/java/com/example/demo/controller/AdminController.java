@@ -829,7 +829,7 @@ public class AdminController extends WorkdaysProperties{
 
         if (csvFileList == null || csvFileList.size() == 0) {
             model.addAttribute("error", "boxのWorkDays_userUploadフォルダにcsvファイルが存在しません");
-            return "alluserupload";
+            return "boxcsvfilelist";
         }
 
         session.setAttribute("csvFileList", csvFileList);
