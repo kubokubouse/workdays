@@ -199,7 +199,7 @@ public class MasterController {
 		String timeStamp=date1.toString();
 
 		contractData.setTopupContract(timeStamp);
-		contractData.setLimitedUser(1);
+		contractData.setLimitedCapacity(1);
 
 		System.out.println(contractData);
 		
