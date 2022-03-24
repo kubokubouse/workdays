@@ -8,10 +8,10 @@ public class WorkdaysProperties {
 
     public static String host = "http://ec2-54-92-109-108.ap-northeast-1.compute.amazonaws.com:8080";
     // public static String basePath = "C:/pleiades/workdays/workdays/src/main/resources";
-    //public static String basePath = "C:/久保さん/cloneproject/workdays/src/main/resources";
+    //public static String basePath = "C:/久保さん/cloneproject/workdays/src/main/resources/static";
     // public static String host = "http://localhost:8080";
    
-    public static String basePath = "/home/ec2-user/workdays/src/main/resources";//aws用のpath
+    public static String basePath = "/home/ec2-user/workdays/src/main/resources/static";//aws用のpath
 
 
     public static String outputFileName = "勤怠表.xls";
