@@ -240,7 +240,7 @@ public class AdminController extends WorkdaysProperties{
 	public String superuserdelete(@RequestParam("mail") String mail, Model model){
 		
 		mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
-		return "/remail";
+		return "remail";
 	}
 
 	//ファイルアップロード画面表示
@@ -288,7 +288,7 @@ public class AdminController extends WorkdaysProperties{
             }
 
 
-		return "templatelist";
+		return "templateupload";
 	}
     
     //ファイルアップロード処理
