@@ -370,6 +370,19 @@ public class AdminController extends WorkdaysProperties{
         return "templateupload";
     }
 
+    //ファイル一覧操作方法選択画面へ遷移
+    @GetMapping("/templatelistTransition")
+	public String templateTransition(){
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        
+        if (superUser == null) {
+            return "accessError";
+        }
+		return "totemplatelist";
+	}
+
+
     //ファイル一覧を表示
     @RequestMapping("/templatelist")
     public String showTemplateFileList(Model model) {
@@ -413,6 +426,27 @@ public class AdminController extends WorkdaysProperties{
         if(!deleteFile.delete()){
             model.addAttribute("error", "ファイルが削除できませんでした");
         }
+        
+        String fileFolderPath = getInputFolder(id).getAbsolutePath();
+        
+        File fileFolder = new File(fileFolderPath);
+        File[] fileList = fileFolder.listFiles();
+        List<String> filePathList = new ArrayList<String>();
+        List<String> fileNameList = new ArrayList<String>();
+
+        if (fileList != null) {
+            for (File file : fileList){
+                fileNameList.add(file.getName());
+                String filePath = getInputFolder(id).getAbsolutePath() + "/" + file.getName();
+                filePathList.add(filePath);
+            }
+        } else {
+            model.addAttribute("error", "ファイルが存在しません");
+            return "templatelist";
+        }
+        model.addAttribute("filePath", filePathList);
+        model.addAttribute("fileName", fileNameList);
+        
         model.addAttribute("error", deleteFileName+"が削除されました");
         return "templatelist";
     }
@@ -432,8 +466,27 @@ public class AdminController extends WorkdaysProperties{
 		);
 
         session.setAttribute("api", api);
-        model.addAttribute("error", "boxにログインしました");
-        return "templatelist";
+
+        List<String> filePathList = new ArrayList<String>();
+        List<String> fileNameList = new ArrayList<String>();
+        int companyId = (Integer)session.getAttribute("companyId");
+        String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        
+        File fileFolder = new File(fileFolderPath);
+        File[] fileList = fileFolder.listFiles();
+        
+        if (fileList != null) {
+            for (File file : fileList){
+                fileNameList.add(file.getName());
+                String filePath = getInputFolder(companyId).getAbsolutePath() + "/" + file.getName();
+                filePathList.add(filePath);
+            }
+        } else {
+            model.addAttribute("error", "ファイルが存在しません");
+            return "templatelist";
+        }
+        model.addAttribute("fileName", fileNameList);
+        return "templatelistBox";
     }
 
     //テンプレファイル一覧からboxへファイルダウンロード
@@ -488,8 +541,27 @@ public class AdminController extends WorkdaysProperties{
 			BoxFile.Info newFileInfo = uploadFolder.uploadFile(input, fileName);
 		}
   
-        model.addAttribute("error", "WorkDays_templateフォルダにファイルがダウンロードされました");
-        return "templatelist";
+        List<String> filePathList = new ArrayList<String>();
+        List<String> fileNameList = new ArrayList<String>();
+        int companyId = (Integer)session.getAttribute("companyId");
+        String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        
+        File fileFolder = new File(fileFolderPath);
+        File[] fileList = fileFolder.listFiles();
+        
+        if (fileList != null) {
+            for (File file : fileList){
+                fileNameList.add(file.getName());
+                String filePath = getInputFolder(companyId).getAbsolutePath() + "/" + file.getName();
+                filePathList.add(filePath);
+            }
+        } else {
+            model.addAttribute("error", "ファイルが存在しません");
+            return "templatelist";
+        }
+        model.addAttribute("fileName", fileNameList);
+        model.addAttribute("error", "WorkDays_templateフォルダにダウンロードが完了しました");
+        return "templatelistBox";
     }
 
     //パスワード変更画面表示
@@ -528,14 +600,24 @@ public class AdminController extends WorkdaysProperties{
     }
 
     //ユーザー一括アップロード画面表示
+    @GetMapping("/touserupload")
+    public String toUserUpload() {
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        if (superUser == null) {
+            return "accessError";
+        }
+		return "touserupload";
+	}
+    //ローカルからユーザー一括ファイルアップロードする画面表示
     @GetMapping("/alluserupload")
     public String allUserUpload() {
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        if (superUser != null) {
-            return "alluserupload";
+        if (superUser == null) {
+            return "accessError";
         }
-		return "accessError";
+		return "alluserupload";
 	}
 
     //ユーザー一括アップロード処理
@@ -978,9 +1060,11 @@ public class AdminController extends WorkdaysProperties{
 
             //ユーザー情報に使用できないメールアドレスを含んでいた場合はエラーを返す
             if (errorMailList.size() != 0 || !errorMailList.isEmpty()) {
+                ArrayList csvFileList = (ArrayList)session.getAttribute("csvFileList");
+                model.addAttribute("fileName", csvFileList);
                 errorMailList.add("使用できないメールアドレスが含まれているためファイルのアップロードに失敗しました");
                 model.addAttribute("mail", errorMailList); 
-                return "alluserupload";
+                return "boxcsvfilelist";
             }
 
             for (IndividualData id : newIdList) {
@@ -999,8 +1083,10 @@ public class AdminController extends WorkdaysProperties{
                    
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            ArrayList csvFileList = (ArrayList)session.getAttribute("csvFileList");
+            model.addAttribute("fileName", csvFileList);
             model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
-            return "alluserupload";
+            return "boxcsvfilelist";
         } finally {
             br.close();
             uploadFile.delete();
@@ -1015,9 +1101,22 @@ public class AdminController extends WorkdaysProperties{
             );
         }
 
+        ArrayList csvFileList = (ArrayList)session.getAttribute("csvFileList");
+        model.addAttribute("fileName", csvFileList);
         model.addAttribute("error", "ファイルがアップロードされました");
-        return "alluserupload";
+        return "boxcsvfilelist";
     }
+
+    //テンプレファイル一覧画面遷移
+    @GetMapping("/totemplateupload")
+    public String toTemplateUpload() {
+
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        if (superUser == null) {
+            return "accessError";
+        }
+		return "totemplateupload";
+	}
 
     //boxからテンプレファイル読み込み
     @GetMapping("/boxtemplateupload")
@@ -1074,6 +1173,7 @@ public class AdminController extends WorkdaysProperties{
             templatelist.add(info.getName());
         }
 
+        session.setAttribute("templatelist", templatelist);
         model.addAttribute("fileName", templatelist);
         return "boxTemplatelist";
 	}
@@ -1107,7 +1207,7 @@ public class AdminController extends WorkdaysProperties{
         file.download(stream);
         stream.close();
 
-        model.addAttribute("error", "ファイルがアップロードされました");
+        model.addAttribute("error", fileName + "がアップロードされました");
         List<String> templatelist = (List<String>)session.getAttribute("templatelist");
         model.addAttribute("fileName", templatelist);
         return "boxTemplatelist";
