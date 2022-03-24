@@ -139,6 +139,7 @@ a:hover::after{
             <th>ランク</th>
             <th>税抜き価格</th>
             <th>税込み価格</th>
+            <th>容量上限</th>
             <th>削除</th>
             
           </tr>
@@ -178,6 +179,9 @@ a:hover::after{
             </td>
             <td>
               <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="taxExclude" th:value="${user.taxExclude}">
+            </td>
+            <td>
+              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="limitedCapacity" th:value="${user.limitedCapacity}">
             </td>
             
             <td>

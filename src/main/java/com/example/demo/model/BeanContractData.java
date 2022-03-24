@@ -34,6 +34,8 @@ public class BeanContractData {
 	  
 	 @Column
 	 private Integer taxExclude;
+	 @Column
+	 private long limitedCapacity;
 
 	 
 	 
