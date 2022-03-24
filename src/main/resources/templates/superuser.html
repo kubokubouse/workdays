@@ -27,7 +27,7 @@
     
       <form th:action="@{/transition}">
         <input type="hidden" name="local" value="/alluserupload">
-        <input type="hidden" name="box" value="http://localhost:8080/uploaduserfrombox">
+        <input type="hidden" name="box" value="/uploaduserfrombox">
         <input type="submit" value="ユーザー一括アップロード">
       </form>
     </div>
@@ -35,13 +35,13 @@
     <div class="contents_2">
       <form th:action="@{/transition}">
         <input type="hidden" name="local" value="/templateupload">
-        <input type="hidden" name="box" value="http://localhost:8080/boxtemplateupload">
+        <input type="hidden" name="box" value="/boxtemplateupload">
         <input type="submit" value="ファイルアップロード">
       </form>
      
       <form th:action="@{/transition}">
         <input type="hidden" name="local" value="/templatelist">
-        <input type="hidden" name="box" value="http://localhost:8080/createApi">
+        <input type="hidden" name="box" value="/createApi">
         <input type="submit" value="ファイル一覧">
       </form>
       <form th:action="@{/changePass}">

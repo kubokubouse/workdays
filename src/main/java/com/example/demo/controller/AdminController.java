@@ -605,7 +605,7 @@ public class AdminController extends WorkdaysProperties{
     public String transition(@RequestParam("local") String localPath, @RequestParam("box") String boxPath, Model model) {
 
         model.addAttribute("localPath", localPath);
-        model.addAttribute("boxPath", boxPath);
+        model.addAttribute("boxPath", WorkdaysProperties.host + boxPath);
 
 		return "transition";
 	}
