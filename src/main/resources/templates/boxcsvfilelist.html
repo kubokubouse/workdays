@@ -7,36 +7,41 @@
 </head>
 <body>
 
-    <h2>ファイル一覧</h2>
-   
+    <h2>boxファイル一覧</h2>
+
+    <h3>アップロードするファイルを以下の点に注意して指定してください</h3>
+
+    <div class="caution">
+        <p>※csvファイル形式でカンマ区切りであること</p>
+        <p>※ヘッダーとして１列目に以下が全角で記入されていること</p>
+        <p>管理番号,氏名,メールアドレス,会社１,会社２,会社３,利用可否</p>
+        <p>（※利用可の場合は可と入力されていること）</p>
+    </div>
+
     <table>
         <tr>
             <th>ファイル名</th>
             <th> </th>
-            <th> </th>
         </tr>
-        
-        <div class="data"> 
-        <tr th:each="fileName, fileNameSt : ${fileName}">            
-        <form th:action="@{/filedelete}">
-            <input type="hidden" name="deleteFileName" th:value="${fileName}">       
+        <tr th:each="fileName, fileNameSt : ${fileName}">
+        <form th:action="@{/boxuserresister}">
+            <input type="hidden" name="uploadfile" th:value="${fileName}">       
             <td th:text="${fileName}"></td>
-            <td><input type="submit" value="削除"></td>
-        </form> 
+            <td><input type="submit" value="アップロード"></td>
+        </form>
         </tr>
-   
-        <tr th:each="filePath, filePath : ${filePath}">
-        <td><a th:href="@{${filePath}}" class="btn_item" download> ダウンロード</a></td>
-        </tr>
-    </div>
     </table>
 
-    <p th:text="${error}"></p>
+    <p th:text="${error}" class="error"></p>
+      <table>
+        <tr th:each="mail, st : ${mail}" >
+            <td th:text="${mail}" class="error"></td>
+        </tr>
+        </table>
 
    
 
     <div class="tab">
-        <p><a href="/templatelistTransition">前の画面に戻る</a></p>
         <p><a href="/superuser">管理画面へ戻る</a></p>
         <p><a href="/">ログアウト</a></p>
     </div>
@@ -85,6 +90,10 @@
         transition    : .3s;         /* なめらか変化 */
       }
  
+      .error {
+        color: blue;
+        font-weight: bold;
+    }
       table {
           margin: 3px auto;
       }
@@ -104,10 +113,6 @@
       
     .tab {
         margin-top: 50px;
-    }
-
-    .data {
-        display: inline;
     }
 
 </style>

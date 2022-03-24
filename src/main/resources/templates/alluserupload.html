@@ -13,25 +13,27 @@
     <div class="caution">
         <p>※csvファイル形式でカンマ区切りであること</p>
         <p>※ヘッダーとして１列目に以下が全角で記入されていること</p>
-        <p>社員番号,氏名,メールアドレス,会社１,会社２,会社３,利用可否</p>
+        <p>管理番号,氏名,メールアドレス,会社１,会社２,会社３,利用可否</p>
         <p>（※利用可の場合は可と入力されていること）</p>
     </div>
     
     <form th:action="@{/uploadalluser}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
         <input type="file" name="file">
         <br>
+
+    <div class="error">
         <p class="error">[[${error}]]</p>
         <table>
         <tr th:each="mail, st : ${mail}" >
             <td th:text="${mail}"></td>
         </tr>
         </table>
-    
+    </div>
         <button type="submit" class="btn">アップロード</button>
     </form>
+    
 
     <div class="tab">
-        <p><a href="/templatelist">ファイル一覧</a></p>
         <p><a href="/superuser">管理画面へ戻る</a></p>
         <p><a href="/">ログアウト</a></p>
     </div>

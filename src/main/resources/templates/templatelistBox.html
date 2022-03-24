@@ -23,11 +23,12 @@
             <td th:text="${fileName}"></td>
             <td><input type="submit" value="削除"></td>
         </form> 
-        </tr>
-   
-        <tr th:each="filePath, filePath : ${filePath}">
-        <td><a th:href="@{${filePath}}" class="btn_item" download> ダウンロード</a></td>
-        </tr>
+    
+        <form th:action="@{/templatefiledownload}">
+            <input type="hidden" name="fileName" th:value="${fileName}">       
+            <td><input type="submit" value="boxへダウンロード"></td>
+        </form>
+    </tr>
     </div>
     </table>
 

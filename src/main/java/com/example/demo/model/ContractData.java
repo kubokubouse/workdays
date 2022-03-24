@@ -77,5 +77,8 @@ public class ContractData
 	@Column
 	private Integer contractID;
 
+	@Column
+	private long limitedCapacity;
+
 
 }

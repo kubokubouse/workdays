@@ -56,28 +56,9 @@ h1:after {
   bottom: -3px;
   width: 30%;
 }
-
-a{
-  position: relative;
-  display: inline-block;
-  transition: .3s;
-  text-decoration: none;
-}
-
-a::after {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  content: '';
-  width: 0;
-  height: 2px;
-  background-color: #31aae2;
-  transition: .3s;
-  transform: translateX(-50%);
-}
-
-a:hover::after{
-  width: 100%;
+.output{
+  text-align: left;
+  margin-left: 10px;
 }
 
 .tabs {
@@ -115,29 +96,6 @@ h1:after {
   border-bottom: solid 3px #ffc778;
   bottom: -3px;
   width: 30%;
-}
-
-a{
-  position: relative;
-  display: inline-block;
-  transition: .3s;
-  text-decoration: none;
-}
-
-a::after {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  content: '';
-  width: 0;
-  height: 2px;
-  background-color: #31aae2;
-  transition: .3s;
-  transform: translateX(-50%);
-}
-
-a:hover::after{
-  width: 100%;
 }
 
 .btn {
@@ -201,11 +159,10 @@ a:hover::after{
           name : name
         }
       }).done(function (result) {
-        // 通信成功時のコールバック
-        alert("更新成功")
+        
       }).fail(function () {
         // 通信失敗時のコールバック
-        alert("更新失敗");
+        alert("更新に失敗しました");
       }).always(function (result) {
         // 常に実行する処理
       });
@@ -220,24 +177,12 @@ a:hover::after{
       <label class="text-danger" th:text="${error}"></label>
     </div>
     <h1>[[${workingListParam.year}]]年[[${workingListParam.month}]]月勤怠表 </h1>
-    
-   
-    
   </div>
-  <form th:action="@{/companyselect}" th:object="${users}" >
-  
-    <div class="tabs">
-      <div th:each="idUser, st:${idUserList}">
-        <div th:if="${idUser.banned==0}">【[[${idUser.companyName}]]】 
-          <div th:unless="${idUser.company1==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]</div>
-          <div th:unless="${idUser.company2==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company2}|"> [[${idUser.company2}]]</div>
-          <div th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"> [[${idUser.company3}]]</div>
-        </div>
-      </div>
-      <input type="submit" class="btn btn-primary" value="Excelファイル出力">
-    </div>
-  
-    </form>
+</form>
+<div class="output">
+<p><a href="/choosetemplatelocal"> このPCに勤怠表を保存</a></p>
+<p><a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/boxDownload"> boxにログインして勤怠表を保存</a></p>
+</div>
     <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
         <select name="nowyear" th:field="*{year}">
           <option th:value="${yearMonth.year-1}">[[${yearMonth.year-1}]]年</option>

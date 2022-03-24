@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Time;
@@ -205,6 +206,7 @@ public class HomeController extends WorkdaysProperties{
 		
 		String id = login.getEmail();
 		String pass = login.getPassword();
+		session.setAttribute("email", id);
 
 			//管理者の場合は管理者ページに移行
 		SuperUserLogin superUser = userService.findEmailAndPass(id, pass);
@@ -225,28 +227,21 @@ public class HomeController extends WorkdaysProperties{
 		if(users.getBanned()==1){
 			return "banned";
 		}
-		//メアドから個別ユーザーのリストを作成する
+		//ログイン時に入力されたメアドを使っている個別ユーザーを特定しリストを作る
 		List <IndividualData>iDataList=individualService.findMail(login.getEmail());
 		model.addAttribute("iDataList", iDataList);
 		
 		
-		//個別ユーザーから会社IDを取得し会社のリストを作る
+		//個別ユーザーから会社IDを取得し会社名のリストを作る
 		List<IdUser>idUserList=new ArrayList<IdUser>();
 		
 		for(IndividualData iData:iDataList){
-			IdUser idUser=new IdUser();
-			CompanyInfo companyInfo= companyInfoService.findByCompanyID(iData.getCompanyID());
-			idUser.setCompany1(iData.getCompany1());// companyInfo.getCompanyName();
-			idUser.setCompany2(iData.getCompany2());
-			idUser.setCompany3(iData.getCompany3());
-			idUser.setBanned(iData.getBanned());
-			idUser.setCompanyID(iData.getCompanyID());
-			idUser.setCompanyName(companyInfo.getCompanyName());
+			IdUser idUser=individualService.getIdUser(iData);
+			
 			idUserList.add(idUser);
 		}
 
 		model.addAttribute("idUserList", idUserList);
-		System.out.println(idUserList);
 		
 		session.setAttribute("Data",users);
 		
@@ -264,26 +259,6 @@ public class HomeController extends WorkdaysProperties{
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
 		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
-
-		//1か月先から1年前までのリストを作る
-		List<YearMonth>yearMonthList=new ArrayList<>();
-		YearMonth ym=userService.nowYearMonth();
-		
-		for(int i=0;i<11;i++){
-			
-			yearMonthList.add(ym);
-			System.out.println(yearMonthList);
-			int month=ym.getMonth()-1;
-			if(month==0){
-				month=12;
-				ym.setYear(ym.getYear()-1);
-			}
-			ym.setMonth(month);
-
-		}
-		
-		model.addAttribute("yearMonthList", yearMonthList);
-		System.out.println(yearMonthList);
 		model.addAttribute("yearMonth",yearMonth);
 		return "list";
 	}
@@ -343,14 +318,7 @@ public class HomeController extends WorkdaysProperties{
 		List<IdUser>idUserList=new ArrayList<IdUser>();
 		
 		for(IndividualData iData:iDataList){
-			IdUser idUser=new IdUser();
-			CompanyInfo companyInfo= companyInfoService.findByCompanyID(iData.getCompanyID());
-			idUser.setCompany1(iData.getCompany1());// companyInfo.getCompanyName();
-			idUser.setCompany2(iData.getCompany2());
-			idUser.setCompany3(iData.getCompany3());
-			idUser.setBanned(iData.getBanned());
-			idUser.setCompanyID(iData.getCompanyID());
-			idUser.setCompanyName(companyInfo.getCompanyName());
+			IdUser idUser=individualService.getIdUser(iData);
 			idUserList.add(idUser);
 		}
 
@@ -405,7 +373,27 @@ public class HomeController extends WorkdaysProperties{
 		return "sucsess";
 	}
 
-	//会社選択時の処理
+	//ローカルに勤怠表ダウンロード時の会社選択画面
+	@GetMapping("/choosetemplatelocal")
+	public String chooseTemplateLocal(Model model){
+
+		//会社選択
+		String email = (String)session.getAttribute("email");
+		List <IndividualData>iDataList=individualService.findMail(email);
+		//個別ユーザーから会社IDを取得し会社名のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+				
+		for(IndividualData iData:iDataList){
+			IdUser idUser=individualService.getIdUser(iData);
+					
+			idUserList.add(idUser);
+		}
+		
+		model.addAttribute("idUserList", idUserList);
+		return "choosetemplatelocal";
+	}
+
+	//会社選択後のboxダウンロード処理
 	@RequestMapping(value="/companyselect")
 	public String CompanySelect (@RequestParam String company, Model model) {
 			
@@ -465,7 +453,7 @@ public class HomeController extends WorkdaysProperties{
 		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "\\" + companyName + ".xls";
 		//会社ID_output/個別ID_出力会社.xls
 		String outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
-			+ "\\" + individualID + "_" + companyName + ".xls";
+			+ "\\" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
 
 		System.out.println("input: " + inputFilePath);
 		System.out.println("output: " + outputFilePath);
@@ -483,6 +471,8 @@ public class HomeController extends WorkdaysProperties{
 			return "outputerror";
 		}
 
+		File file = new File(outputFilePath);
+		model.addAttribute("outputFileName", "ファイル名：" + file.getName());
 		model.addAttribute("filePath", outputFilePath);
 
 		return "done";
@@ -580,28 +570,12 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			onetimeService.delete(oneTime);
 		}
 	}
-	
-	Onetime onetime=new Onetime();
-	onetime.setEmail(user.getEmail());
-	onetime.setLastname(user.getLastname());
-	onetime.setFirstname(user.getFirstname());
-	onetime.setPassword(user.getPassword());
-	onetime.setId(1);
-	Date date = new Date();
-	Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-	onetime.setDatetime(date);
-	
-	//Date型の持つ日時を表示
-    /*System.out.println(date);
-	long longer=date.getTime();
-
-	System.out.println(longer);
-	long longer2=longer+300;
-	
-    System.out.println("result="+longer2+longer);*/
+	//入力されたuserの情報をonetimeに入れる
+	Onetime onetime=userService.inOnetime(user);
+	//ワンタイムテーブルに情報を登録しメールを送る
 	onetimeService.insert(onetime);
 	mailsendService.mailsend(user.getEmail(),onetimeText);
+
 	//エラーがなければ仮登録完了ページに遷移
 	return "onetime";
 	}
@@ -618,11 +592,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		onetime.setDatetime(date);
 		long nowlong=onetime.getDatetime().getTime();
 		
-		System.out.println("now="+date);
-		System.out.println("before="+onetime.getDatetime());
-		System.out.println();
-		System.out.println(nowlong-ontimelong);
-		if((nowlong-ontimelong)/1000<180){
+		if((nowlong-ontimelong)/1000<WorkdaysProperties.limitsecond){
 			User users=new User();
 			users.setEmail(onetime.getEmail());
 			users.setFirstname(onetime.getFirstname());
@@ -659,7 +629,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		
 		return "registerdone";
 	}
-
 
 
 	@PostMapping("/AjaxServlet")
@@ -750,14 +719,10 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	}
 
 	@GetMapping("/boxDownload")
-	public void downloadBox(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException, ServletException {
+	public String downloadBox(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException, ServletException {
 		
 		String clientId = WorkdaysProperties.boxClientId;
 		String clientSecret = WorkdaysProperties.boxClientSecret;
-		String boxSaveFolderName = WorkdaysProperties.boxSaveFolderName;
-		String clientFilePath = (String)session.getAttribute("output");
-		File clientFile = new File(clientFilePath);
-		String clientFileName = clientFile.getName();
 		
 		// String authorizationUrl = "https://account.box.com/api/oauth2/authorize?client_id="
 		// 	+ clientId + "&response_type=code";
@@ -773,6 +738,101 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			code
 		);
 
+		session.setAttribute("api", api);
+
+		//会社選択
+		String email = (String)session.getAttribute("email");
+		List <IndividualData>iDataList=individualService.findMail(email);
+		//個別ユーザーから会社IDを取得し会社名のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+				
+		for(IndividualData iData:iDataList){
+			IdUser idUser=individualService.getIdUser(iData);
+					
+			idUserList.add(idUser);
+		}
+		
+		model.addAttribute("idUserList", idUserList);
+		return "choosetemplate";
+	}
+
+	@RequestMapping(value="/boxfiledownload")
+	public String boxfiledownload (@RequestParam String company, Model model) throws FileNotFoundException {
+			
+		User users=(User)session.getAttribute("Data");
+		model.addAttribute("user",users);
+		//苗字と名前合わせてname
+		String lastname=users.getLastname();
+
+		//当日の年月取得
+		Calendar cal = Calendar.getInstance();
+		int year=cal.get(Calendar.YEAR);
+		int month=cal.get(Calendar.MONTH);
+		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
+	
+		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
+
+		Map<String, String> stHourMap = new HashMap<>();
+		Map<String, String> stMinMap = new HashMap<>(); 
+		Map<String, String> endHourMap = new HashMap<>(); 
+		Map<String, String> endMinMap = new HashMap<>();
+		Map<String, String> lunchTimeHourMap = new HashMap<>(); 
+		Map<String, String> lunchTimeMinMap = new HashMap<>();
+		Map<String, String> totalHourMap = new HashMap<>();
+		Map<String, String> totalMinMap = new HashMap<>(); 
+		Map<String, String> other1Map = new HashMap<>();
+		Map<String, String> other2Map = new HashMap<>();
+		Map<String, String> other3Map = new HashMap<>();
+
+		int index = 1;
+		for(Workdays workday:workdays){
+
+			stHourMap.put("sth"+index, workday.getStart().toString().substring(0,2));
+			stMinMap.put("stm"+index, workday.getStart().toString().substring(3,5));
+			endHourMap.put("edh"+index, workday.getEnd().toString().substring(0,2));
+			endMinMap.put("edm"+index, workday.getEnd().toString().substring(3,5));
+			lunchTimeHourMap.put("lth"+index, workday.getHalftime().toString().substring(0,2));
+			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
+			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
+			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
+			other1Map.put("oa"+index, workday.getOther1());
+			other2Map.put("ob"+index, workday.getOther2());
+			other3Map.put("oc"+index, workday.getOther3());
+
+			index++;
+
+		}
+				
+		//個別ユーザーTLから個人IDと会社IDを拾ってくる
+		String[] values = company.split(":");
+		int companyID = Integer.parseInt(values[0]);
+		String companyName=values[1];
+		
+		String mail = users.getEmail();
+		int individualID = Integer.valueOf(userService.findIndividualID(mail, companyID));
+		
+		//会社ID_input/会社名.xls
+		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "/" + companyName + ".xls";
+		//会社ID_output/個別ID_出力会社.xls
+		String outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
+			+ "/" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
+
+		System.out.println("input: " + inputFilePath);
+		System.out.println("output: " + outputFilePath);
+		
+		WorkdayMapping workdayMapping = new WorkdayMapping();
+		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
+			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
+			totalHourMap, totalMinMap, other1Map,other2Map,other3Map
+		);
+
+		if (errors.size() != 0 || !errors.isEmpty()) {
+			model.addAttribute("errors", errors);
+			return "outputerror";
+		}
+
+		BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+		
 		//すべてのフォルダ(id=0)下に出力用ファイルを作成
 		BoxFolder parentFolder = new BoxFolder(api, "0");
 		Iterable<Info> childrens = parentFolder.getChildren();
@@ -790,9 +850,13 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			childFolderId = childFolderInfo.getID();
 		}
 
+		
 		BoxFolder uploadFolder = new BoxFolder(api, childFolderId);
 		BoxFolder.Info info = uploadFolder.getInfo();
 		System.out.println("出力フォルダ名：" + info.getName() + ", 出力フォルダID:" + info.getID());
+
+		File clientFile = new File(outputFilePath);
+		String clientFileName = clientFile.getName();
 
 		//ファイル名の重複を確認
 		String fileId = null;
@@ -801,18 +865,20 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 				//ファイルを更新
 				fileId = itemInfo.getID();
 				BoxFile updatefile = new BoxFile(api, fileId);
-				FileInputStream stream = new FileInputStream(clientFilePath);
+				FileInputStream stream = new FileInputStream(outputFilePath);
 				updatefile.uploadNewVersion(stream);
 			}
 		}
 
 		if(fileId == null) {
-			FileInputStream input = new FileInputStream(clientFilePath);
+			FileInputStream input = new FileInputStream(outputFilePath);
 			BoxFile.Info newFileInfo = uploadFolder.uploadFile(input, clientFileName);
 		}
 
-		String url = WorkdaysProperties.host + "/success";
-		System.out.println("リダイレクト先：" + url);
-		response.sendRedirect(url);
+		// String url = WorkdaysProperties.host + "/success";
+		// System.out.println("リダイレクト先：" + url);
+		// response.sendRedirect(url);
+
+		return "success";
 	}
 }

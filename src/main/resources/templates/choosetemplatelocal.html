@@ -7,10 +7,20 @@
 <link th:href="@{/css/donestyle.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2>勤怠表をダウンロードします</h2>
-<p th:text="${outputFileName}" class="fileName"></p>
+<h2>このPCに勤怠表をダウンロードします</h2>
+<form th:action="@{/companyselect}" th:object="${users}" >
+  
+  <div class="tabs">
+    <div th:each="idUser, st:${idUserList}">
+      <div th:if="${idUser.banned==0}">【[[${idUser.companyName}]]】 
+        <div th:unless="${idUser.company1==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]</div>
+        <div th:unless="${idUser.company2==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company2}|"> [[${idUser.company2}]]</div>
+        <div th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"> [[${idUser.company3}]]</div>
+      </div>
+    </div>
+    <input type="submit" class="btn btn-primary" value="選択">
+  </div>
 
-<a th:href="@{${filePath}}" class="btn_item" download> ダウンロード</a>
 
 <p><a href="/logout">ログアウト</a></p>
 </body>
