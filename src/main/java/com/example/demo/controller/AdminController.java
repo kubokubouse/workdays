@@ -278,8 +278,7 @@ public class AdminController extends WorkdaysProperties{
                     foldermegasize=foldermegasize+file.length();
                 }
             }else {
-                model.addAttribute("error", "ファイルが存在しません");
-                return "templatelist";
+                
             }
             System.out.println("all="+foldermegasize);
             if(foldermegasize>limitmegasize){
@@ -336,14 +335,14 @@ public class AdminController extends WorkdaysProperties{
                     foldermegasize=foldermegasize+file.length();
                 }
             }else {
-                model.addAttribute("error", "ファイルが存在しません");
-                return "templatelist";
+                
             }
             System.out.println("all="+foldermegasize);
             if(foldermegasize+newfilemeagsize>limitmegasize){
                 model.addAttribute("error", "フォルダの容量が制限を超えています");
                 return "templatelist";
             }
+            System.out.println("はいはい");
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
                 new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -351,12 +350,14 @@ public class AdminController extends WorkdaysProperties{
             uploadFileStream.close();   
             
             if (!uploadFile.exists()) {
-                model.addAttribute("error", "ファイルのアップロードに失敗しました");        
+                model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
+                System.out.println("はいはいはい");       
             }
             
         } catch (Exception e) {
             if (uploadFile.exists()){
                 uploadFile.delete();
+                System.out.println("はいはいはいはい");   
             }
             model.addAttribute("error", "ファイルのアップロードに失敗しました");
             return "templateupload";
@@ -365,6 +366,7 @@ public class AdminController extends WorkdaysProperties{
                 uploadFile.delete();
             }
             model.addAttribute("error", "ファイルのアップロードに失敗しました");
+            System.out.println("はいはいはいはいはい");
             return "templateupload";
         }
         model.addAttribute("error", "ファイルがアップロードされました");
