@@ -15,10 +15,16 @@
 
   <div class="contents">
    
-    <div class="contents_1">      
-      <p><a href="/register" class="btn btn-radius-solid">ユーザー登録</a></p>
-      <p><a href="/userlist" class="btn btn-radius-solid">ユーザー一覧</a></p>
-
+    <div class="contents_1">  
+      <form th:action="@{/register}">
+        <input type="submit" value="ユーザー登録">
+      </form>
+    
+      <form th:action="@{/userlist}">
+        <input type="submit" value="ユーザー一覧">
+      </form>
+    
+    
       <form th:action="@{/transition}">
         <input type="hidden" name="local" value="/alluserupload">
         <input type="hidden" name="box" value="http://localhost:8080/uploaduserfrombox">
@@ -38,8 +44,10 @@
         <input type="hidden" name="box" value="http://localhost:8080/createApi">
         <input type="submit" value="ファイル一覧">
       </form>
+      <form th:action="@{/changePass}">
+        <input type="submit" value="パスワード更新">
+      </form>
      
-      <p><a href="/changePass"class="btn btn-radius-solid">パスワード更新</a></p>
     </div>
   </div>
 
@@ -111,6 +119,9 @@
     width: 100%;
   }
 */
+  form {
+    margin: 10px;
+  }
   .logout{
     margin-top: 20px;
   }
