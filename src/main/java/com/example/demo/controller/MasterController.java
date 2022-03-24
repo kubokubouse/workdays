@@ -418,6 +418,15 @@ public class MasterController {
         }
 		return "toholidayupload";
 	}
+	@GetMapping("/holidayupload")
+    public String holidayupload() {
+
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
+		return "holidayupload";
+	}
 	//祝日一括アップロード処理
     @RequestMapping("/uploadholiday")
     public String uploadalluser(@RequestParam("file") MultipartFile multipartFile,

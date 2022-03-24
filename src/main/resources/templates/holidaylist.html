@@ -214,7 +214,13 @@ a:hover::after{
           <input type="submit" value="全削除">
       </form>
       </p>
-  <p><a href="/toholidayupload">祝日一括登録</a></p>
+
+      <form th:action="@{/transition}">
+        <input type="hidden" name="local" value="/holidayupload">
+        <input type="hidden" name="box" value="http://localhost:8080/boxuploadholiday">
+        <input type="submit" value="祝日一括登録">
+      </form>
+
   <p><a href="/masteruser">管理画面へ戻る</a></p>
   <p><a href="/master">ログアウト</a></p>
 </body>
