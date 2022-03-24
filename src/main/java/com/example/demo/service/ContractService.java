@@ -79,6 +79,7 @@ public class ContractService {
 			beanContractData.setTaxExclude(contractdata.getTaxExclude());
 			beanContractData.setCompanyID(contractdata.getCompanyID());
 			beanContractData.setContractID(contractdata.getContractID());
+			beanContractData.setLimitedCapacity(contractdata.getLimitedCapacity());
 			contractDataList.add(beanContractData);
         }
 		
