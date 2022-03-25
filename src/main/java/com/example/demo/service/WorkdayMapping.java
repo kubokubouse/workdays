@@ -30,7 +30,7 @@ public class WorkdayMapping {
 
     if (!inputFileObject.exists()) {
         System.out.println("ファイルが存在しません：" + inputFilePath);
-        errorList.add("ファイルが存在しません：" + inputFilePath);
+        errorList.add("テンプレートファイルが存在しません" );
         return errorList;
     }
     
