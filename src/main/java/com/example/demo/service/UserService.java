@@ -75,7 +75,7 @@ public class UserService{
 	@Autowired
 	IndividualDataRepository iDataRepository;
 
-    @Value("${worklist.path}")
+    //@Value("${worklist.path}")
     private String path;
 
 	
