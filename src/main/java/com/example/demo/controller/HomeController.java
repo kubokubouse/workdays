@@ -111,7 +111,7 @@ public class HomeController extends WorkdaysProperties{
     //トップページがログイン画面になる
 	@GetMapping("/")
 	public String login(@ModelAttribute Login login){
-		
+		session.removeAttribute("api");
 		session.removeAttribute("Data");
 		Calendar before = Calendar.getInstance();
 		before.set(Calendar.YEAR, 2022);
