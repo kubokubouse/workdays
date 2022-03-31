@@ -474,7 +474,7 @@ public class HomeController extends WorkdaysProperties{
 		File file = new File(outputFilePath);
 		model.addAttribute("outputFileName", "ファイル名：" + file.getName());
 		
-		model.addAttribute("filePath", "/"+companyID+"_output/"+individualID + "_" + companyName + ".xls");
+		model.addAttribute("filePath", basePath+"/"+companyID+"_output/"+individualID + "_" + companyName + ".xls");
 
 		return "done";
 	}	
