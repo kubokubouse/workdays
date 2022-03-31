@@ -615,7 +615,7 @@ public class AdminController extends WorkdaysProperties{
         if (api == null) {
             String url = "https://account.box.com/api/oauth2/authorize?client_id=" 
             + WorkdaysProperties.boxClientId + "&response_type=code&redirect_uri=";
-            
+
             model.addAttribute("boxPath", url + WorkdaysProperties.host + boxPath);
         } else {
             model.addAttribute("boxPath", boxPath);
@@ -1234,7 +1234,15 @@ public class AdminController extends WorkdaysProperties{
 
         String templateFile = getInputFolder(companyid) + "//" + info.getName();
         File templatefile = new File(templateFile);
-        templatefile.createNewFile();
+        System.out.println("boxファイルアップロード先" + templatefile.getAbsolutePath());
+
+        if(!templatefile.createNewFile()) {
+            model.addAttribute("error", "ファイルのアップロードに失敗しました");
+            List<String> templatelist = (List<String>)session.getAttribute("templatelist");
+            model.addAttribute("fileName", templatelist);
+            return "boxuploadlist";
+        }
+
         FileOutputStream stream = new FileOutputStream(templatefile);
         file.download(stream);
         stream.close();
