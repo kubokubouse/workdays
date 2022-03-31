@@ -11,7 +11,7 @@ public class WorkdaysProperties {
     //public static String basePath = "C:/久保さん/cloneproject/workdays/src/main/resources/static";
     // public static String host = "http://localhost:8080";
    
-    public static String basePath = "/home/ec2-user/workdays/src/main/resources/static";//aws用のpath
+    public static String basePath = "/var/www/html";//aws用のpath
 
 
     public static String outputFileName = "勤怠表.xls";
