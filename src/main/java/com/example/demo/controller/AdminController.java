@@ -84,7 +84,7 @@ public class AdminController extends WorkdaysProperties{
 
 	@GetMapping("/logout")
 	public String logout(){
-		
+		session.removeAttribute("api");
 		return "logout";
 	}
 
