@@ -420,7 +420,7 @@ public class AdminController extends WorkdaysProperties{
 
     //ファイル一覧からファイル削除
     @RequestMapping("/filedelete")
-    public String showTemplateFileList(@RequestParam("deleteFileName") String deleteFileName, Model model) {
+    public String showTemplateFileList(@RequestParam("deleteFileName") String deleteFileName, @RequestParam("box") String box, Model model) {
         
         int id = (Integer)session.getAttribute("companyId");
         File folder = getInputFolder(id);
@@ -451,6 +451,10 @@ public class AdminController extends WorkdaysProperties{
         model.addAttribute("fileName", fileNameList);
         
         model.addAttribute("error", deleteFileName+"が削除されました");
+
+        if (box.equals("box")) {
+            return "templatedownloadBox"; 
+        }
         return "templatelist";
     }
 

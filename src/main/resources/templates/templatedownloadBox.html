@@ -20,7 +20,8 @@
         <div class="data"> 
         <tr th:each="fileName, fileNameSt : ${fileName}">            
         <form th:action="@{/filedelete}">
-            <input type="hidden" name="deleteFileName" th:value="${fileName}">       
+            <input type="hidden" name="deleteFileName" th:value="${fileName}">
+            <input type="hidden" name="box" value="box">      
             <td th:text="${fileName}"></td>
             <td><input type="submit" value="削除"></td>
         </form> 
