@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 public class WorkdaysProperties {
 
-    public static String host = "https://ec2-13-231-210-64.ap-northeast-1.compute.amazonaws.com:8080";
+    public static String host = "https://workdays.jp";
     // public static String basePath = "C:/pleiades/workdays/workdays/src/main/resources";
     //public static String basePath = "C:/久保さん/cloneproject/workdays/src/main/resources/static";
     // public static String host = "http://localhost:8080";
@@ -25,11 +25,6 @@ public class WorkdaysProperties {
 	public static String boxClientSecret = "wE7OWwmsH0V1Z1wYscLQUaOgTpiUqNvJ";
     public static String boxSaveFolderName = "WorkDays";
 
-
-    //TODO ※templateupload.htmlのリンクを修正すること
-    public static String boxTemplateDownloadUri = "https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/boxtemplateupload";
-    //TODO ※alluserupload.htmlのリンクを修正すること
-    public static String boxCSVDownloadUri = "https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=http://localhost:8080/uploaduserfrombox";
     public static int limitsecond=180;
 
     public File getInputFolder(int companyID) {
