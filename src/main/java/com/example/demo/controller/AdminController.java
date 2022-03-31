@@ -613,7 +613,10 @@ public class AdminController extends WorkdaysProperties{
         BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
 
         if (api == null) {
-            model.addAttribute("boxPath", WorkdaysProperties.host + boxPath);
+            String url = "https://account.box.com/api/oauth2/authorize?client_id=" 
+            + WorkdaysProperties.boxClientId + "&response_type=code&redirect_uri=";
+            
+            model.addAttribute("boxPath", url + WorkdaysProperties.host + boxPath);
         } else {
             model.addAttribute("boxPath", boxPath);
         }
