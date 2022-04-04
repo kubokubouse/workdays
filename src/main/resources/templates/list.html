@@ -208,7 +208,6 @@ table tr {
           <div th:unless="${yearMonth.month==12}"><option th:value="12">12月</option></div><div th:if="${yearMonth.month==12}"><option th:value="12" selected>12月</option></div>
         </select>
       <input class="button_blue" type="submit" value="変更">
-      <p>*過去一年分のみ確認できます</p>
       <small th:if="${error2}">*[[${error2}]]</small>
     </form>
   </div>
