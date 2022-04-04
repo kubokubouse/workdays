@@ -8,8 +8,8 @@
 <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 </head>
 <body>
-
-    <h2>アップロードするファイルを以下の点に注意して指定してください</h2>
+    <h1>boxからテンプレートファイルをアップロード</h1>
+    <h3>アップロードするファイルを以下の点に注意して指定してください</h3>
 
     <div class="caution">
     <p>※ファイルのセルやシートが保護されていない状態であること</p>
@@ -30,10 +30,10 @@
     </div>
     
     <form th:action="@{/uploadFile}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
-        <input type="file" name="file">
+        <input type="file" name="file" class="button">
         <br>
         <p class="error">[[${error}]]</p>
-        <button type="submit" class="btn">アップロード</button>
+        <button type="submit" class="button_blue">アップロード</button>
     </form>
 
     
@@ -49,25 +49,6 @@
 
 <style>
 
-    body {
-        font-family: sans-serif;
-        text-align: center;
-    }
-
-    h2 {
-        margin-top: 30px;
-        border-bottom: solid 3px skyblue;
-        position: relative;
-      }
-      
-      h2:after {
-        position: absolute;
-        content: " ";
-        display: block;
-        border-bottom: solid 3px #ffc778;
-        bottom: -3px;
-        width: 30%;
-      }
       .caution {
           display: inline-block;
           text-align: left;
@@ -76,23 +57,9 @@
         color: blue;
         font-weight: bold;
     }
-    .upform {
-        margin-top: 30px;
-    }
     .example {
         padding-left: 100px;
     }
-    .upbtn {
-        background    : #1a1aff; 
-        color         : #ffffff; 
-    }
-
-    .btn {
-        margin-top: 50px;
-        background    : #1a1aff; 
-        color         : #ffffff; 
-    }
-
     .tab {
         margin-top: 50px;
     }

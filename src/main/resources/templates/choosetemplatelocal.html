@@ -8,10 +8,10 @@
 <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 </head>
 <body>
-<h2>このPCに勤怠表をダウンロードします</h2>
+<h1>このPCに勤怠表をダウンロードします</h1>
 <form th:action="@{/companyselect}" th:object="${users}" >
   
-  <div class="tabs">
+  <div class="fileName">
     <div th:each="idUser, st:${idUserList}">
       <div th:if="${idUser.banned==0}">【[[${idUser.companyName}]]】 
         <div style="display: inline-block; _display: inline;" th:unless="${idUser.company1==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company1}|"> [[${idUser.company1}]]</div>
@@ -19,7 +19,7 @@
         <div style="display: inline-block; _display: inline;" th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"> [[${idUser.company3}]]</div>
       </div>
     </div>
-    <input type="submit" class="btn btn-primary" value="選択">
+    <input type="submit" class="button_blue" value="選択">
   </div>
 
 
@@ -28,44 +28,20 @@
 </html>
 
 <style>
-    body {
-        font-family: sans-serif;
-        margin: center;
-        text-align: center;
-    }
-    h2 {
-        margin-top: 30px;
-        border-bottom: solid 3px skyblue;
-        position: relative;
-      }
-      
-      h2:after {
-        position: absolute;
-        content: " ";
-        display: block;
-        border-bottom: solid 3px #ffc778;
-        bottom: -3px;
-        width: 30%;
-      }
-
-      .fileName{
-        margin-top: 50px;
-      }
-    a {
-        display: block;
-        margin-top: 40px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .btn_item {
-      display: inline-block;
-      padding: 10px 20px;
-      text-decoration: none;
-      background: rgb(228,226,223);
-      color: #333;
-      border: 1px solid rgb(228,226,223);
-      /* border-radius: 5px; デザインによる */
-    }
+  body {
+    margin: 0;
+    background-color: #f5f6fd;
+  }
+  .button_blue {
+    margin-top: 20px;
+    padding: 5px;
+  }
+  .fileName{
+    margin-top: 50px;
+  }
+  a {
+    display: block;
+    margin-top: 40px;
+  }
       
 </style>

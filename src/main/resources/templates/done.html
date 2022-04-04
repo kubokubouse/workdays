@@ -8,54 +8,25 @@
 <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 </head>
 <body>
-<h2>勤怠表をダウンロードします</h2>
+<h1>勤怠表をダウンロードします</h1>
 <p th:text="${outputFileName}" class="fileName"></p>
 
-<a th:href="@{${filePath}}" class="btn_item" download> ダウンロード</a>
+<a th:href="@{${filePath}}" class="button_blue" download> ダウンロード</a>
 
 <p><a href="/logout">ログアウト</a></p>
 </body>
 </html>
 
 <style>
-    body {
-        font-family: sans-serif;
-        margin: center;
-        text-align: center;
-    }
-    h2 {
-        margin-top: 30px;
-        border-bottom: solid 3px skyblue;
-        position: relative;
-      }
-      
-      h2:after {
-        position: absolute;
-        content: " ";
-        display: block;
-        border-bottom: solid 3px #ffc778;
-        bottom: -3px;
-        width: 30%;
-      }
-
-      .fileName{
-        margin-top: 50px;
-      }
-    a {
-        display: block;
-        margin-top: 40px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .btn_item {
-      display: inline-block;
-      padding: 10px 20px;
-      text-decoration: none;
-      background: rgb(228,226,223);
-      color: #333;
-      border: 1px solid rgb(228,226,223);
-      /* border-radius: 5px; デザインによる */
-    }
-      
+  h1 {
+    font-size: 20px;
+  }
+  a.button_blue {
+    text-decoration: none;
+    font-weight: bold;
+  }
+  a {
+    display: inline-block;
+    margin-top: 40px;
+  }    
 </style>

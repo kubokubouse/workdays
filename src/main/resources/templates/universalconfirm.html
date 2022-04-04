@@ -9,9 +9,8 @@
 </head>
 <body>
 
+  <h1>登録情報確認</h1>
   <table class="entryTable" border="1">
-
-  <caption>会員情報</caption>
 
   <tr>
     <th>氏 </th>
@@ -33,14 +32,14 @@
 </table>
 
 <div class="footer">
-  <a href="#" id="back-link">戻る</a>
+  <a href="#" id="back-link" class="button">戻る</a>
   <form  th:action="@{/universalregist}" th:object="${user}"method="post" >
     <label for="name"></label>
     <input type="hidden" th:field="*{lastname}">
     <input type="hidden" th:field="*{firstname}">
     <input type="hidden" th:field="*{password}">
     <input type="hidden" th:field="*{email}">
-    <input type="submit" value="登録">
+    <input type="submit" value="登録" class="button">
   </form>
 </div>
 </body>
@@ -55,26 +54,6 @@
 </html>
 
 <style>
-
-  body {
-    font-family: sans-serif;
-    text-align: center;
-  }  
-
-  caption {
-    border-bottom: solid 3px skyblue;
-    position: relative;
-    font-family: sans-serif;
-  }
-  
-  caption:after {
-    position: absolute;
-    content: " ";
-    display: block;
-    border-bottom: solid 3px #ffc778;
-    bottom: -3px;
-    width: 30%;
-  }
 
   th {
     color: black;

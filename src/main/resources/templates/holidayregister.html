@@ -45,8 +45,8 @@
   
   <div class="send">
     <input type="hidden" th:field="*{year}">
-    <input type="reset" value="クリア">
-    <input type="submit" value="登録">
+    <input type="reset" value="クリア" class="button">
+    <input type="submit" value="登録" class="button">
   </div>
 </form>
 </main>
@@ -59,35 +59,16 @@
 
 <style>
 
-  body {
-    font-family: sans-serif;
-    margin: center;
-    text-align: center;
-  }
-
-  h1 {
-    border-bottom: solid 3px skyblue;
-    position: relative;
-    font-family: sans-serif;
-  }
-  
-  h1:after {
-    position: absolute;
-    content: " ";
-    display: block;
-    border-bottom: solid 3px #ffc778;
-    bottom: -3px;
-    width: 30%;
-  }
-
   .entryTable {
     margin: auto;
+    margin-top: 20px;
     border: 0px none;
     text-align: center;
   }
 
   th {
     background-color: #CCCCFF;
+    padding: 5px;
     color: black;
   }
   

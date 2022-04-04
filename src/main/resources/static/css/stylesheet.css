@@ -1,6 +1,41 @@
+body {
+  font-family: Lato, arial, Helvetica, clean, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
 
-  body {
-    font-family: 'Helvetica Neue', 'Helvetica', 'ヒラギノゴ';
-    font-family: sans-serif;
-    text-align: center;
-  }
+h1 {
+  font-size: 20px;
+  padding: 15px;
+  color: rgb(253, 239, 239);
+  background-color: #006AE9;
+  border-bottom: solid 1px rgb(48, 27, 235);
+  padding-top: 10px;
+  margin: 0;
+}
+
+
+.button{
+  background-color: rgb(245, 245, 245);
+  border-radius: 5px;
+  padding: 10px 15px;
+  border: 1px solid rgb(143, 140, 140);
+  outline: none;
+  background: transparent;
+}
+.button_blue {
+  background-color: #006AE9;
+  border-radius: 5px;
+  color: white;
+  margin-top: 10px;
+  padding: 10px 16px;
+  font-size: 15px;
+  border: 1px solid rgb(48, 27, 235);
+}
+a{
+  color: rgb(70, 64, 64);
+  text-decoration: none;
+}
+
+/* background-color: #f5f6fd; */

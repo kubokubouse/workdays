@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="css/stylesheet.css">
   <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
   <style>
+    .container {
+      padding: 0;
+      max-width: 100%;
+    }
   .tr_color0 {
 
  vertical-align: middle;
@@ -23,16 +27,11 @@
  vertical-align: middle;
 }
 
-body {
-  font-family: sans-serif;
-  text-align: center;
-}
-
 table {
   border-collapse: collapse;
   margin: 0 auto;
   padding: 0;
-  width: 850px;
+  max-width: 90%;
   table-layout: fixed;
 }
 thead th{
@@ -44,44 +43,10 @@ table tr {
   background-color: #fff;
   padding: .35em;
 }
-
-h1 {
-  border-bottom: solid 3px skyblue;
-  position: relative;
+.button{
+  padding: 5px;
+  background-color: #fff;
 }
-
-h1:after {
-  position: absolute;
-  content: " ";
-  display: block;
-  border-bottom: solid 3px #ffc778;
-  bottom: -3px;
-  width: 30%;
-}
-
-a{
-  position: relative;
-  display: inline-block;
-  transition: .3s;
-  text-decoration: none;
-}
-
-a::after {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  content: '';
-  width: 0;
-  height: 2px;
-  background-color: #31aae2;
-  transition: .3s;
-  transform: translateX(-50%);
-}
-
-a:hover::after{
-  width: 100%;
-}
-
 .tabs {
   margin-left: 100px;
   margin-top: 50px;
@@ -184,7 +149,7 @@ a:hover::after{
             <td>
               <form th:action="@{/superuserdelete}" >
                 <input type="hidden" name="id" th:value="${superUser.id}" />
-                <input type="submit" value="削除">
+                <input type="submit" value="削除" class="button">
 
               </form>
             </td>

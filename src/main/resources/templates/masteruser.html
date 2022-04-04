@@ -11,50 +11,41 @@
 <body>
 
   <h1>マスターユーザー画面</h1>
-
-  <main id="contents">
-    <h3>
-      <p><a href="/company_info">会社登録</a></p>
-      <p><a href="/companylist">会社一覧</a></p>
-      <p><a href="/registersuperuser">管理者登録</a></p>
-      <p><a href="/superuserlist1">管理者一覧</a></p>
-      <p><a href="/contract">契約情報登録</a></p>
-      <p><a href="/contractlist">契約情報一覧</a></p>
-      <p><a href="/alluserlist">ユーザー利用可否一覧</a></p>
-      <p><a href="/holiday">祝日設定</a></p>
-      <p><a href="/master">ログアウト</a></p>
-    </h3>
-
-</main>
+  <div class="content">
+    <div class="content_1">
+      <p><a href="/company_info" class="button">会社登録</a></p>
+      <p><a href="/companylist" class="button">会社一覧</a></p>
+      <p><a href="/registersuperuser" class="button">管理者登録</a></p>
+      <p><a href="/superuserlist1" class="button">管理者一覧</a></p>
+    </div>
+    <div class="content_2">
+      <p><a href="/contract" class="button">契約情報登録</a></p>
+      <p><a href="/contractlist" class="button">契約情報一覧</a></p>
+      <p><a href="/alluserlist" class="button">ユーザー利用可否一覧</a></p>
+      <p><a href="/holiday" class="button">祝日設定</a></p>
+    </div>
+  </div>
+  <p><a href="/master">ログアウト</a></p>
 </body>
 </html>
 
 <style>
-  h1 {
-    border-bottom: solid 3px skyblue;
-    margin-top: 30px;
-    position: relative;
-  }
-  
-  h1:after {
-    position: absolute;
-    content: " ";
-    display: block;
-    border-bottom: solid 3px #ffc778;
-    bottom: -3px;
-    width: 30%;
-  }
-  
-  body {
-    font-family: sans-serif;
-    text-align: center;
-  }
-
   a {
-    display: block;
+    display: inline-block;
     margin-top: 50px;
   }
-  
-
+  .content {
+    display: flex;
+  }
+  .content_1{
+    margin: 0 auto;
+  }
+  .content_2{
+    margin:0 auto;
+  }
+  .button {
+    margin: 10px auto;
+    gap: auto;
+  }
 
 </style>

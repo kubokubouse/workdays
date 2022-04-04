@@ -8,10 +8,8 @@
 <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 </head>
 <body>
-
+<h1>会員情報確認</h1>
   <table class="entryTable" border="1">
-
-  <caption>会員情報</caption>
 
   <tr>
     <th>管理番号 </th>
@@ -46,7 +44,7 @@
  
 </table>
 <div class="footer">
-  <a href="#" id="back-link">戻る</a>
+  <a href="#" id="back-link" class="button">戻る</a>
   <form  th:action="@{/regist}" th:object="${individualData}"method="post" >
     <label for="name"></label>
     <input type="hidden" th:field="*{number}">
@@ -56,7 +54,7 @@
     <input type="hidden" th:field="*{company2}">
     <input type="hidden" th:field="*{company3}">
 
-    <input type="submit" value="登録">
+    <input type="submit" value="登録" class="button">
   </form>
 </div>
 </body>
@@ -71,27 +69,6 @@
 </html>
 
 <style>
-
-  body {
-    font-family: sans-serif;
-    text-align: center;
-  }  
-
-  caption {
-    border-bottom: solid 3px skyblue;
-    position: relative;
-    font-family: sans-serif;
-  }
-  
-  caption:after {
-    position: absolute;
-    content: " ";
-    display: block;
-    border-bottom: solid 3px #ffc778;
-    bottom: -3px;
-    width: 30%;
-  }
-
   th {
     color: black;
     background-color: #CCCCFF;

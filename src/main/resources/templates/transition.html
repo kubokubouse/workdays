@@ -8,57 +8,43 @@
 <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 </head>
 <body>
-<h2>ファイル操作する方法を選択してください</h2>
+<h1>ファイル操作する方法を選択してください</h1>
 
-<a th:href="@{${localPath}}" class="btn_item">ローカルのファイルを操作する</a>
+<div class="main">
+  <a th:href="@{${localPath}}" class="button_blue">ローカルのファイル<br>を操作する</a>
+  <a th:href="@{${boxPath}}" class="button_blue">boxのファイル<br>を操作する</a>
 
-<a th:href="@{${boxPath}}" class="btn_item">boxのファイルを操作する</a>
+  <div class="tabs">
+    <p><a href="/logout">ログアウト</a></p>
+  </div>
+</div>
 
-
-<p><a href="/superuser">管理画面へ戻る</a></p>
-<p><a href="/logout">ログアウト</a></p>
 </body>
 </html>
 
 <style>
-    body {
-        font-family: sans-serif;
-        margin: center;
-        text-align: center;
-    }
-    h2 {
-        margin-top: 30px;
-        border-bottom: solid 3px skyblue;
-        position: relative;
-      }
-      
-      h2:after {
-        position: absolute;
-        content: " ";
-        display: block;
-        border-bottom: solid 3px #ffc778;
-        bottom: -3px;
-        width: 30%;
-      }
-
-      .fileName{
-        margin-top: 50px;
-      }
-    a {
-        display: block;
-        margin-top: 40px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .btn_item {
-      display: inline-block;
-      padding: 10px 20px;
-      text-decoration: none;
-      background: rgb(228,226,223);
-      color: #333;
-      border: 1px solid rgb(228,226,223);
-      /* border-radius: 5px; デザインによる */
-    }
+  body {
+    margin: 0;
+    background-color: #f5f6fd;
+  }
+  h1{
+    font-size: 20px;
+    margin: 0;
+  }
+  a{
+    font-size: 15px;
+  }
+  .button_blue {
+    margin: 30px;
+    display: inline-block;
+  }
+  a.button_blue {
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .tabs{
+    display: block;
+    margin-top: 40px;      
+  }
       
 </style>
