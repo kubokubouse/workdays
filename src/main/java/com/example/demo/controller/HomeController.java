@@ -3,31 +3,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.File;
-import java.io.IOException;
-import java.sql.Time;
-import java.time.LocalTime;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import java.net.HttpURLConnection;
 
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +36,11 @@ import com.box.sdk.BoxItem.Info;
 import javax.servlet.http.*;
 
 import com.example.demo.model.Otherpa;
-import com.example.demo.model.Holiday;
 import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
 import com.example.demo.model.Mail;
 import com.example.demo.model.Onetime;
-import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.StringListParam;
 import com.example.demo.model.User;
 import com.example.demo.model.SuperUser;
@@ -207,8 +191,8 @@ public class HomeController extends WorkdaysProperties{
 		String id = login.getEmail();
 		String pass = login.getPassword();
 		session.setAttribute("email", id);
-
-			//管理者の場合は管理者ページに移行
+		
+		//管理者の場合は管理者ページに移行
 		SuperUserLogin superUser = userService.findEmailAndPass(id, pass);
 		
 		if (superUser != null && !sudoresult.hasErrors()) {
@@ -248,7 +232,10 @@ public class HomeController extends WorkdaysProperties{
 		YearMonth yearMonth=userService.nowYearMonth();
 		session.setAttribute("yearMonth",yearMonth);
 		
-		//年月を渡し勤怠データの有無の確認→データなしなら新規追加→勤怠データをDBからリスト形式で取得
+		//年月を渡し勤怠データの有無の確認→データなしなら新規追加
+		workdaysService.checkYearMonth(yearMonth.getYear(),yearMonth.getMonth());
+		
+		//年月を渡し勤怠データをDBからリスト形式で取得
 		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
 		//WorkingListParam workingListParam = userService.searchAll(users);//リストに出す用の検索は必要
 		workingListParam.setMonth(yearMonth.getMonth());
@@ -324,6 +311,7 @@ public class HomeController extends WorkdaysProperties{
 
 		model.addAttribute("idUserList", idUserList);
 
+
 		//指定された月のデータをリスト化
 		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
 		workingListParam.setMonth(yearMonth.getMonth());
@@ -335,6 +323,44 @@ public class HomeController extends WorkdaysProperties{
 		List<Otherpa>opList=workdaysService.oplist(user);
 		model.addAttribute("opList", opList);
 		session.setAttribute("yearMonth",yearMonth);
+	
+		return "list";
+	}
+
+	//定時ボタンを押されたときの処理
+	@GetMapping("/ontime")
+	public String Ontime(@Validated @ModelAttribute YearMonth yearMonth, Model model){
+		//セッション取得
+		User user=(User)session.getAttribute("Data");
+		yearMonth=(YearMonth)session.getAttribute("yearMonth");
+		
+		//メアドから個別ユーザーのリストを作成する
+		List <IndividualData>iDataList=individualService.findMail(user.getEmail());
+		model.addAttribute("iDataList", iDataList);
+		
+		//個別ユーザーから会社IDを取得し会社のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+		
+		for(IndividualData iData:iDataList){
+			IdUser idUser=individualService.getIdUser(iData);
+			idUserList.add(idUser);
+		}
+
+		model.addAttribute("idUserList", idUserList);
+
+		//指定された年月の平日に定時データを埋め込む
+		workdaysService.insertOntime(yearMonth.getYear(),yearMonth.getMonth());
+		
+		//指定された月のデータをリスト化
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		model.addAttribute("workingListParam", workingListParam);
+		model.addAttribute("users", user);
+
+		//備考仕様の有無を確認
+		List<Otherpa>opList=workdaysService.oplist(user);
+		model.addAttribute("opList", opList);
+		session.setAttribute("yearMonth",yearMonth);
+		model.addAttribute("yearMonth",yearMonth);
 	
 		return "list";
 	}
@@ -400,7 +426,7 @@ public class HomeController extends WorkdaysProperties{
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("user",users);
 		//苗字と名前合わせてname
-		String lastname=users.getLastname();
+		//String lastname=users.getLastname();
 
 		//当日の年月取得
 		Calendar cal = Calendar.getInstance();
@@ -763,7 +789,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("user",users);
 		//苗字と名前合わせてname
-		String lastname=users.getLastname();
+		//String lastname=users.getLastname();
 
 		//当日の年月取得
 		Calendar cal = Calendar.getInstance();
