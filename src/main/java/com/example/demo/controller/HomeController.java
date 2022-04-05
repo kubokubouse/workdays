@@ -426,7 +426,9 @@ public class HomeController extends WorkdaysProperties{
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("user",users);
 		//苗字と名前合わせてname
-		//String lastname=users.getLastname();
+		String lastname=users.getLastname();
+		String firstname=users.getFirstname();
+		String name = lastname + "　" + firstname;
 
 		//当日の年月取得
 		Calendar cal = Calendar.getInstance();
@@ -489,7 +491,7 @@ public class HomeController extends WorkdaysProperties{
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
-			totalHourMap, totalMinMap, other1Map,other2Map,other3Map
+			totalHourMap, totalMinMap, other1Map,other2Map,other3Map, mail, individualID, name
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {
@@ -789,7 +791,9 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("user",users);
 		//苗字と名前合わせてname
-		//String lastname=users.getLastname();
+		String lastname = users.getLastname();
+		String firstname = users.getFirstname();
+		String name = lastname + "　" + firstname;
 
 		//当日の年月取得
 		Calendar cal = Calendar.getInstance();
@@ -850,7 +854,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
-			totalHourMap, totalMinMap, other1Map,other2Map,other3Map
+			totalHourMap, totalMinMap, other1Map,other2Map,other3Map, mail, individualID, name
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {

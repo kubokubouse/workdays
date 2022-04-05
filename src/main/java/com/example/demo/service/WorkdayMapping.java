@@ -17,8 +17,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class WorkdayMapping {
     
     public List<String> outputExcel(String inputFilePath, String outputFilePath,
-        Map stHourMap, Map stMinMap, Map endHourMap, Map endMinMap,
-            Map lunchTimeHourMap, Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map other1Map,Map other2Map,Map other3Map) {
+        Map stHourMap, Map stMinMap, Map endHourMap, Map endMinMap, Map lunchTimeHourMap, 
+            Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map other1Map, Map other2Map,
+                Map other3Map, String email, int id, String name) {
 
     List<String> errorList = new ArrayList<String>();
     File inputFileObject = new File(inputFilePath);
@@ -274,6 +275,20 @@ public class WorkdayMapping {
                         setValue = value.replace(value, data.toString());
                     }
                 }
+
+                //メールアドレス
+                if (value.contains("[MAIL]")) {
+                    setValue = value.replace("[MAIL]", email);
+                }
+                //名前
+                if (value.contains("[NAME]")) {
+                    setValue = value.replace("[NAME]", name);
+                }                
+                //管理番号
+                if (value.contains("[ID]")) {
+                    setValue = value.replace("[ID]", String.valueOf(id));
+                }
+
                 //sth:stmなどコロンがある時
                 if (timeValue != null) {
                     cell.setCellValue(timeValue);
