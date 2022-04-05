@@ -13,7 +13,7 @@
 
   <main id="contents">
     <form id="entryForm" th:action="@{/send_company_info}" th:object="${companyInfo}"method="post" novalidate>
-    <table class="entryTable" border="1">
+    <table class="registerTable" border="1">
 
     <tr>
       <th>企業名</th>
@@ -52,7 +52,7 @@
         <input type="text" class="register-control"
         th:errorclass="is-invalid" th:field="*{tel}">
        <div class="invalid-feedback" th:errors="*{tel}"></div>
-       <small>※‐（ハイフン）必須</small>
+       <p>※‐（ハイフン）必須</p>
        
       </td>
     </tr>
@@ -108,29 +108,20 @@
 
   form {
     margin-top: 10px;
-  }
-  .entryTable {
-    margin: auto;
-    border: 0px none;
-    text-align: center;
-  }
-
-  th {
-    background-color: #CCCCFF;
-    color: black;
-  }
-  
-  td {
-  padding-left: 10px;
-  text-align: left;
-  }
-  
+  }  
   .send {
     margin-top: 20px;
   }
-
+  th{
+    text-align: right;
+  }
   a {
     display: block;
     padding-top: 10px;
+  }
+  p {
+    font-size: 10px; 
+    color: #808080;
+    margin: 0px;
   }
 </style>

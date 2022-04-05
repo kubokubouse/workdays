@@ -9,27 +9,16 @@
   <link rel="stylesheet" href="css/stylesheet.css">
   <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
   <style>
-    .container {
-      max-width: 100%;
-      padding: 0;
-    }
-    h1{
-      margin-bottom: 10px;
-    }
-  .tr_color0 {
-
- vertical-align: middle;
+.container {
+  max-width: 100%;
+  padding: 0;
 }
-
-  .tr_color1 {
-  background-color: #EAF6FD;
-  vertical-align: middle;
+h1{
+  margin-bottom: 10px;
 }
-.tr_color2 {
-  background-color: #ED5353;
- vertical-align: middle;
+select {
+  margin-right: 10px;
 }
-
 table {
   border-collapse: collapse;
   margin: 0 auto;
@@ -37,20 +26,30 @@ table {
   max-width: 90%;
   table-layout: fixed;
 }
-thead th{
+th {
+  text-align: center;
   padding: 1em .8em;
-  border-right: 5px solid #fff;
-  background-color: #eee;
+  border-top: 2px solid rgb(233, 233, 233);
 }
 table tr {
-  background-color: #fff;
   padding: .35em;
 }
 .button_blue {
+  margin-top: 0px;
   padding: 5px;
 }
 .button {
   padding: 5px 10px;
+  
+}
+.action {
+  display: flex;
+  justify-content: center; 
+  margin-top: 30px;
+  gap: 20px;
+}
+.register {
+  margin-top: 20px;
 }
 .tabs {
   margin-top: 30px;
@@ -117,7 +116,7 @@ table tr {
       <option th:value="1" selected>現在</option>
       <option th:value="2">来年</option>
     </select>
-    <input type="submit" value="年変更" class="button">
+    <input type="submit" value="年変更" class="button_blue">
   </form>
       <br/>
 
@@ -172,20 +171,20 @@ table tr {
 
 
   </div>
-  <p>
+
+  <div class="action">
     <form th:action="@{/holidayplus}" >
         <input type="hidden" name="year" th:value="${yearMonth.year}" />
         <input type="submit" value="追加" class="button">
     </form>
-    </p>
-    <p>
+    
       <form th:action="@{/holidayalldelete}" >
           <input type="hidden" name="year" th:value="${yearMonth.year}" />
           <input type="submit" value="全削除" class="button">
       </form>
-      </p>
-
-      <form th:action="@{/transition}">
+      
+    </div>
+      <form th:action="@{/transition}" class="register">
         <input type="hidden" name="local" value="/holidayupload">
         <input type="hidden" name="box" value="/boxuploadholiday">
         <input type="submit" value="祝日一括登録" class="button">

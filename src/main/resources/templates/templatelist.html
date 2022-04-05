@@ -23,13 +23,14 @@
             <input type="hidden" name="deleteFileName" th:value="${fileName}">
             <input type="hidden" name="box" value="local">         
             <td th:text="${fileName}"></td>
-            <td><input type="submit" value="削除"></td>
+            <td><input type="submit" value="削除" class="button"></td>
         </form> 
-        </tr>
+       
    
-        <tr th:each="filePath, filePath : ${filePath}">
-        <td><a th:href="@{${filePath}}" class="btn_item" download> ダウンロード</a></td>
-        </tr>
+        <th:block th:each="filePath, filePath : ${filePath}">
+        <td><a th:href="@{${filePath}}" class="button_blue" download> ダウンロード</a></td>
+        </th:block>
+    </tr>
     </div>
     </table>
 
@@ -85,6 +86,12 @@
           padding: 10px;
       }
       
+      .button {
+          padding: 5px;
+      }
+      .button_blue {
+          padding: 5px 10px;
+      }
     .tab {
         margin-top: 50px;
     }
