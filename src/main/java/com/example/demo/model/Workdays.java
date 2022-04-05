@@ -18,40 +18,45 @@ public class Workdays
 {
 	@Id
 	private int id;
+	
 	@Column
-	 private Integer userid;//integer4
+	private Integer userid;//integer4
+	
 	@Column
-	 private Integer day;
+	private Integer day;
+	
 	@Column
-	 private Integer year;
+	private Integer year;
+	
 	@Column
-	 private Integer month;
+	private Integer month;
+	
+	@Column
+	private String  weekday;
+	
+	@Column
+	private Time start;//time4
+	
+	@Column
+	private Time end;
+	
+	@Column
+	private Time  halftime;
+	
+	@Column
+	private Time  worktime;
 
 	@Column
-	 private String  weekday;
-	@Column
-	 private Time start;//time4
+	private String other1;
 
 	@Column
-	 private Time end;
-
-	@Column
-	 private Time  halftime;
-
-	@Column
-	 private Time  worktime;
-
-	@Column
-	 private String other1;
-
-	 @Column
-	 private Integer holiday;
+	private Integer holiday;
 	 
-	 @Column
-	 private String other2;
+	@Column
+	private String other2;
 
-	 @Column
-	 private String other3;
+	@Column
+	private String other3;
 	 
 
 }
