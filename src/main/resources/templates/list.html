@@ -282,10 +282,10 @@ table tr {
               <input type="text" onclick="this.select()" th:id="|${workingday.day}:other1|" th:day="${workingday.day}" class="form-control" th:name="other1" th:value="${workingday.other1}">
             </td>
             <td>
-              <input type="text" onclick="this.select()" th:id="|${workingday.day}:other2|" th:day="${workingday.day}" class="form-control" th:name="other2"th:value="${workingday.other2}">
+              <input type="text" style="ime-mode: active" onclick="this.select()" th:id="|${workingday.day}:other2|" th:day="${workingday.day}" class="form-control" th:name="other2"th:value="${workingday.other2}">
             </td>
             <td>
-              <input type="text" onfocus="jpn(this)" onclick="this.select()" th:id="|${workingday.day}:other3|" th:day="${workingday.day}" class="form-control" th:name="other3" th:value="${workingday.other3}" >
+              <input type="text" inputmode="kana" onclick="this.select()" th:id="|${workingday.day}:other3|" th:day="${workingday.day}" class="form-control" th:name="other3" th:value="${workingday.other3}" >
             </td>
           </tr>
         </tbody>
