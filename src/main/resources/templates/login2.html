@@ -6,11 +6,11 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="css/stylesheet.css">
-  <link rel="icon" href="img/workdays_fc.ico" id="favicon">
+  <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 </head>
 <body>
 <header>
-<h1>ログイン</h1>
+<h1>WorkDays</h1>
 </header>
 <main id=contents>
 <form id="entryform" th:action="@{/login2}"  th:object="${login}"method="post" >
@@ -18,78 +18,73 @@
 <table class="entryTable" border="1">
 
  <tr>
-        <th>メールアドレス </th>
+      <th> </th>
+      <td><img src="img/mail.jpeg" class="icon_mail"></td>
       <td><label for="email"></label>
-
-      <input type="text" class="login-control"
-    th:errorclass="is-invalid" th:field="*{email}">
- <div class="invalid-feedback" th:errors="*{email}">
-            </div>
-
-        <small>※半角で入力してください</small>
+        <input type="text" class="login-control" placeholder="メールアドレス"
+          th:errorclass="is-invalid" th:field="*{email}">
+        <div class="invalid-feedback" th:errors="*{email}"></div>
+        <p>※半角で入力してください</p>
       </td>
     </tr>
 
 <tr>
-      <th>パスワード </th>
-      <td>
-         <label for="password"></label>
-      <input type="password" class="login-control"
-      th:errorclass="is-invalid" th:field="*{password}">
-       <div class="invalid-feedback" th:errors="*{password}">
-            </div>
-        <small>※半角英数</small>
+      <th></th>
+      <td><img src="img/pass.png" class="icon_pass"></td>
+      <td><label for="password"></label>
+        <input type="password" class="login-control" placeholder="パスワード"
+          th:errorclass="is-invalid" th:field="*{password}">
+       <div class="invalid-feedback" th:errors="*{password}"></div>
+        <p>※半角英数</p>
       </td>
     </tr>
 
   </table>
-  <input type="submit" value="ログイン">
+  <input class="button_blue" type="submit" value="ログイン">
 </form>
 <p><a href="/forgetpassword">パスワードを忘れた方はこちら</a></p>
 </main>
-<img src="https://www.connectcrew.co.jp/assets/images/connectcrew_logo.jpg" alt="CCC" width="160px">
+<img src="https://www.connectcrew.co.jp/assets/images/connectcrew_logo.jpg" alt="CCC" width="160px" class="logo">
 <p>©株式会社コネクトクルー</p>
 </body>
 </html>
 
 <style>
-  
   body {
-    font-family: sans-serif;
-    margin: center;
-    text-align: center;
+    background-color: #f5f6fd;
   }
-
-  h1 {
-    padding-top: 10px;
-    border-bottom: solid 3px skyblue;
-    position: relative;
-    font-family: sans-serif;
-    margin-bottom: 30px;
-  }
-  
-  h1:after {
-    position: absolute;
-    content: " ";
-    display: block;
-    border-bottom: solid 3px #ffc778;
-    bottom: -3px;
-    width: 30%;
-  }
-
   .entryTable {
     border: 0px none;
-    margin: auto;
+    margin: 0 auto;
+    margin-top: 30px;
     border-collapse: separate;
     border-spacing: 0px 10px;
   }
-
-  th {
-    text-align: right;
+  .icon_mail {
+    padding-bottom: 15px;
+    width: 20px;
+    height: auto;
   }
-
+  .icon_pass {
+    padding-bottom: 15px;
+    padding-right: 5px;
+    width: 30px;
+    height: auto;
+  }
+  .login-control {
+    box-sizing: border-box;
+    padding: 0.3em;
+    transition: 0.3s;
+    letter-spacing: 1px;
+    color: rgb(56, 55, 55);
+    border: 1px solid rgb(143, 140, 140);
+    box-shadow: 1px 1px 2px 0 #707070 inset;
+    border-radius: 4px;
+  }
+  th {
+    margin-right: 50px;
+  }
   td {
-    padding-left: 10px;
     text-align: left;
   }
 
@@ -98,13 +93,14 @@
     padding-top: 10px;
   }
 
-  img {
+  .logo {
     margin-top: 20px;
   }
 
   p {
     font-size: 10px; 
     color: #808080;
+    margin: 0px;
   }
 
 </style>

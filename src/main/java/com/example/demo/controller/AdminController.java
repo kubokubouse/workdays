@@ -84,7 +84,7 @@ public class AdminController extends WorkdaysProperties{
 
 	@GetMapping("/logout")
 	public String logout(){
-		
+		session.removeAttribute("api");
 		return "logout";
 	}
 
@@ -420,7 +420,7 @@ public class AdminController extends WorkdaysProperties{
 
     //ファイル一覧からファイル削除
     @RequestMapping("/filedelete")
-    public String showTemplateFileList(@RequestParam("deleteFileName") String deleteFileName, Model model) {
+    public String showTemplateFileList(@RequestParam("deleteFileName") String deleteFileName, @RequestParam("box") String box, Model model) {
         
         int id = (Integer)session.getAttribute("companyId");
         File folder = getInputFolder(id);
@@ -451,6 +451,10 @@ public class AdminController extends WorkdaysProperties{
         model.addAttribute("fileName", fileNameList);
         
         model.addAttribute("error", deleteFileName+"が削除されました");
+
+        if (box.equals("box")) {
+            return "templatedownloadBox"; 
+        }
         return "templatelist";
     }
 
@@ -459,16 +463,20 @@ public class AdminController extends WorkdaysProperties{
         String clientId = WorkdaysProperties.boxClientId;
 		String clientSecret = WorkdaysProperties.boxClientSecret;
 
-        String code = request.getParameter("code");
-		System.out.println("CODE=" + code);
+        BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+
+        if (api == null) {
+            String code = request.getParameter("code");
+		    System.out.println("CODE=" + code);
 		
-		BoxAPIConnection api = new BoxAPIConnection(
+		    api = new BoxAPIConnection(
   			clientId,
   			clientSecret,
 			code
 		);
 
         session.setAttribute("api", api);
+        }
 
         List<String> filePathList = new ArrayList<String>();
         List<String> fileNameList = new ArrayList<String>();
@@ -606,8 +614,18 @@ public class AdminController extends WorkdaysProperties{
     @GetMapping("/transition")
     public String transition(@RequestParam("local") String localPath, @RequestParam("box") String boxPath, Model model) {
 
+        BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+
+        if (api == null) {
+            String url = "https://account.box.com/api/oauth2/authorize?client_id=" 
+            + WorkdaysProperties.boxClientId + "&response_type=code&redirect_uri=";
+
+            model.addAttribute("boxPath", url + WorkdaysProperties.host + boxPath);
+        } else {
+            model.addAttribute("boxPath", boxPath);
+        }
+
         model.addAttribute("localPath", localPath);
-        model.addAttribute("boxPath", WorkdaysProperties.host + boxPath);
 
 		return "transition";
 	}
@@ -854,15 +872,19 @@ public class AdminController extends WorkdaysProperties{
 		String clientSecret = WorkdaysProperties.boxClientSecret;
         List<String> csvFileList = new ArrayList<String>();
 
-		String code = request.getParameter("code");
-		System.out.println("CODE=" + code);
+        BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+
+        if (api == null) {
+		    String code = request.getParameter("code");
+		    System.out.println("CODE=" + code);
 		
-		BoxAPIConnection api = new BoxAPIConnection(
-  			clientId,
-  			clientSecret,
-			code
-		);
-        session.setAttribute("api", api);
+		    api = new BoxAPIConnection(
+  			    clientId,
+  			    clientSecret,
+			    code
+		    );
+            session.setAttribute("api", api);
+        }
 
         //すべてのフォルダ(id=0)下の情報を取得
 		BoxFolder parentFolder = new BoxFolder(api, "0");
@@ -1144,18 +1166,19 @@ public class AdminController extends WorkdaysProperties{
 		String clientSecret = WorkdaysProperties.boxClientSecret;
         List<String> templatelist = new ArrayList<String>();
 		 
-        // String authorizationUrl = WorkdaysProperties.boxTemplateDownloadUri;
-		// response.sendRedirect(authorizationUrl);
+        BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
 
-		String code = request.getParameter("code");
-		System.out.println("CODE=" + code);
+        if (api == null) {
+		    String code = request.getParameter("code");
+		    System.out.println("CODE=" + code);
 		
-		BoxAPIConnection api = new BoxAPIConnection(
-  			clientId,
-  			clientSecret,
-			code
-		);
-        session.setAttribute("api", api);
+		    api = new BoxAPIConnection(
+  			    clientId,
+  			    clientSecret,
+			    code
+		    );
+            session.setAttribute("api", api);
+        }
 
 		//すべてのフォルダ(id=0)下の情報を取得
 		BoxFolder parentFolder = new BoxFolder(api, "0");
@@ -1215,7 +1238,15 @@ public class AdminController extends WorkdaysProperties{
 
         String templateFile = getInputFolder(companyid) + "//" + info.getName();
         File templatefile = new File(templateFile);
-        templatefile.createNewFile();
+        System.out.println("boxファイルアップロード先" + templatefile.getAbsolutePath());
+
+        if(!templatefile.createNewFile()) {
+            model.addAttribute("error", "ファイルのアップロードに失敗しました");
+            List<String> templatelist = (List<String>)session.getAttribute("templatelist");
+            model.addAttribute("fileName", templatelist);
+            return "boxuploadlist";
+        }
+
         FileOutputStream stream = new FileOutputStream(templatefile);
         file.download(stream);
         stream.close();

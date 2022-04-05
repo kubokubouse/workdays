@@ -5,11 +5,12 @@
 <title>祝日一括アップロード</title>
 <link th:href="@{/css/confirmstyle.css}" rel="stylesheet" />
 <link rel="stylesheet" href="css/stylesheet.css">
-<link rel="icon" href="img/connectcrew_fc.ico" id="favicon">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 </head>
 <body>
+    <h1>祝日一括アップロード</h1>
 
-    <h2>アップロードするファイルを以下の点に注意して指定してください</h2>
+    <h3>アップロードするファイルを以下の点に注意して指定してください</h3>
 
     <div class="caution">
         <p>※csvファイル形式でカンマ区切りであること</p>
@@ -19,12 +20,12 @@
     </div>
     
     <form th:action="@{/uploadholiday}" method="POST" action="upload" enctype="multipart/form-data" class="upform">
-        <input type="file" name="file">
+        <input type="file" name="file" class="button">
         <br>
         <p class="error">[[${error}]]</p>
        
     
-        <button type="submit" class="btn">アップロード</button>
+        <button type="submit" class="button_blue">アップロード</button>
     </form>
 
     <div class="tab">
@@ -38,26 +39,7 @@
 
 <style>
 
-    body {
-        font-family: sans-serif;
-        text-align: center;
-    }
-
-    h2 {
-        margin-top: 30px;
-        border-bottom: solid 3px skyblue;
-        position: relative;
-      }
-      
-      h2:after {
-        position: absolute;
-        content: " ";
-        display: block;
-        border-bottom: solid 3px #ffc778;
-        bottom: -3px;
-        width: 30%;
-      }
-      .caution {
+       .caution {
           display: inline-block;
           text-align: left;
       }
@@ -69,29 +51,11 @@
         margin: 0 auto;
         color: blue;
     }
-    .upform {
-        margin-top: 30px;
-    }
     .example {
         padding-left: 100px;
     }
-    .upbtn {
-        background    : #1a1aff; 
-        color         : #ffffff; 
-    }
-
-    .btn {
-        margin-top: 50px;
-        background    : #1a1aff; 
-        color         : #ffffff; 
-    }
-
     .tab {
         margin-top: 50px;
-    }
-
-    .caution {
-        margin-top: 25px;
     }
 
 </style>

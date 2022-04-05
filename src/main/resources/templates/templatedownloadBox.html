@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="css/stylesheet.css">
-<link rel="icon" href="img/workdays_fc.ico" id="favicon">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 <title>ダウンロードファイル一覧</title>
 </head>
 <body>
 
-    <h2>ファイル一覧</h2>
+    <h1>WorkDaysテンプレートファイル一覧</h1>
    
     <table>
         <tr>
@@ -20,7 +20,8 @@
         <div class="data"> 
         <tr th:each="fileName, fileNameSt : ${fileName}">            
         <form th:action="@{/filedelete}">
-            <input type="hidden" name="deleteFileName" th:value="${fileName}">       
+            <input type="hidden" name="deleteFileName" th:value="${fileName}">
+            <input type="hidden" name="box" value="box">      
             <td th:text="${fileName}"></td>
             <td><input type="submit" value="削除"></td>
         </form> 
@@ -46,48 +47,9 @@
 </html>
 
 <style>
-
-    body {
-        font-family: sans-serif;
-        text-align: center;
-    }
-
-    h2 {
-        margin-top: 30px;
-        border-bottom: solid 3px skyblue;
-        position: relative;
-      }
-      
-      h2:after {
-        position: absolute;
-        content: " ";
-        display: block;
-        border-bottom: solid 3px #ffc778;
-        bottom: -3px;
-        width: 30%;
-      }
-
-      .reicon {
-          text-align: right;
-          margin-right: 100px;
-      }
-
-      .redirect {
-        text-decoration: none;
-        display       : inline-block;
-        border-radius : 5%;          /* 角丸       */
-        font-size     : 12pt;        /* 文字サイズ */
-        text-align    : center;      /* 文字位置   */
-        cursor        : pointer;     /* カーソル   */
-        padding       : 10px 10px;   /* 余白       */
-        background    : #1a1aff;     /* 背景色     */
-        color         : #ffffff;     /* 文字色     */
-        line-height   : 1em;         /* 1行の高さ  */
-        transition    : .3s;         /* なめらか変化 */
-      }
- 
       table {
-          margin: 3px auto;
+          margin: 0px auto;
+          margin-top: 10px;
       }
 
       td, th {

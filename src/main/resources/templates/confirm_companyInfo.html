@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="css/stylesheet.css">
-<link rel="icon" href="img/connectcrew_fc.ico" id="favicon">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 <title>登録確認</title>
 </head>
 <body>
 
+  <h1>会社情報登録</h1>
   <table class="entryTable" border="1">
-
-  <caption>会社情報</caption>
 
   <tr>
     <th>企業名</th>
@@ -50,7 +49,7 @@
 </table>
 
 <div class="footer">
-  <a href="#" id="back-link">戻る</a>
+  <a href="#" id="back-link" class="button">戻る</a>
   <form  th:action="@{/ci_regist}" th:object="${companyInfo}"method="post" >
     <label for="name"></label>
     <input type="hidden" th:field="*{companyID}">
@@ -61,7 +60,7 @@
     <input type="hidden" th:field="*{mail}">
     <input type="hidden" th:field="*{homepage}">
     <input type="hidden" th:field="*{limitedUser}">
-    <input type="submit" value="登録">
+    <input type="submit" value="登録" class="button">
   </form>
 </div>
 </body>
@@ -76,26 +75,6 @@
 </html>
 
 <style>
-
-  body {
-    font-family: sans-serif;
-    text-align: center;
-  }  
-
-  caption {
-    border-bottom: solid 3px skyblue;
-    position: relative;
-    font-family: sans-serif;
-  }
-  
-  caption:after {
-    position: absolute;
-    content: " ";
-    display: block;
-    border-bottom: solid 3px #ffc778;
-    bottom: -3px;
-    width: 30%;
-  }
 
   th {
     color: black;

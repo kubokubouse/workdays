@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="css/stylesheet.css">
-<link rel="icon" href="img/workdays_fc.ico" id="favicon">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 <title>アップロードファイル一覧</title>
 </head>
 <body>
-
-    <h2>boxファイル一覧</h2>
+    <h1>boxからユーザー一括アップロード</h1>
 
     <h3>アップロードするファイルを以下の点に注意して指定してください</h3>
 
@@ -21,7 +20,7 @@
 
     <table>
         <tr>
-            <th>ファイル名</th>
+            <th>boxファイル一覧</th>
             <th> </th>
         </tr>
         <tr th:each="fileName, fileNameSt : ${fileName}">
@@ -52,26 +51,7 @@
 
 <style>
 
-    body {
-        font-family: sans-serif;
-        text-align: center;
-    }
-
-    h2 {
-        margin-top: 30px;
-        border-bottom: solid 3px skyblue;
-        position: relative;
-      }
-      
-      h2:after {
-        position: absolute;
-        content: " ";
-        display: block;
-        border-bottom: solid 3px #ffc778;
-        bottom: -3px;
-        width: 30%;
-      }
-
+ 
       .reicon {
           text-align: right;
           margin-right: 100px;

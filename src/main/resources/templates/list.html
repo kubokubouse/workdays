@@ -7,9 +7,17 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script src="js/mamtimepicker.js"></script>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="css/list.css">
-  <link rel="icon" href="img/workdays_fc.ico" id="favicon">
+
+  <link rel="stylesheet" href="css/stylesheet.css">
+  <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+
 <style>
+h1 {
+  font-family: arial, Helvetica, clean, sans-serif;
+}
+.button {
+  margin-top: 10px;
+}
 .tr_color0 {
 
  vertical-align: middle;
@@ -20,13 +28,10 @@
   vertical-align: middle;
 }
 .tr_color2 {
-  background-color: #ED5353;
+  background-color: #fa4d4d;
   vertical-align: middle;
 }
-body {
-  font-family: sans-serif;
- 
-}
+
 table {
   border-collapse: collapse;
   margin: 0 auto;
@@ -37,26 +42,12 @@ table {
 
 thead th{
   padding: 1em .8em;
-  border-right: 5px solid#fff;
-  background-color: #eee;;
+  border-right: 5px solid #fff;
+  background-color: #eee;
 }
 table tr {
   background-color: #fff;
   padding: .35em;
-}
-
-h1 {
-  border-bottom: solid 3px skyblue;
-  position: relative;
-}
-
-h1:after {
-  position: absolute;
-  content: " ";
-  display: block;
-  border-bottom: solid 3px #ffc778;
-  bottom: -3px;
-  width: 30%;
 }
 .output{
   text-align: left;
@@ -69,37 +60,42 @@ h1:after {
   margin-top: 10px;
 }
 
-body {
-  font-family: sans-serif;
+.main {
   max-width: 80%;
-  text-align: center;
   margin: 0 auto;
+}
+
+.container {
+  background-color: #006AE9;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.button_blue {
+  padding: 5px 10px;
+}
+.select_month {
+  text-align: right;
+  margin-right: 10px;
+}
+p {
+  color: #808080;
+}
+th {
+  font-size: 15px;
+  font-weight: normal;
 }
 
 thead th{
   padding: 1em .8em;
-  border-right: 5px solid#fff;
-  background-color: #eee;;
+  border-right: 5px solid #fff;
+  background-color: #eee;
 }
 table tr {
   background-color: #fff;
   padding: .35em;
 }
-
-h1 {
-  border-bottom: solid 3px skyblue;
-  position: relative;
-}
-
-h1:after {
-  position: absolute;
-  content: " ";
-  display: block;
-  border-bottom: solid 3px #ffc778;
-  bottom: -3px;
-  width: 30%;
-}
-
 .btn {
   margin-top: 10px;
 }
@@ -190,22 +186,25 @@ h1:after {
   </div>
 </form>
 
-<div class="output">
+<div class="main">
+  <div class="output">
 
   <form th:action="@{/transition}">
   <input type="hidden" name="local" value="/choosetemplatelocal">
   <input type="hidden" name="box" value="/boxDownload">
-  <input type="submit" value="勤怠表を出力">
+  <input class="button" type="submit" value="勤怠表を出力">
 </form>
 
 </div>
+
+  <div class="select_month">
     <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
-        <select name="nowyear" th:field="*{year}">
+        <select class="button" name="nowyear" th:field="*{year}">
           <option th:value="${yearMonth.year-1}">[[${yearMonth.year-1}]]年</option>
           <option th:value="${yearMonth.year}" selected>[[${yearMonth.year}]]年</option>
           <option th:value="${yearMonth.year+1}">[[${yearMonth.year+1}]]年</option>
         </select>
-        <select name="nowmonth" th:field="*{month}">
+        <select class="button" name="nowmonth" th:field="*{month}">
           <div th:unless="${yearMonth.month==1}"><option th:value="1">1月</option></div><div th:if="${yearMonth.month==1}"><option th:value="1" selected>1月</option></div>
           <div th:unless="${yearMonth.month==2}"><option th:value="2">2月</option></div> <div th:if="${yearMonth.month==2}"><option th:value="2" selected>2月</option></div>
           <div th:unless="${yearMonth.month==3}"><option th:value="3">3月</option></div><div th:if="${yearMonth.month==3}"><option th:value="3" selected>3月</option></div>
@@ -219,9 +218,14 @@ h1:after {
           <div th:unless="${yearMonth.month==11}"><option th:value="11">11月</option></div><div th:if="${yearMonth.month==11}"><option th:value="11" selected>11月</option></div>
           <div th:unless="${yearMonth.month==12}"><option th:value="12">12月</option></div><div th:if="${yearMonth.month==12}"><option th:value="12" selected>12月</option></div>
         </select>
-      <input type="submit" value="変更"><small th:if="${error2}">*[[${error2}]]</small>
-    </form>
 
+      
+
+      <input class="button_blue" type="submit" value="変更">
+      <small th:if="${error2}">*[[${error2}]]</small>
+
+    </form>
+  </div>
     <div  class="text-end">
        
       </div><br />
@@ -288,7 +292,8 @@ h1:after {
       </table>
     </form>
   </div>
- 
+</div>
+
     <p><a href="/">ログアウト</a></p>
     <!-- <p><a href="/sendmail">メール送信</a></p>
     <p><a href="/beforemonth">先月へ</a></p>
