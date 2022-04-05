@@ -4,7 +4,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,8 @@ public class WorkdaysService {
     HttpSession session;
     @Autowired
     HolidayService holidayService;
+	@Autowired
+    UserService userService;
 
 
     public List <Workdays> findId(int id){
@@ -47,17 +48,14 @@ public class WorkdaysService {
     public void update(Workdays workdays){
         workdaysRepository.save(workdays);
     }
-
-    //年月日入れたら勤怠データの有無の確認→データなしなら新規追加→勤怠データをDBからリスト形式で取得
-    public WorkingListParam date(int year,int month){
+	
+	//指定された年月が既に存在するかどうかの確認＋なかったらデータを追加
+	public void checkYearMonth(int year,int month){
 		User user=(User)session.getAttribute("Data");
 		int userid=user.getId();
 		Workdays workdays =findUseridYearMonthDay(userid,year, month,1);
 		Calendar cal = Calendar.getInstance();
 		if (workdays==null){
-			//もしDBにその月の勤怠データがナカッタラ→勤怠データをDBに登録
-			//id year month はこの時点で回収済み　残りは日付と曜日
-			//年と月からforで回転させる回数を出してどうにかこうにか？
 			cal.set(Calendar.YEAR, year);
 			cal.set(Calendar.MONTH, month-1);//カレンダーメソッドなので使うのは実際の月-1の方
 			int lastDayOfMonth = cal.getActualMaximum(Calendar.DATE);
@@ -75,7 +73,12 @@ public class WorkdaysService {
 				update(workdays);
 			}
         }
+	}
 
+    //年月日入れたら勤怠データをDBからリスト形式で取得
+    public WorkingListParam date(int year,int month){
+		User user=(User)session.getAttribute("Data");
+	
 		List<Workdays> workdayslist =findYearMonth(user.getId(),year,month);
 		WorkingListParam workingListParam = new WorkingListParam();
         List<WorkingData> list = new ArrayList<WorkingData>();
@@ -95,15 +98,34 @@ public class WorkdaysService {
           list.add(data);
         }
         workingListParam.setWorkingDataList(list);
+		workingListParam.setMonth(year);
+		workingListParam.setYear(month);
         return workingListParam;
 
+	}
+
+	//指定された年月の時間項目（開始休憩終了総合）に定時を入れる
+	public void insertOntime(int year,int month){
+		User user=(User)session.getAttribute("Data");
+		List<Workdays> workdayslist =findYearMonth(user.getId(),year,month);
+		//テスト:規定された定時データを勤怠データに突っ込む
+		for(Workdays workday : workdayslist) {
+			if(workday.getWeekday().equals("土")||workday.getWeekday().equals("日")||workday.getHoliday()==1){
+			}
+			else{
+				workday.setStart(userService.toTime("09:00"));
+				workday.setEnd(userService.toTime("18:00"));
+				workday.setHalftime(userService.toTime("01:00"));
+				workday.setWorktime(userService.toTime("08:00"));
+				update(workday);
+			}
+		}
 	}
 
 
     //ユーザーから備考が使われているかの確認
     public List<Otherpa> oplist(User user){
         CellvalueGet cellgetvalue=new CellvalueGet();
-		
 		
 		List<Otherpa>opList=new ArrayList<Otherpa>();
 		Judgeused judgeused1=cellgetvalue.GetCellvalue(user.getCompany1());

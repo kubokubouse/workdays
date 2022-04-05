@@ -5,9 +5,12 @@
   <script th:src="@{https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="js/mamtimepicker.js"></script>
   <meta charset="utf-8" />
+
   <link rel="stylesheet" href="css/stylesheet.css">
   <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+
 <style>
 h1 {
   font-family: arial, Helvetica, clean, sans-serif;
@@ -100,6 +103,9 @@ table tr {
 </style>
 
 <script>
+  function jpn(tbox){
+  tbox.style.imeMode="active";
+  }
   $(function(){
     
     // 値が更新されたときの処理
@@ -157,13 +163,14 @@ table tr {
         
       }).fail(function () {
         // 通信失敗時のコールバック
-        alert("更新に失敗しました");
+        //alert("更新に失敗しました");
       }).always(function (result) {
         // 常に実行する処理
       });
     });
     
   });
+  
   </script> 
 </head>
 <body>
@@ -172,6 +179,10 @@ table tr {
       <label class="text-danger" th:text="${error}"></label>
     </div>
     <h1>[[${workingListParam.year}]]年[[${workingListParam.month}]]月勤怠表 </h1>
+    <form th:action="@{/ontime}" >
+        <div  class="text-end">
+          <input type="submit" class="btn btn-primary" value="　定時　">
+        </div><br />
   </div>
 </form>
 
@@ -207,8 +218,12 @@ table tr {
           <div th:unless="${yearMonth.month==11}"><option th:value="11">11月</option></div><div th:if="${yearMonth.month==11}"><option th:value="11" selected>11月</option></div>
           <div th:unless="${yearMonth.month==12}"><option th:value="12">12月</option></div><div th:if="${yearMonth.month==12}"><option th:value="12" selected>12月</option></div>
         </select>
+
+      
+
       <input class="button_blue" type="submit" value="変更">
       <small th:if="${error2}">*[[${error2}]]</small>
+
     </form>
   </div>
     <div  class="text-end">
@@ -252,25 +267,25 @@ table tr {
               <input type="hidden" th:field="*{workingDataList[__${st.index}__].weekday}">
             </td>
             <td>
-              <input type="text" th:id="|${workingday.day}:start|" th:day="${workingday.day}"  class="form-control" th:name="start" th:value="${workingday.start}" >
+              <input type="text" onclick="this.select()" th:id="|${workingday.day}:start|" th:day="${workingday.day}"  class="mamTimePicker" th:name="start" th:value="${workingday.start}"  >
             </td>
             <td>
-              <input type="text" th:id="|${workingday.day}:end|"th:day="${workingday.day}" class="form-control" th:name="end" th:value="${workingday.end}">
+              <input type="text" onclick="this.select()"th:id="|${workingday.day}:end|"th:day="${workingday.day}" class="mamTimePicker" th:name="end" th:value="${workingday.end}">
             </td>
             <td>
-              <input type="text" th:id="|${workingday.day}:halftime|" th:day="${workingday.day}" class="form-control" th:name="halftime" th:value="${workingday.halftime}">
+              <input type="text" onclick="this.select()"th:id="|${workingday.day}:halftime|" th:day="${workingday.day}" class="mamTimePicker" th:name="halftime" th:value="${workingday.halftime}">
             </td>
             <td>
-              <input type="text" th:id="|${workingday.day}:worktime|" th:day="${workingday.day}" class="form-control" th:name="worktime" th:value="${workingday.worktime}">
+              <input type="text" onclick="this.select()"th:id="|${workingday.day}:worktime|" th:day="${workingday.day}" class="mamTimePicker" th:name="worktime" th:value="${workingday.worktime}">
             </td>
             <td>
-              <input type="text" th:id="|${workingday.day}:other1|" th:day="${workingday.day}" class="form-control" th:name="other1" th:value="${workingday.other1}">
+              <input type="text" onclick="this.select()" th:id="|${workingday.day}:other1|" th:day="${workingday.day}" class="form-control" th:name="other1" th:value="${workingday.other1}">
             </td>
             <td>
-              <input type="text" th:id="|${workingday.day}:other2|" th:day="${workingday.day}" class="form-control" th:name="other2"th:value="${workingday.other2}">
+              <input type="text" onclick="this.select()" th:id="|${workingday.day}:other2|" th:day="${workingday.day}" class="form-control" th:name="other2"th:value="${workingday.other2}">
             </td>
             <td>
-              <input type="text" th:id="|${workingday.day}:other3|" th:day="${workingday.day}" class="form-control" th:name="other3" th:value="${workingday.other3}">
+              <input type="text" onfocus="jpn(this)" onclick="this.select()" th:id="|${workingday.day}:other3|" th:day="${workingday.day}" class="form-control" th:name="other3" th:value="${workingday.other3}" >
             </td>
           </tr>
         </tbody>
