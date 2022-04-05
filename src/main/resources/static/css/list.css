@@ -1,0 +1,9 @@
+.mamTimePicker{
+    display: inline-block;
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid #999;
+    box-sizing: border-box;
+    background: #ffffff;
+    margin: 0.5em 0;
+}
