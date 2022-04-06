@@ -20,11 +20,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.BindingResult;
 
 import com.example.demo.model.MasterUser;
+import com.example.demo.model.RegularTime;
 import com.example.demo.model.BeanContractData;
+import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.ContractData;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.ContractService;
+import com.example.demo.service.UserService;
 import com.example.demo.repository.CompanyInfoRepository;
 import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.WorkdaysProperties;
@@ -47,6 +50,8 @@ public class MasterUserController extends WorkdaysProperties{
     HttpSession session;
 	@Autowired
 	ContractService contractService;
+	@Autowired
+    UserService userService;
 
 	//メニュー画面へ戻る
 	@GetMapping("/masteruser")
@@ -225,42 +230,92 @@ public class MasterUserController extends WorkdaysProperties{
 	}
 
 		//契約情報更新
-		@PostMapping("/updateContract")
-		public String UpdateContract(@RequestParam String inputvalue, String userid, String name, Model model){
-			String[] values = userid.split(":");
-			int companyID = Integer.parseInt(values[0]);
-			int contractID=Integer.parseInt(values[1]);	
-			ContractData cd = contractService.findCompanyIDContractID(companyID,contractID);
+	@PostMapping("/updateContract")
+	public String UpdateContract(@RequestParam String inputvalue, String userid, String name, Model model){
+		String[] values = userid.split(":");
+		int companyID = Integer.parseInt(values[0]);
+		int contractID=Integer.parseInt(values[1]);	
+		ContractData cd = contractService.findCompanyIDContractID(companyID,contractID);
 	
-			switch (name) {
-				case "register":
-				  cd.setRegister(Date.valueOf(inputvalue));
-				break;
-				case "startContract":
-				  cd.setStartContract(Date.valueOf(inputvalue));
-				break;
-				case "endContract":
-				  cd.setEndContract(Date.valueOf(inputvalue));
-				break;
-				case "limitedUser":
-				  cd.setLimitedUser(Integer.valueOf(inputvalue));
-				break;
-				case "userRank":
-				  cd.setUserRank(inputvalue);
-				break;
-				case "taxInclude":
-				  cd.setTaxInclude(Integer.valueOf(inputvalue));
-				break;
-				case "taxExclude":
-				  cd.setTaxExclude(Integer.valueOf(inputvalue));
-				break;
-			} 
-			contractRepository.save(cd);
-			List<BeanContractData>contractDataList=contractService.createBeanContractList();
-			model.addAttribute("contractDataList",contractDataList);
-			return "contractList";
+		switch (name) {
+		    case "register":
+			 cd.setRegister(Date.valueOf(inputvalue));
+			break;
+			case "startContract":
+			 cd.setStartContract(Date.valueOf(inputvalue));
+			break;
+			case "endContract":
+			 cd.setEndContract(Date.valueOf(inputvalue));
+			break;
+			case "limitedUser":
+			 cd.setLimitedUser(Integer.valueOf(inputvalue));
+			break;
+			case "userRank":
+			 cd.setUserRank(inputvalue);
+			break;
+			case "taxInclude":
+			 cd.setTaxInclude(Integer.valueOf(inputvalue));
+			break;
+			case "taxExclude":
+			 cd.setTaxExclude(Integer.valueOf(inputvalue));
+			break;
+		} 
+		contractRepository.save(cd);
+		List<BeanContractData>contractDataList=contractService.createBeanContractList();
+		model.addAttribute("contractDataList",contractDataList);
+		return "contractList";
+	}
+	
+
+	//定時登録画面
+    @GetMapping("/regulartime")
+	public String register_regulartime(@ModelAttribute BeanRegularTime Brtime, Model model){
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
+		model.addAttribute("Brtime",Brtime);
+		return "regulartime";
+	}
+
+    //定時情報登録→確認画面へ
+    @PostMapping("/send_Brtime")
+	public String confirm_Brtime(@Validated @ModelAttribute BeanRegularTime Brtime,BindingResult result, Model model){
+		
+        if (result.hasErrors()){
+            return "company_info";
+        }
+		model.addAttribute("Brtime",Brtime);
+		return "confirm_regulartime";
+	}
+
+    //定時情報をDBに登録
+	@PostMapping("/br_regist")
+    public String regist_regulartime(@Validated @ModelAttribute BeanRegularTime Brtime, BindingResult result, 
+		@ModelAttribute ContractData cData, Model model){
+		
+        if (result.hasErrors()){
+			return "confirm_companyInfo";
 		}
-	
-	
-	   
+		//Brtimeの値をRegularTime型regulartimeに詰め込みDBに登録
+		//Brtimeの値はStringなのでtime型に変換
+
+		//終了-開始-休憩で労働時間の合計を算出
+		int sminutes=userService.allminutes(Brtime.getStart());
+		int hminutes=userService.allminutes(Brtime.getEnd());
+		int eminutes=userService.allminutes(Brtime.getHalftime());
+		int wminutes=eminutes-hminutes-sminutes;
+		//分になった労働時間を00:00形式に変換
+		String worktime=userService.wminutes(wminutes);
+
+		RegularTime regularTime=new RegularTime();
+		regularTime.setStart(userService.toTime(Brtime.getStart()));
+		regularTime.setEnd(userService.toTime(Brtime.getEnd()));
+		regularTime.setHalftime(userService.toTime(Brtime.getHalftime()));
+		regularTime.setWorktime(userService.toTime(worktime));
+		//companyRepository.save(Brtime);
+
+		return "masteruser";
+    }
+	 
 }

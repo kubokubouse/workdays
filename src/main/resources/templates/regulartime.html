@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/stylesheet.css">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+<script src="js/mamtimepicker.js"></script>
+<title>会社情報画面</title>
+</head>
+
+<body>
+    <h1>会社情報登録</h1>
+
+
+  <main id="contents">
+    <form id="entryForm" th:action="@{/send_Brtime}" th:object="${Brtime}"method="post" novalidate>
+    <table class="entryTable" border="1">
+
+    <tr>
+      <th>開始時刻</th>
+      <td>
+        <label for="start"></label>
+        <input type="text" class="mamTimePicker"
+        th:errorclass="is-invalid" th:field="*{start}">
+       <div class="invalid-feedback" th:errors="*{start}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>終了時刻</th>
+      <td>
+        <label for="end"></label>
+        <input type="text" class="mamTimePicker"
+        th:errorclass="is-invalid" th:field="*{end}">
+        <div class="invalid-feedback" th:errors="*{end}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>休憩時間</th>
+      <td>
+        <label for="halftime"></label>
+        <input type="text" class="mamTimePicker"
+        th:errorclass="is-invalid" th:field="*{halftime}">
+       <div class="invalid-feedback" th:errors="*{halftime}"></div>
+      </td>
+    </tr>
+
+
+
+  </table>
+
+  <div class="send">
+    <input type="reset" value="クリア" class="button">
+    <input type="submit" value="登録" class="button">
+  </div>
+</form>
+</main>
+  <p><a href="/masteruser">メニュー画面へ戻る</a></p> 
+  <p><a href="/master">ログアウト</a></p>
+
+</body>
+</html>
+
+<style>
+
+  form {
+    margin-top: 10px;
+  }
+  .entryTable {
+    margin: auto;
+    border: 0px none;
+    text-align: center;
+  }
+
+  th {
+    background-color: #CCCCFF;
+    color: black;
+  }
+  
+  td {
+  padding-left: 10px;
+  text-align: left;
+  }
+  
+  .send {
+    margin-top: 20px;
+  }
+
+  a {
+    display: block;
+    padding-top: 10px;
+  }
+</style>
