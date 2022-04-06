@@ -11,11 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Judgeused;
 import com.example.demo.model.Otherpa;
+import com.example.demo.model.RegularTime;
+import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.Holiday;
 import com.example.demo.model.User;
 import com.example.demo.model.Workdays;
 import com.example.demo.model.WorkingData;
 import com.example.demo.model.WorkingListParam;
+import com.example.demo.model.YearMonth;
 import com.example.demo.repository.WorkdaysRepository;
 
 @Service
@@ -28,7 +31,8 @@ public class WorkdaysService {
     HolidayService holidayService;
 	@Autowired
     UserService userService;
-
+	@Autowired
+    RegularTimeService rtService;
 
     public List <Workdays> findId(int id){
     	return workdaysRepository.findByUserid(id);
@@ -105,24 +109,59 @@ public class WorkdaysService {
 	}
 
 	//指定された年月の時間項目（開始休憩終了総合）に定時を入れる
-	public void insertOntime(int year,int month){
+	public void insertOntime(BeanRegularTime Brtime){
+		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
 		User user=(User)session.getAttribute("Data");
-		List<Workdays> workdayslist =findYearMonth(user.getId(),year,month);
-		//テスト:規定された定時データを勤怠データに突っ込む
-		for(Workdays workday : workdayslist) {
-			if(workday.getWeekday().equals("土")||workday.getWeekday().equals("日")||workday.getHoliday()==1){
+		List<Workdays> workdayslist =findYearMonth(user.getId(),yearMonth.getYear(),yearMonth.getMonth());
+		
+		//送信された定時データが空だった場合→DBにある定時テーブルの値が埋め込まれる
+		if(Brtime.getStart().equals("")||Brtime.getEnd().equals("")||Brtime.getHalftime().equals("")){
+			RegularTime rTime=rtService.findId(1);
+			for(Workdays workday : workdayslist) {
+
+				if(workday.getWeekday().equals("土")||workday.getWeekday().equals("日")||workday.getHoliday()==1){
+
+				}
+				else{
+					workday.setStart(rTime.getStart());
+					workday.setEnd(rTime.getEnd());
+					workday.setHalftime(rTime.getHalftime());
+					workday.setWorktime(rTime.getWorktime());
+					update(workday);
+				}
 			}
-			else{
-				workday.setStart(userService.toTime("09:00"));
-				workday.setEnd(userService.toTime("18:00"));
-				workday.setHalftime(userService.toTime("01:00"));
-				workday.setWorktime(userService.toTime("08:00"));
-				update(workday);
+		}
+		//送信された定時データが空でなかった場合→そのデータが埋め込まれる
+		else{
+			for(Workdays workday : workdayslist) {
+				if(workday.getWeekday().equals("土")||workday.getWeekday().equals("日")||workday.getHoliday()==1){
+
+				}
+				else{
+					workday.setStart(userService.toTime(Brtime.getStart()));
+					workday.setEnd(userService.toTime(Brtime.getEnd()));
+					workday.setHalftime(userService.toTime(Brtime.getHalftime()));
+					String worktime=InquireWorkTime(Brtime);
+					System.out.println(worktime);
+					workday.setWorktime(userService.toTime(worktime));
+					update(workday);
+				}
 			}
 		}
 	}
 
-
+	//開始終了休憩時刻（String）を含んだBeanRegularTimeから労働時間（Sting？）を割り出す
+	public String InquireWorkTime(BeanRegularTime Brtime){
+		//開始終了休憩時間をそれぞれ分単位にして引き算する（終了-開始-休憩＝労働時間）
+		int sminutes=userService.allminutes(Brtime.getStart());
+		int hminutes=userService.allminutes(Brtime.getHalftime());
+		int eminutes=userService.allminutes(Brtime.getEnd());
+		int wminutes=eminutes-hminutes-sminutes;
+		//分になった労働時間を00:00形式に変換
+		String worktime=userService.wminutes(wminutes);
+		
+		return worktime;
+	}
     //ユーザーから備考が使われているかの確認
     public List<Otherpa> oplist(User user){
         CellvalueGet cellgetvalue=new CellvalueGet();

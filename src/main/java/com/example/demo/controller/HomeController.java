@@ -36,6 +36,7 @@ import com.box.sdk.BoxItem.Info;
 import javax.servlet.http.*;
 
 import com.example.demo.model.Otherpa;
+import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
@@ -186,7 +187,7 @@ public class HomeController extends WorkdaysProperties{
 	@RequestMapping("/login2")
 	@CrossOrigin(origins = "*")
 	public String sucsess2(@Validated  @ModelAttribute Login login, BindingResult result,
-	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult, @ModelAttribute YearMonth yaerMonth){
+	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult, @ModelAttribute YearMonth yaerMonth,BeanRegularTime Brtime){
 		
 		String id = login.getEmail();
 		String pass = login.getPassword();
@@ -247,12 +248,13 @@ public class HomeController extends WorkdaysProperties{
 		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
 		model.addAttribute("yearMonth",yearMonth);
+		model.addAttribute("Brtime",Brtime);
 		return "list";
 	}
 
 	//年月が指定された場合のログイン
 	@PostMapping("/yearmonth")
-	public String yearMonth(@Validated @ModelAttribute YearMonth yearMonth,  Model model){
+	public String yearMonth(@Validated @ModelAttribute YearMonth yearMonth,BeanRegularTime Brtime,  Model model){
 		Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
 		int month=1+cal.get(Calendar.MONTH);
@@ -323,13 +325,14 @@ public class HomeController extends WorkdaysProperties{
 		List<Otherpa>opList=workdaysService.oplist(user);
 		model.addAttribute("opList", opList);
 		session.setAttribute("yearMonth",yearMonth);
+		model.addAttribute("Brtime",Brtime);
 	
 		return "list";
 	}
 
 	//定時ボタンを押されたときの処理
-	@GetMapping("/ontime")
-	public String Ontime(@Validated @ModelAttribute YearMonth yearMonth, Model model){
+	@PostMapping("/ontime")
+	public String Ontime(@Validated @ModelAttribute YearMonth yearMonth,BeanRegularTime Brtime, Model model){
 		//セッション取得
 		User user=(User)session.getAttribute("Data");
 		yearMonth=(YearMonth)session.getAttribute("yearMonth");
@@ -347,9 +350,9 @@ public class HomeController extends WorkdaysProperties{
 		}
 
 		model.addAttribute("idUserList", idUserList);
-
-		//指定された年月の平日に定時データを埋め込む
-		workdaysService.insertOntime(yearMonth.getYear(),yearMonth.getMonth());
+		System.out.println(Brtime);
+		//セッションに登録されている年月の平日に指定された定時データを埋め込む
+		workdaysService.insertOntime(Brtime);
 		
 		//指定された月のデータをリスト化
 		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
@@ -361,6 +364,7 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("opList", opList);
 		session.setAttribute("yearMonth",yearMonth);
 		model.addAttribute("yearMonth",yearMonth);
+		model.addAttribute("Brtime",Brtime);
 	
 		return "list";
 	}
@@ -661,12 +665,13 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 
 
 	@PostMapping("/AjaxServlet")
-	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model,@ModelAttribute YearMonth yaerMonth){	
+	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model,@ModelAttribute YearMonth yaerMonth,BeanRegularTime Brtime){	
 		User users=(User)session.getAttribute("Data");
 		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
 		int id=users.getId();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
+		System.out.println("before="+inputvalue);
 		
 		//0900のような:なしの入力がされた場合に間に:を挿入する
 		if(inputvalue.length()==4){
@@ -676,8 +681,10 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			inputvalue=sb.toString();  
 
 		}
+		System.out.println("after="+inputvalue);
 		switch (name) {
 			case "start":
+				
 				//開始終了休憩時間をそれぞれ分単位にして引き算する（終了-開始-休憩＝労働時間）
 				int sminutes=userService.allminutes(inputvalue);
 				int hminutes=userService.allminutes(workdays.getHalftime().toString());
@@ -717,7 +724,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			break;
 
 			case "worktime":
-			 workdays.setEnd(userService.toTime(inputvalue));
+			 workdays.setWorktime(userService.toTime(inputvalue));
 			break;
 			
 			case "other1":
@@ -742,6 +749,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		List<Otherpa>opList=workdaysService.oplist(users);
 		model.addAttribute("opList", opList);
 		model.addAttribute("yearMonth", yearMonth);
+		model.addAttribute("Brtime",Brtime);
 		return "list";
 	}
 
