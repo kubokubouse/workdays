@@ -27,7 +27,9 @@ import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.ContractData;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.ContractService;
+import com.example.demo.service.RegularTimeService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.WorkdaysService;
 import com.example.demo.repository.CompanyInfoRepository;
 import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.WorkdaysProperties;
@@ -52,7 +54,10 @@ public class MasterUserController extends WorkdaysProperties{
 	ContractService contractService;
 	@Autowired
     UserService userService;
-
+	@Autowired
+    RegularTimeService rtService;
+	@Autowired
+    WorkdaysService workdaysService;
 	//メニュー画面へ戻る
 	@GetMapping("/masteruser")
 	public String showMenue(@ModelAttribute CompanyInfo companyInfo){
@@ -265,6 +270,35 @@ public class MasterUserController extends WorkdaysProperties{
 		model.addAttribute("contractDataList",contractDataList);
 		return "contractList";
 	}
+
+	//定時情報一覧
+	@GetMapping("/regulartimelist")
+	public String regulartimelist(Model model){
+
+		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
+        if(masterUser==null){
+            return "masterloginfault";
+        }
+
+		//Beanに情報を移す
+		List<RegularTime> rtbList = new ArrayList<RegularTime>();
+		rtbList = rtService.findAll();
+		List<BeanRegularTime> rtList=new ArrayList<BeanRegularTime>();
+		BeanRegularTime Brtime=new BeanRegularTime();
+		int i=1;
+		for(RegularTime brt:rtbList){
+			Brtime.setStart(brt.getStart().toString().substring(0,5));
+			Brtime.setEnd(brt.getEnd().toString().substring(0,5));
+			Brtime.setHalftime(brt.getHalftime().toString().substring(0,5));
+			Brtime.setWorktime(brt.getWorktime().toString().substring(0,5));
+			Brtime.setId(i);
+			i=i+1;
+			rtList.add(Brtime);
+		}
+		
+		model.addAttribute("rtList", rtList);
+		return "regulartimelist";
+	}  
 	
 
 	//定時登録画面
@@ -317,5 +351,89 @@ public class MasterUserController extends WorkdaysProperties{
 
 		return "masteruser";
     }
+
+	@PostMapping("/RbAjaxServlet")
+	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model ){	
+		int id=Integer.parseInt(day);
+		RegularTime rtime= rtService.findId(id);
+		System.out.println("before="+inputvalue);
+		
+		//0900のような:なしの入力がされた場合に間に:を挿入する
+		if(inputvalue.length()==4){
+			StringBuilder sb = new StringBuilder();
+            sb.append(inputvalue);
+			sb.insert(2, ":");
+			inputvalue=sb.toString();  
+
+		}
+		System.out.println("after="+inputvalue);
+		switch (name) {
+			case "start":
+				//開始終了休憩時間をそれぞれ分単位にして引き算する（終了-開始-休憩＝労働時間）
+				int sminutes=userService.allminutes(inputvalue);
+				int hminutes=userService.allminutes(rtime.getHalftime().toString());
+				int eminutes=userService.allminutes(rtime.getEnd().toString());
+				int wminutes=eminutes-hminutes-sminutes;
+			    //分になった労働時間を00:00形式に変換
+				String worktime=userService.wminutes(wminutes);
+				//Stringからtime形式に変換しDBに登録
+				rtime.setWorktime(userService.toTime(worktime));
+				rtime.setStart(userService.toTime(inputvalue));//StringをlocalTimeに変換した後Timeに変換するメソッド
+			break;
+			
+			case "end":
+			sminutes=userService.allminutes(rtime.getStart().toString());
+			hminutes=userService.allminutes(rtime.getHalftime().toString());
+			eminutes=userService.allminutes(inputvalue);
+			wminutes=eminutes-hminutes-sminutes;
+			//分になった労働時間を00:00形式に変換
+			worktime=userService.wminutes(wminutes);
+			//Stringからtime形式に変換しDBに登録
+			rtime.setWorktime(userService.toTime(worktime));
+	
+			rtime.setEnd(userService.toTime(inputvalue));
+			break;
+
+			case "halftime":
+			sminutes=userService.allminutes(rtime.getStart().toString());
+			hminutes=userService.allminutes(inputvalue);
+			eminutes=userService.allminutes(rtime.getEnd().toString());
+			wminutes=eminutes-hminutes-sminutes;
+			//分になった労働時間を00:00形式に変換
+			worktime=userService.wminutes(wminutes);
+			//Stringからtime形式に変換しDBに登録
+			rtime.setWorktime(userService.toTime(worktime));
+			rtime.setHalftime(userService.toTime(inputvalue));
+			
+			break;
+
+			case "worktime":
+			 rtime.setEnd(userService.toTime(inputvalue));
+			break;
+			
+			
+			} 
+		rtService.update(rtime);
+
+		//Beanに情報を移す
+		List<RegularTime> rtbList = new ArrayList<RegularTime>();
+		rtbList = rtService.findAll();
+		List<BeanRegularTime> rtList=new ArrayList<BeanRegularTime>();
+		BeanRegularTime Brtime=new BeanRegularTime();
+		int i=1;
+		for(RegularTime brt:rtbList){
+			Brtime.setStart(brt.getStart().toString().substring(0,5));
+			Brtime.setEnd(brt.getEnd().toString().substring(0,5));
+			Brtime.setHalftime(brt.getHalftime().toString().substring(0,5));
+			Brtime.setWorktime(brt.getWorktime().toString().substring(0,5));
+			Brtime.setId(i);
+			i=i+1;
+			rtList.add(Brtime);
+		}
+		
+		model.addAttribute("rtList", rtList);
+		return "regulartimelist";
+		
+	}
 	 
 }
