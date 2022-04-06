@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="ユーザー情報一覧"></title>
+  <script th:src="@{https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js}"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="js/mamtimepicker.js"></script>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" href="css/stylesheet.css">
+  <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+
+<style>
+h1 {
+  font-family: arial, Helvetica, clean, sans-serif;
+}
+.button {
+  margin-top: 10px;
+}
+.time {
+  background-color: white;
+}
+.tr_color0 {
+
+ vertical-align: middle;
+}
+
+.tr_color1 {
+  background-color: #EAF6FD;
+  vertical-align: middle;
+}
+.tr_color2 {
+  background-color: #fa4d4d;
+  vertical-align: middle;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  padding: 0;
+  width: 80%;
+  table-layout: fixed;
+}
+
+thead th{
+  padding: 1em .8em;
+  border-right: 5px solid #fff;
+  background-color: #eee;
+}
+table tr {
+  background-color: #fff;
+  padding: .35em;
+}
+.output{
+  text-align: left;
+  margin-left: 10px;
+}
+
+.tabs {
+  text-align: left;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.main {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.container {
+  background-color: #006AE9;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.button_blue {
+  padding: 5px 10px;
+}
+.select_month {
+  text-align: right;
+  margin-right: 10px;
+}
+p {
+  color: #808080;
+}
+th {
+  font-size: 15px;
+  font-weight: normal;
+}
+
+thead th{
+  padding: 1em .8em;
+  border-right: 5px solid #fff;
+  background-color: #eee;
+}
+table tr {
+  background-color: #fff;
+  padding: .35em;
+}
+
+</style>
+
+<script>
+  function jpn(tbox){
+  tbox.style.imeMode="active";
+  }
+  $(function(){
+    
+    // 値が更新されたときの処理
+    $('input').change(function(){
+      var inputvalue = $(this).val();
+      var day = $(this).attr('day');
+      var name = $(this).attr('name');
+      var id=$(this).attr('id');
+      var wt=':worktime';
+      var st=':start';
+      var ed=':end';
+      var ht=':halftime';
+
+      //0900表記だったら09:00に修正する
+      if(inputvalue.length==4&&inputvalue.indexOf(':')==-1){
+        var a = inputvalue.slice(0, 2)
+        var b = ':'
+        var c = inputvalue.slice(2)
+        a=a+b+c
+        var inputForm = document.getElementById(id);
+        inputForm.value=a
+        inputvalue=a
+      }
+      //9:00表記だった場合09:00に修正する
+      if(inputvalue.length==4&&inputvalue.indexOf(':')==1){
+        var a = '0'
+        inputvalue=a+inputvalue
+       
+        var inputForm = document.getElementById(id);
+        inputForm.value=inputvalue
+        
+      }
+      
+      var start = document.getElementById(day+st).value;
+      var end = document.getElementById(day+ed).value;
+      var half = document.getElementById(day+ht).value;
+      
+      var sth=Number(start.substr(0,2));
+      var stm=Number(start.substr(3,2));
+
+      var edh=Number(end.substr(0,2));
+      var edm=Number(end.substr(3,2));
+
+      var hfh=Number(half.substr(0,2));
+      var hfm=Number(half.substr(3,2));
+      
+      console.log('h'+hfh);
+      console.log('m'+hfm);
+      var wtm=(edh-sth-hfh)*60+(edm-stm-hfm);
+      console.log('wtm='+wtm);
+      var tenhour=Math.floor(wtm/600);
+      console.log('th'+tenhour);
+		  var hour=Math.floor(wtm%600/60);
+      console.log('hour='+hour);
+		  var tenminutes=wtm%600%60;
+      console.log('tm1='+tenminutes);
+      var tenminutes=Math.floor(tenminutes/10);
+      console.log('tm2='+tenminutes);
+		  var minutes=Math.floor(wtm%600%60%10%10);
+      console.log('minutes='+minutes);
+		  var time=String(tenhour)+String(hour)+":"+String(tenminutes)+String(minutes);
+      
+      var resultForm = document.getElementById(day+wt);
+      resultForm.value = time;
+
+      
+      $.ajax({
+        url: "/RbAjaxServlet",
+        type: "POST",
+        data: {
+          inputvalue : inputvalue,
+          day : day,
+          name : name
+        }
+      }).done(function (result) {
+        
+      }).fail(function () {
+        // 通信失敗時のコールバック
+        //alert("更新に失敗しました");
+      }).always(function (result) {
+        // 常に実行する処理
+      });
+    });
+    
+  });
+  
+  </script> 
+</head>
+<body>
+  <div class="container">
+    
+    <h1>定時一覧 </h1>
+  </div>
+
+<div class="main">
+  
+
+ 
+    <div  class="text-end">
+       
+      </div><br />
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>開始時刻</th>
+            <th>終了時刻</th>
+            <th>休憩時間</th>
+            <th>作業時間</th>
+            
+          </tr>
+        </thead>
+        
+
+        <tbody>
+          <tr th:each="regulartime, st : *{rtList}" >
+           
+            <td>
+              <input type="text" onclick="this.select()" th:id="|${regulartime.id}:start|"  th:day="${regulartime.id}" class="mamTimePicker" th:name="start" th:value="${regulartime.start}"  >
+            </td>
+            <td>
+                <input type="text" onclick="this.select()" th:id="|${regulartime.id}:end|"  th:day="${regulartime.id}" class="mamTimePicker" th:name="end" th:value="${regulartime.end}"  >
+            </td>
+            <td>
+                <input type="text" onclick="this.select()" th:id="|${regulartime.id}:halftime|" th:day="${regulartime.id}"  class="mamTimePicker" th:name="halftime" th:value="${regulartime.halftime}"  >
+            </td>
+            <td>
+                <input type="text" onclick="this.select()" th:id="|${regulartime.id}:worktime|" th:day="${regulartime.id}"  class="mamTimePicker" th:name="worktime" th:value="${regulartime.worktime}"  >
+            </td>
+            
+          </tr>
+        </tbody>
+      </table>
+    
+  </div>
+</div>
+
+    <p><a href="/">ログアウト</a></p>
+   
+
+</body>
+</html>
