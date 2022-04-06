@@ -11,7 +11,7 @@
 <h1>勤怠表をダウンロードします</h1>
 <p th:text="${outputFileName}" class="fileName"></p>
 
-<a th:href="@{${filePath}}" class="button_blue" download> ダウンロード</a>
+<a th:href="@{${filePath}}" class="button" download> ダウンロード</a>
 
 <p><a href="/logout">ログアウト</a></p>
 </body>
@@ -21,9 +21,8 @@
   h1 {
     font-size: 20px;
   }
-  a.button_blue {
+  a.button {
     text-decoration: none;
-    font-weight: bold;
   }
   a {
     display: inline-block;

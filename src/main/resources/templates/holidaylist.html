@@ -34,7 +34,7 @@ th {
 table tr {
   padding: .35em;
 }
-.button_blue {
+.button {
   margin-top: 0px;
   padding: 5px;
 }
@@ -116,7 +116,7 @@ table tr {
       <option th:value="1" selected>現在</option>
       <option th:value="2">来年</option>
     </select>
-    <input type="submit" value="年変更" class="button_blue">
+    <input type="submit" value="年変更" class="button">
   </form>
       <br/>
 
@@ -148,7 +148,7 @@ table tr {
             <td>
                 <form th:action="@{/holidaychange}" >
                     <input type="hidden" name="id" th:value="${holiday.id}" />
-                    <input type="submit" value="変更" class="button_blue">
+                    <input type="submit" value="変更" class="button">
     
                   </form>
             </td>
@@ -156,7 +156,7 @@ table tr {
             <td>
             <form th:action="@{/holidaydelete}" >
                 <input type="hidden" name="id" th:value="${holiday.id}" />
-                <input type="submit" value="削除" class="button_blue">
+                <input type="submit" value="削除" class="button">
             </form>
             </td>
             

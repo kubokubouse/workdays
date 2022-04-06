@@ -11,8 +11,9 @@
 <h1>ファイル操作する方法を選択してください</h1>
 
 <div class="main">
-  <a th:href="@{${localPath}}" class="button_blue">ローカルのファイル<br>を操作する</a>
-  <a th:href="@{${boxPath}}" class="button_blue">boxのファイル<br>を操作する</a>
+  <a th:href="@{${localPath}}" class="button">ローカルのファイル<br>を操作する</a>
+  
+  <a th:href="@{${boxPath}}" class="button">boxのファイルを<br>操作する</a>
 
   <div class="tabs">
     <p><a href="/logout">ログアウト</a></p>
@@ -34,11 +35,11 @@
   a{
     font-size: 15px;
   }
-  .button_blue {
+  .button {
     margin: 30px;
     display: inline-block;
   }
-  a.button_blue {
+  a.button {
     text-decoration: none;
     font-weight: bold;
   }

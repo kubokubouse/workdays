@@ -22,7 +22,6 @@
         <input type="text" class="login-control" placeholder="メールアドレス"
           th:errorclass="is-invalid" th:field="*{email}">
         <div class="invalid-feedback" th:errors="*{email}"></div>
-        <p>※半角で入力してください</p>
       </td>
     </tr>
 
@@ -32,7 +31,6 @@
         <input type="password" class="login-control" placeholder="パスワード"
         th:errorclass="is-invalid" th:field="*{password}">
         <div class="invalid-feedback" th:errors="*{password}"></div>
-        <p>※半角英数</p>
       </td>
     </tr>
 

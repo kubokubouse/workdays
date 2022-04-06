@@ -27,7 +27,7 @@
         <form th:action="@{/boxuserresister}">
             <input type="hidden" name="uploadfile" th:value="${fileName}">       
             <td th:text="${fileName}"></td>
-            <td><input type="submit" value="アップロード"></td>
+            <td><input type="submit" value="アップロード" class="button"></td>
         </form>
         </tr>
     </table>
@@ -91,7 +91,9 @@
           padding-top: 30px;
           padding-left: 10px;
       }
-      
+      .button {
+          padding: 5px;
+      }
     .tab {
         margin-top: 50px;
     }

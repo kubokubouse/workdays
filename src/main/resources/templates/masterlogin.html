@@ -2,13 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>ログイン</title>
-<link rel="stylesheet" href="css/stylesheet.css">
-<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+<title>マスターユーザーログイン</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-
+  <link rel="stylesheet" href="css/stylesheet.css">
+  <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 </head>
 <body>
 <header>
@@ -20,45 +18,53 @@
 <table class="entryTable" border="1">
 
  <tr>
-      <th></th>
+      <th> </th>
+      <td><img src="img/mail.jpeg" class="icon_mail"></td>
       <td><label for="email"></label>
-
         <input type="text" class="login-control" placeholder="メールアドレス"
           th:errorclass="is-invalid" th:field="*{email}">
         <div class="invalid-feedback" th:errors="*{email}"></div>
-        <p>※半角で入力してください</p>
       </td>
     </tr>
- <tr>
+
+<tr>
       <th></th>
-        <td><label for="password"></label>
+      <td><img src="img/pass.png" class="icon_pass"></td>
+      <td><label for="password"></label>
         <input type="password" class="login-control" placeholder="パスワード"
           th:errorclass="is-invalid" th:field="*{password}">
-        <div class="invalid-feedback" th:errors="*{password}"></div>
-        <p>※半角英数</p>
+       <div class="invalid-feedback" th:errors="*{password}"></div>
       </td>
     </tr>
 
   </table>
-  <input type="submit" value="ログイン" class="button_blue">
+  <input class="button" type="submit" value="ログイン">
 </form>
+
 </main>
-<img src="./img/CCCLogo.jpg" alt="CCC" width="160px">
+<img src="https://www.connectcrew.co.jp/assets/images/connectcrew_logo.jpg" alt="CCC" width="160px" class="logo">
 <p>©株式会社コネクトクルー</p>
 </body>
 </html>
 
 <style>
-  body {
-    background-color: #f5f6fd;
-  }
-
   .entryTable {
     border: 0px none;
-    margin: auto;
+    margin: 0 auto;
     margin-top: 30px;
     border-collapse: separate;
     border-spacing: 0px 10px;
+  }
+  .icon_mail {
+    padding-bottom: 15px;
+    width: 20px;
+    height: auto;
+  }
+  .icon_pass {
+    padding-bottom: 15px;
+    padding-right: 5px;
+    width: 30px;
+    height: auto;
   }
   .login-control {
     box-sizing: border-box;
@@ -70,12 +76,12 @@
     box-shadow: 1px 1px 2px 0 #707070 inset;
     border-radius: 4px;
   }
-  th {
-    text-align: right;
+  .button {
+    background-color: white;
   }
-
   td {
     text-align: left;
+    margin-right: 0px;
   }
 
   a {
@@ -83,7 +89,7 @@
     padding-top: 10px;
   }
 
-  img {
+  .logo {
     margin-top: 20px;
   }
 

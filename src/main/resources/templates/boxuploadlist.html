@@ -36,7 +36,7 @@
         <form th:action="@{/boxupload}">
             <input type="hidden" name="uploadfile" th:value="${fileName}">       
             <td th:text="${fileName}"></td>
-            <td><input type="submit" value="アップロード"></td>
+            <td><input type="submit" value="アップロード" class="button"></td>
         </form>
         </tr>
     </table>
@@ -99,6 +99,9 @@
       
     .tab {
         margin-top: 50px;
+    }
+    .button {
+        padding: 5px;
     }
 
 </style>
