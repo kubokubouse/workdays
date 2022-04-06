@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/stylesheet.css">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+<title>登録確認</title>
+</head>
+<body>
+
+  <h1>定時登録</h1>
+  <table class="entryTable" border="1">
+
+  <tr>
+    <th>開始時刻</th>
+    <td>[[${Brtime.start}]] </td>
+  </tr>
+
+  <tr>
+    <th>終了時刻</th>
+    <td>[[${Brtime.end}]] </td>
+  </tr>
+
+  <tr>
+    <th>休憩時間</th>
+    <td>[[${Brtime.halftime}]] </td>
+  </tr>
+  
+  
+
+</table>
+
+<div class="footer">
+  <a href="#" id="back-link" class="button">戻る</a>
+  <form  th:action="@{/br_regist}" th:object="${Brtime}"method="post" >
+    <label for="name"></label>
+    <input type="hidden" th:field="*{start}">
+    <input type="hidden" th:field="*{end}">
+    <input type="hidden" th:field="*{halftime}">
+   
+    <input type="submit" value="登録" class="button">
+  </form>
+</div>
+</body>
+
+<script>
+  const backLink = document.getElementById('back-link');
+  backLink.addEventListener('click', () => {
+    history.back(-1);
+  });
+</script>
+
+</html>
+
+<style>
+
+  th {
+    color: black;
+    background-color: #CCCCFF;
+  }
+
+  .entryTable {
+    border: 0px none;
+    margin: auto;
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+
+  .footer {
+    display:flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+  }
+</style>
