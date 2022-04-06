@@ -13,7 +13,10 @@
 
   <table class="entryTable" border="1">
   
-
+    <tr>
+      <th>会社ID </th>
+      <td>[[${superUser.companyID}]]</td>
+    </tr>
   <tr>
     <th>メールアドレス </th>
     <td>[[${superUser.email}]]</td>
@@ -23,14 +26,7 @@
      <th>パスワード </th>
      <td>[[${superUser.pass}]]</td>
   </tr>
-
   
- <tr>
-  <th>会社ID </th>
-  <td>[[${superUser.companyID}]]</td>
-</tr>
-
-
 </table>
 
 <div class="footer">
@@ -57,8 +53,7 @@
 <style>
 
   th {
-    color: black;
-    background-color: #CCCCFF;
+    text-align: right;
   }
 
   .entryTable {

@@ -52,7 +52,7 @@
         <input type="text" class="register-control"
         th:errorclass="is-invalid" th:field="*{tel}">
        <div class="invalid-feedback" th:errors="*{tel}"></div>
-       <p>※‐（ハイフン）必須</p>
+       <p class="caution">※‐（ハイフン）必須</p>
        
       </td>
     </tr>
@@ -119,7 +119,8 @@
     display: block;
     padding-top: 10px;
   }
-  p {
+  .caution {
+    text-align: left;
     font-size: 10px; 
     color: #808080;
     margin: 0px;
