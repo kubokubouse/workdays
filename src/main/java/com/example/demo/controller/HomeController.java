@@ -667,7 +667,15 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		int id=users.getId();
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
-		System.out.println(inputvalue);
+		
+		//0900のような:なしの入力がされた場合に間に:を挿入する
+		if(inputvalue.length()==4){
+			StringBuilder sb = new StringBuilder();
+            sb.append(inputvalue);
+			sb.insert(2, ":");
+			inputvalue=sb.toString();  
+
+		}
 		switch (name) {
 			case "start":
 				//開始終了休憩時間をそれぞれ分単位にして引き算する（終了-開始-休憩＝労働時間）
