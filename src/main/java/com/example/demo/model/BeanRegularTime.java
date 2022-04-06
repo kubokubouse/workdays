@@ -15,4 +15,6 @@ public class BeanRegularTime {
     String start;
     String end;
     String halftime;
+    String worktime;
+    Integer id;
 }
