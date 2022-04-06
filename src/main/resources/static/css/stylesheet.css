@@ -37,7 +37,21 @@ a{
   color: rgb(70, 64, 64);
   text-decoration: none;
 }
-
+table {
+  margin: 0 auto;
+  margin-top: 10px;
+  border: 0 none;
+}
+th{
+  border: 0 none;
+  font-weight: normal;
+  padding: 5px;
+}
+td{
+  margin-right: 5px;
+  padding: 5px;
+  border: 0 none;
+}
 .mamTimePicker{
   display: inline-block;
   width: 100%;

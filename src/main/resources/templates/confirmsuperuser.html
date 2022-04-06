@@ -34,13 +34,13 @@
 </table>
 
 <div class="footer">
-  <a href="#" id="back-link">戻る</a>
+  <a href="#" id="back-link" class="button">戻る</a>
   <form  th:action="@{/registsuperuser}" th:object="${superUser}"method="post" >
     <label for="name"></label>
     <input type="hidden" th:field="*{email}">
     <input type="hidden" th:field="*{pass}">
     <input type="hidden" th:field="*{companyID}">
-    <input type="submit" value="登録">
+    <input type="submit" value="登録" class="button">
   </form>
 </div>
 </body>

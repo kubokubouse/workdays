@@ -41,7 +41,7 @@
         <input type="text" th:errorclass="is-invalid" th:field="*{pass}">
         <div class="invalid-feedback" th:errors="*{pass}"></div>
        
-        <small>※半角英数</small>
+        <p class="caution">※半角英数</p>
       </td>
     </tr>
 
@@ -60,31 +60,20 @@
 </html>
 
 <style>
-
-
-  .entryTable {
-    margin: auto;
-    margin-top: 20px;
-    border: 0px none;
-    text-align: center;
-  }
-
-  th {
-    background-color: #CCCCFF;
-    color: black;
-  }
-  
-  td {
-  padding-left: 10px;
-  text-align: left;
-  }
-  
   .send {
     margin-top: 20px;
   }
-
+  th {
+    text-align: right;
+  }
   a {
     display: block;
     padding-top: 10px;
   }
+  .caution {
+    font-size: 10px; 
+    color: #808080;
+    margin: 0px;
+  }
+
 </style>

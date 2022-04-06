@@ -16,19 +16,24 @@
     <form id="entryForm" th:action="@{/holidayregister}" th:object="${oneholiday}" method="post" novalidate>
     <table class="entryTable" border="1">
 
-      <tr>
-        <th>日付</th>
-        <td>[[${oneholiday.year}]]年
+      <tr> 
+        <th>年</th>
+        <td>[[${oneholiday.year}]]年</td>
+       </tr>
+
+        <tr> 
+        <th>月</th>
+        <td>
           <label for="number"></label>
-          <input type="number" class="register-control"
-          th:errorclass="is-invalid" th:field="*{month}" th:value="${oneholiday.month}" >
-         <div class="invalid-feedback" th:errors="*{month}"></div>月
-         <label for="number"></label>
-         <input type="number" class="register-control"
-         th:errorclass="is-invalid" th:field="*{day}" th:value="${oneholiday.day}" >
-        <div class="invalid-feedback" th:errors="*{day}"></div>日
+          <input type="number" class="register-control" style="width:50px;"
+            th:errorclass="is-invalid" th:field="*{month}" th:value="${oneholiday.month}" >
+          <div class="invalid-feedback" th:errors="*{month}"></div>月
         
-         </td>
+          <label for="number"></label>
+          <input type="number" class="register-control" style="width:50px;"
+            th:errorclass="is-invalid" th:field="*{day}" th:value="${oneholiday.day}" >
+          <div class="invalid-feedback" th:errors="*{day}"></div>日
+        </td>
       </tr>
     <tr>
       <th>名称</th>
@@ -67,6 +72,7 @@
   }
 
   th {
+    text-align: center;
     background-color: #CCCCFF;
     color: black;
   }

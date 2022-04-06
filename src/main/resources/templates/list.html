@@ -18,6 +18,9 @@ h1 {
 .button {
   margin-top: 10px;
 }
+.time {
+  background-color: white;
+}
 .tr_color0 {
 
  vertical-align: middle;
@@ -95,9 +98,6 @@ thead th{
 table tr {
   background-color: #fff;
   padding: .35em;
-}
-.btn {
-  margin-top: 10px;
 }
 
 </style>
@@ -188,14 +188,15 @@ table tr {
       <label class="text-danger" th:text="${error}"></label>
     </div>
     <h1>[[${workingListParam.year}]]年[[${workingListParam.month}]]月勤怠表 </h1>
-    <form th:action="@{/ontime}" >
-        <div  class="text-end">
-          <input type="submit" class="btn btn-primary" value="　定時　">
-        </div><br />
   </div>
-</form>
 
 <div class="main">
+  <form th:action="@{/ontime}" class="time">
+    <div  class="text-end">
+      <input type="submit" class="button_blue" value="　定時　">
+    </div><br />
+  </form>
+
   <div class="output">
 
   <form th:action="@{/transition}">
