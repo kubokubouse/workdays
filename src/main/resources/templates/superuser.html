@@ -31,6 +31,11 @@
         <input type="hidden" name="box" value="/uploaduserfrombox">
         <input class="button" type="submit" value="ユーザー一括アップロード">
       </form>
+      <div th:if="${iDuser==1}"> 
+        <form th:action="@{/superworkdays}">
+        <input class="button" type="submit" value="勤怠データ編集">
+        </form>
+      </div>
     </div>
 
     <div class="contents_2">
@@ -48,6 +53,7 @@
       <form th:action="@{/changePass}">
         <input class="button" type="submit" value="パスワード更新">
       </form>
+     
      
     </div>
   </div>
