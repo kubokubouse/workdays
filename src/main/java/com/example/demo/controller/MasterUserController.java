@@ -271,9 +271,9 @@ public class MasterUserController extends WorkdaysProperties{
 		return "contractList";
 	}
 
-	//定時情報一覧
+	//定時情報一覧表示
 	@GetMapping("/regulartimelist")
-	public String regulartimelist(Model model){
+	public String regulartimelist(Model model,@ModelAttribute BeanRegularTime Brtime){
 
 		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
         if(masterUser==null){
@@ -284,19 +284,18 @@ public class MasterUserController extends WorkdaysProperties{
 		List<RegularTime> rtbList = new ArrayList<RegularTime>();
 		rtbList = rtService.findAll();
 		List<BeanRegularTime> rtList=new ArrayList<BeanRegularTime>();
-		BeanRegularTime Brtime=new BeanRegularTime();
-		int i=1;
 		for(RegularTime brt:rtbList){
-			Brtime.setStart(brt.getStart().toString().substring(0,5));
-			Brtime.setEnd(brt.getEnd().toString().substring(0,5));
-			Brtime.setHalftime(brt.getHalftime().toString().substring(0,5));
-			Brtime.setWorktime(brt.getWorktime().toString().substring(0,5));
-			Brtime.setId(i);
-			i=i+1;
-			rtList.add(Brtime);
+			BeanRegularTime BRtime=new BeanRegularTime();
+			BRtime.setStart(brt.getStart().toString().substring(0,5));
+			BRtime.setEnd(brt.getEnd().toString().substring(0,5));
+			BRtime.setHalftime(brt.getHalftime().toString().substring(0,5));
+			BRtime.setWorktime(brt.getWorktime().toString().substring(0,5));
+			BRtime.setId(brt.getId());
+			rtList.add(BRtime);
 		}
 		
 		model.addAttribute("rtList", rtList);
+		model.addAttribute("Brtime", Brtime);
 		return "regulartimelist";
 	}  
 	
@@ -336,8 +335,8 @@ public class MasterUserController extends WorkdaysProperties{
 
 		//終了-開始-休憩で労働時間の合計を算出
 		int sminutes=userService.allminutes(Brtime.getStart());
-		int hminutes=userService.allminutes(Brtime.getEnd());
-		int eminutes=userService.allminutes(Brtime.getHalftime());
+		int hminutes=userService.allminutes(Brtime.getHalftime());
+		int eminutes=userService.allminutes(Brtime.getEnd());
 		int wminutes=eminutes-hminutes-sminutes;
 		//分になった労働時間を00:00形式に変換
 		String worktime=userService.wminutes(wminutes);
@@ -347,9 +346,26 @@ public class MasterUserController extends WorkdaysProperties{
 		regularTime.setEnd(userService.toTime(Brtime.getEnd()));
 		regularTime.setHalftime(userService.toTime(Brtime.getHalftime()));
 		regularTime.setWorktime(userService.toTime(worktime));
-		//companyRepository.save(Brtime);
+		rtService.insert(regularTime);
 
-		return "masteruser";
+
+		List<RegularTime> rtbList = new ArrayList<RegularTime>();
+		rtbList = rtService.findAll();
+		List<BeanRegularTime> rtList=new ArrayList<BeanRegularTime>();
+		for(RegularTime brt:rtbList){
+			BeanRegularTime BRtime=new BeanRegularTime();
+			BRtime.setStart(brt.getStart().toString().substring(0,5));
+			BRtime.setEnd(brt.getEnd().toString().substring(0,5));
+			BRtime.setHalftime(brt.getHalftime().toString().substring(0,5));
+			BRtime.setWorktime(brt.getWorktime().toString().substring(0,5));
+			BRtime.setId(brt.getId());
+			rtList.add(BRtime);
+		}
+		
+		model.addAttribute("rtList", rtList);
+		model.addAttribute("Brtime", Brtime);
+
+		return "regulartimelist";
     }
 
 	@PostMapping("/RbAjaxServlet")
