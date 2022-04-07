@@ -24,4 +24,8 @@ public class RegularTimeService {
     public void insert(RegularTime regularTime){
         rtRepository.save(regularTime);
     }
+    public void delete(int id){
+        RegularTime regularTime=findId(id);
+        rtRepository.delete(regularTime);
+    }
 }
