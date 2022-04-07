@@ -39,12 +39,18 @@ import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.WorkdaysService;
 import com.example.demo.model.User;
+import com.example.demo.model.WorkingListParam;
+import com.example.demo.model.YearMonth;
 import com.example.demo.model.SuperUserLogin;
+import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.ContractData;
+import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
+import com.example.demo.model.Otherpa;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.IndividualDataRepository;
 import com.example.demo.WorkdaysProperties;
@@ -80,6 +86,8 @@ public class AdminController extends WorkdaysProperties{
 
     @Autowired
     ContractService contractService;
+    @Autowired
+    WorkdaysService workdaysService;
     
 
 	@GetMapping("/logout")
@@ -89,6 +97,56 @@ public class AdminController extends WorkdaysProperties{
 	}
 
     //管理メニュー画面
+    //管理者画面から勤怠データ操作画面へ
+    @GetMapping("/superworkdays")
+    public String sworkdays(@ModelAttribute YearMonth yaerMonth,BeanRegularTime Brtime,Model model ){
+        SuperUserLogin superUser=(SuperUserLogin)session.getAttribute("superUser");
+        User users=userService.findEmail(superUser.getEmail());
+
+        if(users.getBanned()==1){
+			return "banned";
+		}
+		//ログイン時に入力されたメアドを使っている個別ユーザーを特定しリストを作る
+		List <IndividualData>iDataList=individualService.findMail(superUser.getEmail());
+		model.addAttribute("iDataList", iDataList);
+		
+		
+		//個別ユーザーから会社IDを取得し会社名のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+		
+		for(IndividualData iData:iDataList){
+			IdUser idUser=individualService.getIdUser(iData);
+			
+			idUserList.add(idUser);
+		}
+
+		model.addAttribute("idUserList", idUserList);
+		
+		session.setAttribute("Data",users);
+		
+		YearMonth yearMonth=userService.nowYearMonth();
+		session.setAttribute("yearMonth",yearMonth);
+		
+		//年月を渡し勤怠データの有無の確認→データなしなら新規追加
+		workdaysService.checkYearMonth(yearMonth.getYear(),yearMonth.getMonth());
+		
+		//年月を渡し勤怠データをDBからリスト形式で取得
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		//WorkingListParam workingListParam = userService.searchAll(users);//リストに出す用の検索は必要
+		workingListParam.setMonth(yearMonth.getMonth());
+		workingListParam.setYear(yearMonth.getYear());
+		model.addAttribute("workingListParam", workingListParam);
+
+		//備考1,2,3に会社名を添付する処理をする
+		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
+		List<Otherpa>opList=workdaysService.oplist(users);
+		model.addAttribute("opList", opList);
+		model.addAttribute("yearMonth",yearMonth);
+		model.addAttribute("Brtime",Brtime);
+		
+        return "list";
+    }
+
     //会員登録ページに移行
 	@GetMapping("/superuser")
 	public String menue(@ModelAttribute User user){
