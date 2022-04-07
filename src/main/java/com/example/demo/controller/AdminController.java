@@ -460,12 +460,14 @@ public class AdminController extends WorkdaysProperties{
         File fileFolder = new File(fileFolderPath);
         File[] fileList = fileFolder.listFiles();
         
+        int fileCount = 0;
         if (fileList != null) {
             for (File file : fileList){
-                fileNameList.add(file.getName());
-                
-            }
-        } else {
+                fileNameList.add(file.getName()); 
+                fileCount++;
+            }  
+        } 
+        if(fileCount == 0) {
             model.addAttribute("error", "ファイルが存在しません");
             return "templatelist";
         }
@@ -1198,7 +1200,7 @@ public class AdminController extends WorkdaysProperties{
         return "boxcsvfilelist";
     }
 
-    //テンプレファイル一覧画面遷移
+    //テンプレファイルアップロード画面遷移
     @GetMapping("/totemplateupload")
     public String toTemplateUpload() {
 
