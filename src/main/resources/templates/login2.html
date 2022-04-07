@@ -24,7 +24,6 @@
         <input type="text" class="login-control" placeholder="メールアドレス"
           th:errorclass="is-invalid" th:field="*{email}">
         <div class="invalid-feedback" th:errors="*{email}"></div>
-        <p>※半角で入力してください</p>
       </td>
     </tr>
 
@@ -35,12 +34,11 @@
         <input type="password" class="login-control" placeholder="パスワード"
           th:errorclass="is-invalid" th:field="*{password}">
        <div class="invalid-feedback" th:errors="*{password}"></div>
-        <p>※半角英数</p>
       </td>
     </tr>
 
   </table>
-  <input class="button_blue" type="submit" value="ログイン">
+  <input class="button" type="submit" value="ログイン">
 </form>
 <p><a href="/forgetpassword">パスワードを忘れた方はこちら</a></p>
 </main>
@@ -50,9 +48,6 @@
 </html>
 
 <style>
-  body {
-    background-color: #f5f6fd;
-  }
   .entryTable {
     border: 0px none;
     margin: 0 auto;
@@ -81,11 +76,12 @@
     box-shadow: 1px 1px 2px 0 #707070 inset;
     border-radius: 4px;
   }
-  th {
-    margin-right: 50px;
+  .button {
+    background-color: white;
   }
   td {
     text-align: left;
+    margin-right: 0px;
   }
 
   a {

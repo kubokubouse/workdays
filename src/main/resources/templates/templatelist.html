@@ -28,7 +28,7 @@
        
    
         <th:block th:each="filePath, filePath : ${filePath}">
-        <td><a th:href="@{${filePath}}" class="button_blue" download> ダウンロード</a></td>
+        <td><a th:href="@{${filePath}}" class="button" download> ダウンロード</a></td>
         </th:block>
     </tr>
     </div>
@@ -89,7 +89,7 @@
       .button {
           padding: 5px;
       }
-      .button_blue {
+      .button {
           padding: 5px 10px;
       }
     .tab {

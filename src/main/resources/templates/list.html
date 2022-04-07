@@ -12,17 +12,7 @@
   <link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
 
 <style>
-h1 {
-  font-family: arial, Helvetica, clean, sans-serif;
-}
-.button {
-  margin-top: 10px;
-}
-.time {
-  background-color: white;
-}
 .tr_color0 {
-
  vertical-align: middle;
 }
 
@@ -53,8 +43,10 @@ table tr {
   padding: .35em;
 }
 .output{
-  text-align: left;
-  margin-left: 10px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .tabs {
@@ -75,7 +67,7 @@ table tr {
   padding: 0;
 }
 
-.button_blue {
+.button {
   padding: 5px 10px;
 }
 .select_month {
@@ -215,6 +207,36 @@ table tr {
   </div>
 
 <div class="main">
+
+
+  <div class="output">
+  <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
+    <select class="button" name="nowyear" th:field="*{year}">
+      <option th:value="${yearMonth.year-1}">[[${yearMonth.year-1}]]年</option>
+      <option th:value="${yearMonth.year}" selected>[[${yearMonth.year}]]年</option>
+      <option th:value="${yearMonth.year+1}">[[${yearMonth.year+1}]]年</option>
+    </select>
+    <select class="button" name="nowmonth" th:field="*{month}">
+      <div th:unless="${yearMonth.month==1}"><option th:value="1">1月</option></div><div th:if="${yearMonth.month==1}"><option th:value="1" selected>1月</option></div>
+      <div th:unless="${yearMonth.month==2}"><option th:value="2">2月</option></div> <div th:if="${yearMonth.month==2}"><option th:value="2" selected>2月</option></div>
+      <div th:unless="${yearMonth.month==3}"><option th:value="3">3月</option></div><div th:if="${yearMonth.month==3}"><option th:value="3" selected>3月</option></div>
+      <div th:unless="${yearMonth.month==4}"><option th:value="4">4月</option></div><div th:if="${yearMonth.month==4}"><option th:value="4" selected>4月</option></div>
+      <div th:unless="${yearMonth.month==5}"><option th:value="5">5月</option></div><div th:if="${yearMonth.month==5}"><option th:value="5" selected>5月</option></div>
+      <div th:unless="${yearMonth.month==6}"><option th:value="6">6月</option></div><div th:if="${yearMonth.month==6}"><option th:value="6" selected>6月</option></div>
+      <div th:unless="${yearMonth.month==7}"><option th:value="7">7月</option></div><div th:if="${yearMonth.month==7}"><option th:value="7" selected>7月</option></div>
+      <div th:unless="${yearMonth.month==8}"><option th:value="8">8月</option></div><div th:if="${yearMonth.month==8}"><option th:value="8" selected>8月</option></div>
+      <div th:unless="${yearMonth.month==9}"><option th:value="9">9月</option></div><div th:if="${yearMonth.month==9}"><option th:value="9" selected>9月</option></div>
+      <div th:unless="${yearMonth.month==10}"><option th:value="10">10月</option></div><div th:if="${yearMonth.month==10}"><option th:value="10" selected>10月</option></div>
+      <div th:unless="${yearMonth.month==11}"><option th:value="11">11月</option></div><div th:if="${yearMonth.month==11}"><option th:value="11" selected>11月</option></div>
+      <div th:unless="${yearMonth.month==12}"><option th:value="12">12月</option></div><div th:if="${yearMonth.month==12}"><option th:value="12" selected>12月</option></div>
+    </select>
+
+  
+
+  <input class="button" type="submit" value="変更">
+  <small th:if="${error2}">*[[${error2}]]</small>
+</form>
+
   <form th:action="@{/ontime}" th:object="${Brtime}"class="time" th:method="post">
     <div  class="text-end">
       開始<input type="text" th:field="*{start}">終了<input type="text"  th:field="*{end}">休憩<input type="text"  th:field="*{halftime}">
@@ -222,44 +244,16 @@ table tr {
     </div><br />
   </form>
 
-  <div class="output">
-
   <form th:action="@{/transition}">
-  <input type="hidden" name="local" value="/choosetemplatelocal">
-  <input type="hidden" name="box" value="/boxDownload">
-  <input class="button" type="submit" value="勤怠表を出力">
-</form>
+    <input type="hidden" name="local" value="/choosetemplatelocal">
+    <input type="hidden" name="box" value="/boxDownload">
+    <input class="button" type="submit" value="勤怠表を出力">
+  </form>
 
 </div>
 
   <div class="select_month">
-    <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
-        <select class="button" name="nowyear" th:field="*{year}">
-          <option th:value="${yearMonth.year-1}">[[${yearMonth.year-1}]]年</option>
-          <option th:value="${yearMonth.year}" selected>[[${yearMonth.year}]]年</option>
-          <option th:value="${yearMonth.year+1}">[[${yearMonth.year+1}]]年</option>
-        </select>
-        <select class="button" name="nowmonth" th:field="*{month}">
-          <div th:unless="${yearMonth.month==1}"><option th:value="1">1月</option></div><div th:if="${yearMonth.month==1}"><option th:value="1" selected>1月</option></div>
-          <div th:unless="${yearMonth.month==2}"><option th:value="2">2月</option></div> <div th:if="${yearMonth.month==2}"><option th:value="2" selected>2月</option></div>
-          <div th:unless="${yearMonth.month==3}"><option th:value="3">3月</option></div><div th:if="${yearMonth.month==3}"><option th:value="3" selected>3月</option></div>
-          <div th:unless="${yearMonth.month==4}"><option th:value="4">4月</option></div><div th:if="${yearMonth.month==4}"><option th:value="4" selected>4月</option></div>
-          <div th:unless="${yearMonth.month==5}"><option th:value="5">5月</option></div><div th:if="${yearMonth.month==5}"><option th:value="5" selected>5月</option></div>
-          <div th:unless="${yearMonth.month==6}"><option th:value="6">6月</option></div><div th:if="${yearMonth.month==6}"><option th:value="6" selected>6月</option></div>
-          <div th:unless="${yearMonth.month==7}"><option th:value="7">7月</option></div><div th:if="${yearMonth.month==7}"><option th:value="7" selected>7月</option></div>
-          <div th:unless="${yearMonth.month==8}"><option th:value="8">8月</option></div><div th:if="${yearMonth.month==8}"><option th:value="8" selected>8月</option></div>
-          <div th:unless="${yearMonth.month==9}"><option th:value="9">9月</option></div><div th:if="${yearMonth.month==9}"><option th:value="9" selected>9月</option></div>
-          <div th:unless="${yearMonth.month==10}"><option th:value="10">10月</option></div><div th:if="${yearMonth.month==10}"><option th:value="10" selected>10月</option></div>
-          <div th:unless="${yearMonth.month==11}"><option th:value="11">11月</option></div><div th:if="${yearMonth.month==11}"><option th:value="11" selected>11月</option></div>
-          <div th:unless="${yearMonth.month==12}"><option th:value="12">12月</option></div><div th:if="${yearMonth.month==12}"><option th:value="12" selected>12月</option></div>
-        </select>
 
-      
-
-      <input class="button_blue" type="submit" value="変更">
-      <small th:if="${error2}">*[[${error2}]]</small>
-
-    </form>
   </div>
     <div  class="text-end">
        

@@ -19,7 +19,7 @@
         <div style="display: inline-block; _display: inline;" th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"> [[${idUser.company3}]]</div>
       </div>
     </div>
-    <input type="submit" class="button_blue" value="選択">
+    <input type="submit" class="button" value="選択">
   </div>
 
 
@@ -30,9 +30,8 @@
 <style>
   body {
     margin: 0;
-    background-color: #f5f6fd;
   }
-  .button_blue {
+  .button {
     margin-top: 20px;
     padding: 5px;
   }
