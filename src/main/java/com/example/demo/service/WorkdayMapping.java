@@ -94,12 +94,12 @@ public class WorkdayMapping {
                     if (!isNumeric) {
                         index = value.substring(4,5);
                     }
-                    Object sth = stHourMap.get("sth" + index);
-                    Object stm = stMinMap.get("stm" + index);
+                    Object sth = stHourMap.get("[sth" + index +"]");
+                    Object stm = stMinMap.get("[stm" + index +"]");
 
             //エクセルに記入されたsthの数がstHourMap内の値の数より多いとNullになる
                     if (sth == null) {
-                        setValue = value.replace(value, " ");
+                        cell.setCellValue("");
                         continue;
                     }
                 
@@ -135,11 +135,11 @@ public class WorkdayMapping {
                     if (!isNumeric) {
                         index = value.substring(4,5);
                     }
-                    Object edh = endHourMap.get("edh" + index);
-                    Object edm = endMinMap.get("edm" + index);
+                    Object edh = endHourMap.get("[edh" + index +"]");
+                    Object edm = endMinMap.get("[edm" + index +"]");
 
                     if (edh == null) {
-                        setValue = value.replace(value, " ");
+                        cell.setCellValue("");
                         continue;
                     }
 
@@ -170,11 +170,11 @@ public class WorkdayMapping {
                     if (!isNumeric) {
                         index = value.substring(4,5);
                     }
-                    Object lth = lunchTimeHourMap.get("lth" + index);
-                    Object ltm = lunchTimeMinMap.get("ltm" + index);
+                    Object lth = lunchTimeHourMap.get("[lth" + index +"]");
+                    Object ltm = lunchTimeMinMap.get("[ltm" + index +"]");
 
                     if (lth == null) {
-                        setValue = value.replace(value, " ");
+                        cell.setCellValue("");
                         continue;
                     }
 
@@ -205,11 +205,11 @@ public class WorkdayMapping {
                     if (!isNumeric) {
                         index = value.substring(4,5);
                     }
-                    Object tth = totalHourMap.get("tth" + index);
-                    Object ttm = totalMinMap.get("ttm" + index);
+                    Object tth = totalHourMap.get("[tth" + index +"]");
+                    Object ttm = totalMinMap.get("[ttm" + index +"]");
 
                     if (tth == null) {
-                        setValue = value.replace(value, " ");
+                        cell.setCellValue("");
                         continue;
                     }
 

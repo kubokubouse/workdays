@@ -457,17 +457,17 @@ public class HomeController extends WorkdaysProperties{
 		int index = 1;
 		for(Workdays workday:workdays){
 
-			stHourMap.put("sth"+index, workday.getStart().toString().substring(0,2));
-			stMinMap.put("stm"+index, workday.getStart().toString().substring(3,5));
-			endHourMap.put("edh"+index, workday.getEnd().toString().substring(0,2));
-			endMinMap.put("edm"+index, workday.getEnd().toString().substring(3,5));
-			lunchTimeHourMap.put("lth"+index, workday.getHalftime().toString().substring(0,2));
-			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
-			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
-			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
-			other1Map.put("oa"+index, workday.getOther1());
-			other2Map.put("ob"+index, workday.getOther2());
-			other3Map.put("oc"+index, workday.getOther3());
+			stHourMap.put("[sth"+index+"]", workday.getStart().toString().substring(0,2));
+			stMinMap.put("[stm"+index+"]", workday.getStart().toString().substring(3,5));
+			endHourMap.put("[edh"+index+"]", workday.getEnd().toString().substring(0,2));
+			endMinMap.put("[edm"+index+"]", workday.getEnd().toString().substring(3,5));
+			lunchTimeHourMap.put("[lth"+index+"]", workday.getHalftime().toString().substring(0,2));
+			lunchTimeMinMap.put("[ltm"+index+"]", workday.getHalftime().toString().substring(3,5));
+			totalHourMap.put("[tth"+index+"]", workday.getWorktime().toString().substring(0,2));
+			totalMinMap.put("[ttm"+index+"]", workday.getWorktime().toString().substring(3,5));
+			other1Map.put("[oa"+index+"]", workday.getOther1());
+			other2Map.put("[ob"+index+"]", workday.getOther2());
+			other3Map.put("[oc"+index+"]", workday.getOther3());
 
 			index++;
 
@@ -834,17 +834,17 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		int index = 1;
 		for(Workdays workday:workdays){
 
-			stHourMap.put("sth"+index, workday.getStart().toString().substring(0,2));
-			stMinMap.put("stm"+index, workday.getStart().toString().substring(3,5));
-			endHourMap.put("edh"+index, workday.getEnd().toString().substring(0,2));
-			endMinMap.put("edm"+index, workday.getEnd().toString().substring(3,5));
-			lunchTimeHourMap.put("lth"+index, workday.getHalftime().toString().substring(0,2));
-			lunchTimeMinMap.put("ltm"+index, workday.getHalftime().toString().substring(3,5));
-			totalHourMap.put("tth"+index, workday.getWorktime().toString().substring(0,2));
-			totalMinMap.put("ttm"+index, workday.getWorktime().toString().substring(3,5));
-			other1Map.put("oa"+index, workday.getOther1());
-			other2Map.put("ob"+index, workday.getOther2());
-			other3Map.put("oc"+index, workday.getOther3());
+			stHourMap.put("[sth"+index+"]", workday.getStart().toString().substring(0,2));
+			stMinMap.put("[stm"+index+"]", workday.getStart().toString().substring(3,5));
+			endHourMap.put("[edh"+index+"]", workday.getEnd().toString().substring(0,2));
+			endMinMap.put("[edm"+index+"]", workday.getEnd().toString().substring(3,5));
+			lunchTimeHourMap.put("[lth"+index+"]", workday.getHalftime().toString().substring(0,2));
+			lunchTimeMinMap.put("[ltm"+index+"]", workday.getHalftime().toString().substring(3,5));
+			totalHourMap.put("[tth"+index+"]", workday.getWorktime().toString().substring(0,2));
+			totalMinMap.put("[ttm"+index+"]", workday.getWorktime().toString().substring(3,5));
+			other1Map.put("[oa"+index+"]", workday.getOther1());
+			other2Map.put("[ob"+index+"]", workday.getOther2());
+			other3Map.put("[oc"+index+"]", workday.getOther3());
 
 			index++;
 
