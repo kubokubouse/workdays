@@ -21,4 +21,7 @@ public class RegularTimeService {
     public void update(RegularTime regularTime){
         rtRepository.save(regularTime);
     }
+    public void insert(RegularTime regularTime){
+        rtRepository.save(regularTime);
+    }
 }
