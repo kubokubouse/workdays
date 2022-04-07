@@ -138,6 +138,18 @@ table tr {
         inputForm.value=inputvalue
         
       }
+      //900表記だった場合09:00に修正する
+      if(inputvalue.length==3){
+        var a = '0'
+        inputvalue=a+inputvalue
+        var b = inputvalue.slice(0, 2)
+        var c = ':'
+        var d = inputvalue.slice(2)
+        inputvalue=b+c+d
+        var inputForm = document.getElementById(id);
+        inputForm.value=inputvalue
+        
+      }
       
       var start = document.getElementById(day+st).value;
       var end = document.getElementById(day+ed).value;
