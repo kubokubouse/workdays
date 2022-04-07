@@ -395,7 +395,6 @@ public class AdminController extends WorkdaysProperties{
             return "accessError";
         }
 
-        List<String> filePathList = new ArrayList<String>();
         List<String> fileNameList = new ArrayList<String>();
         int companyId = (Integer)session.getAttribute("companyId");
         String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
@@ -406,14 +405,13 @@ public class AdminController extends WorkdaysProperties{
         if (fileList != null) {
             for (File file : fileList){
                 fileNameList.add(file.getName());
-                String filePath = "https://workdays.jp/download/"+companyId+"_input/"+file.getName();
-                filePathList.add(filePath);
+                
             }
         } else {
             model.addAttribute("error", "ファイルが存在しません");
             return "templatelist";
         }
-        model.addAttribute("filePath", filePathList);
+        model.addAttribute("folder", companyId + "_input");
         model.addAttribute("fileName", fileNameList);
         return "templatelist";
     }
