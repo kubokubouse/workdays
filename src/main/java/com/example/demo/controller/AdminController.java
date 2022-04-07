@@ -406,7 +406,7 @@ public class AdminController extends WorkdaysProperties{
         if (fileList != null) {
             for (File file : fileList){
                 fileNameList.add(file.getName());
-                String filePath = getInputFolder(companyId).getAbsolutePath() + "/" + file.getName();
+                String filePath = "https://workdays.jp/download/"+companyId+"_input/"+file.getName();
                 filePathList.add(filePath);
             }
         } else {

@@ -20,7 +20,7 @@ public class WorkdaysProperties {
     public static String userRegisterText="/mail/userregister.txt";
     public static String loginText="/mail/login.txt";
     public static String onetimeText="/mail/onetime.txt";
-    //※boxClientIdを変更した場合はdone.htmlページのリンクも編集する事
+    //※boxClientIdを変更した場合はlist.htmlページのリンクも編集する事
     public static String boxClientId = "4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6";
 	public static String boxClientSecret = "wE7OWwmsH0V1Z1wYscLQUaOgTpiUqNvJ";
     public static String boxSaveFolderName = "WorkDays";
