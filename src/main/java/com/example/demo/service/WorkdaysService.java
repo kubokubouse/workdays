@@ -102,8 +102,8 @@ public class WorkdaysService {
           list.add(data);
         }
         workingListParam.setWorkingDataList(list);
-		workingListParam.setMonth(year);
-		workingListParam.setYear(month);
+		workingListParam.setMonth(month);
+		workingListParam.setYear(year);
         return workingListParam;
 
 	}
