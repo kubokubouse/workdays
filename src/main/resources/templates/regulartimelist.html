@@ -242,7 +242,7 @@ table tr {
                  <input type="text" onclick="this.select()" th:id="|${regulartime.id}:worktime|" th:day="${regulartime.id}"  class="mamTimePicker" th:name="worktime" th:value="${regulartime.worktime}"  >
                 </td>
                 <td>
-                 <form th:action="@{/cidelete}">
+                 <form th:action="@{/regulardelete}">
                   <input type="hidden" name="id" th:value="${regulartime.id}" />
                   <input type="submit" value="削除" class="button">
                  </form>

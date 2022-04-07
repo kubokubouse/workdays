@@ -368,6 +368,30 @@ public class MasterUserController extends WorkdaysProperties{
 		return "regulartimelist";
     }
 
+	//定時削除
+	@RequestMapping("/regulardelete")
+	public String deleteregular(@RequestParam("id") String id, @ModelAttribute BeanRegularTime Brtime, Model model ){
+		rtService.delete(Integer.valueOf(id));
+		
+		List<RegularTime> rtbList = new ArrayList<RegularTime>();
+		rtbList = rtService.findAll();
+		List<BeanRegularTime> rtList=new ArrayList<BeanRegularTime>();
+		for(RegularTime brt:rtbList){
+			BeanRegularTime BRtime=new BeanRegularTime();
+			BRtime.setStart(brt.getStart().toString().substring(0,5));
+			BRtime.setEnd(brt.getEnd().toString().substring(0,5));
+			BRtime.setHalftime(brt.getHalftime().toString().substring(0,5));
+			BRtime.setWorktime(brt.getWorktime().toString().substring(0,5));
+			BRtime.setId(brt.getId());
+			rtList.add(BRtime);
+		}
+		
+		model.addAttribute("rtList", rtList);
+		model.addAttribute("Brtime", Brtime);
+
+		return "regulartimelist";
+	}
+
 	@PostMapping("/RbAjaxServlet")
 	public String AjaxServlet(@RequestParam String inputvalue, String name,String day, Model model ){	
 		int id=Integer.parseInt(day);
