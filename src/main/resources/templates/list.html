@@ -24,10 +24,19 @@
   background-color: #fa4d4d;
   vertical-align: middle;
 }
-
+.time {
+  width: 60px;
+  height: 28px;
+  border-radius: 5px;
+  border: 1px solid rgb(143, 140, 140);
+  outline: none;
+  background: transparent;
+  padding: 5px;
+}
 table {
   border-collapse: collapse;
   margin: 0 auto;
+  margin-top: 20px;
   padding: 0;
   width: 80%;
   table-layout: fixed;
@@ -43,10 +52,12 @@ table tr {
   padding: .35em;
 }
 .output{
+  font-size: 13px;
   margin-top: 20px;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }
 
 .tabs {
@@ -68,11 +79,16 @@ table tr {
 }
 
 .button {
-  padding: 5px 10px;
+  padding: 5px;
 }
-.select_month {
-  text-align: right;
-  margin-right: 10px;
+
+.box_icon {
+  width: 36px;
+  height: auto;
+}
+.folder_icon {
+  width: 30px;
+  height: auto;
 }
 p {
   color: #808080;
@@ -194,8 +210,8 @@ table tr {
     <h1>[[${workingListParam.year}]]年[[${workingListParam.month}]]月勤怠表 </h1>
   </div>
 
-<div class="main">
 
+  <div class="main">
 
   <div class="output">
   <form th:action="@{/yearmonth}" th:object="${yearMonth}" th:method="post">
@@ -218,34 +234,26 @@ table tr {
       <div th:unless="${yearMonth.month==11}"><option th:value="11">11月</option></div><div th:if="${yearMonth.month==11}"><option th:value="11" selected>11月</option></div>
       <div th:unless="${yearMonth.month==12}"><option th:value="12">12月</option></div><div th:if="${yearMonth.month==12}"><option th:value="12" selected>12月</option></div>
     </select>
-
-  
-
   <input class="button" type="submit" value="変更">
   <small th:if="${error2}">*[[${error2}]]</small>
 </form>
 
-  <form th:action="@{/ontime}" th:object="${Brtime}"class="time" th:method="post">
-    <div  class="text-end">
-      開始<input type="text" th:field="*{start}">終了<input type="text"  th:field="*{end}">休憩<input type="text"  th:field="*{halftime}">
-      <input type="submit" class="button_blue" value="　定時　">
-    </div><br />
+  <form th:action="@{/ontime}" th:object="${Brtime}" th:method="post">
+      開始 <input type="text" th:field="*{start}" class="time">
+      終了 <input type="text"  th:field="*{end}" class="time">
+      休憩 <input type="text"  th:field="*{halftime}" class="time">
+      <input type="submit" class="button" value="定時">
   </form>
 
-  <form th:action="@{/transition}">
-    <input type="hidden" name="local" value="/choosetemplatelocal">
-    <input type="hidden" name="box" value="/boxDownload">
-    <input class="button" type="submit" value="勤怠表を出力">
-  </form>
-
+  <a href="/choosetemplatelocal"><img src="img/folder.jpg" class="folder_icon"></a>
+  <!-- TODO client_idは必要に応じて変えること -->
+  <a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=https://workdays.jp/boxDownload">
+      <img src="img/box_logo.jpg" class="box_icon">
+  </a>
 </div>
 
-  <div class="select_month">
 
-  </div>
-    <div  class="text-end">
-       
-      </div><br />
+    
       <table class="table table-striped">
         <thead>
           <tr>
