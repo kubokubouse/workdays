@@ -1,3 +1,3 @@
 下記のリンクにアクセスすると登録処理は完了します。
 3分以内にアクセスしないと期限切れになるので注意してください
-http://localhost:8080/registerdone
+https://workdays.jp/registerdone

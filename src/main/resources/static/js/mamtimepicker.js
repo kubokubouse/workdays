@@ -345,7 +345,61 @@
     let m=this.getVal(this.arrM,this.m);
     h=this.arrH[h];
     m=this.arrM[m];
-    this.target.value=h+this.delimiter+m;
+    var inputvalue=h+this.delimiter+m
+    var day=$(this.target).attr('day')
+
+    this.target.value=inputvalue;
+    var wt=':worktime';
+    var st=':start';
+    var ed=':end';
+    var ht=':halftime';
+    var start = document.getElementById(day+st).value;
+    var end = document.getElementById(day+ed).value;
+    var half = document.getElementById(day+ht).value;
+    var sth=Number(start.substr(0,2));
+    var stm=Number(start.substr(3,2));
+
+    var edh=Number(end.substr(0,2));
+    var edm=Number(end.substr(3,2));
+
+    var hfh=Number(half.substr(0,2));
+    var hfm=Number(half.substr(3,2));
+    
+    console.log('h'+hfh);
+    console.log('m'+hfm);
+    var wtm=(edh-sth-hfh)*60+(edm-stm-hfm);
+    console.log('wtm='+wtm);
+    var tenhour=Math.floor(wtm/600);
+    console.log('th'+tenhour);
+    var hour=Math.floor(wtm%600/60);
+    console.log('hour='+hour);
+    var tenminutes=wtm%600%60;
+    console.log('tm1='+tenminutes);
+    var tenminutes=Math.floor(tenminutes/10);
+    console.log('tm2='+tenminutes);
+    var minutes=Math.floor(wtm%600%60%10%10);
+    console.log('minutes='+minutes);
+    var time=String(tenhour)+String(hour)+":"+String(tenminutes)+String(minutes);
+    
+    var resultForm = document.getElementById(day+wt);
+    resultForm.value = time;
+
+    $.ajax({
+      url: "/AjaxServlet",
+      type: "POST",
+      data: {
+        inputvalue : inputvalue,
+        day : day,
+        name :$(this.target).attr('name'),
+      }
+    }).done(function (result) {
+      
+      }).fail(function () {
+        // 通信失敗時のコールバック
+        //alert("更新に失敗しました");
+      }).always(function (result) {
+      // 常に実行する処理
+    });
     this.close();
   }
   this.hourChange=function(val){
