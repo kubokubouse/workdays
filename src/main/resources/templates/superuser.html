@@ -31,9 +31,11 @@
         <input type="hidden" name="box" value="/uploaduserfrombox">
         <input class="button" type="submit" value="ユーザー一括アップロード">
       </form>
+      
       <div th:if="${iDuser==1}"> 
         <form th:action="@{/superworkdays}">
-        <input class="button" type="submit" value="勤怠データ編集">
+          <img src="img/individual.jpeg" class="icon">
+          <input class="button_blue" type="submit" value="勤怠入力へ">
         </form>
       </div>
     </div>
@@ -66,40 +68,36 @@
 </html>
 
 <style>
-
-  body {
-    font-family: Lato, arial, Helvetica, clean, sans-serif;
-    text-align: center;
+  .button {
+    margin-top: 25px;
   }
-
-  h1 {
-    font-size: 30px;
-    padding: 20px;
-    color: white;
-    background-color: #006AE9;
-    border-bottom: solid 1px rgb(48, 27, 235);
-    padding-top: 10px;
-  }
-  .button{
+  .button_blue{
+    margin-top: 30px;
     background-color: #FFFF;
     border-radius: 5px;
     padding: 10px 15px;
-    border: 1px solid rgb(143, 140, 140);
+    border: 1px double rgb(143, 140, 140);
+    color: #034697;
     outline: none;
     background: transparent;
   }
+  .button_blue:hover{
+    background-color: #403dfc;
+    color: #FFFF;
+  }
+  .icon {
+    height: 40px;
+    width: auto;
+  }
   .contents {
     display: flex;
-    margin-top: 30px;
+    margin-top: 10px;
   }
   .contents_1{
     margin: 0 auto;
   }
   .contents_2{
     margin:0 auto;
-  }
-  form {
-    margin: 10px;
   }
   .logout{
     margin-top: 20px;
