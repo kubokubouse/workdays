@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.*;
-
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -149,13 +149,23 @@ public class AdminController extends WorkdaysProperties{
 
     //会員登録ページに移行
 	@GetMapping("/superuser")
-	public String menue(@ModelAttribute User user){
+	public String menue(@ModelAttribute User user, Model model){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        
+        String id = (String)session.getAttribute("email");
+
         if (superUser == null) {
             return "accessError";
         }
+
+        //管理者がindiviudualDataにも登録していた場合勤怠データにアクセスできるように
+		List<IndividualData> iDataList = individualService.findMail(id);
+		if(CollectionUtils.isEmpty(iDataList)){
+			model.addAttribute("iDuser",0);
+			return "superuser";
+		}
+    
+        model.addAttribute("iDuser",1);
 		return "superuser";
 	}
 
