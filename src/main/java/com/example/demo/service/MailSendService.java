@@ -173,7 +173,7 @@ public class MailSendService {
     System.out.println("メール送れたよ");
   }
 
-  public void mailsend(String adress,String textpath)  {
+  public void mailsend(String adress, String title, String textpath)  {
 	  
 
     // メッセージクラス生成
@@ -216,7 +216,7 @@ public class MailSendService {
       // 送信先アドレスをセット
       helper.setTo(adress);
       // 表題をセット
-      helper.setSubject("ユーザー登録のお知らせ");
+      helper.setSubject(title);
 
       
     }

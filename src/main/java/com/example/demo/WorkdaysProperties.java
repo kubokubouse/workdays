@@ -14,12 +14,15 @@ public class WorkdaysProperties {
     public static String basePath = "/var/www/html/download";//aws用のpath
 
 
-    public static String outputFileName = "勤怠表.xls";
     public static String cccExcelFile = "/apache/htdocs/image/test.xlsx";
-    public static String fromMailAdress="r-kubo@connectcrew.co.jp";
-    public static String userRegisterText="/mail/userregister.txt";
+    public static String fromMailAdress="ent_workdays@connectcrew.co.jp";
+    public static String userRegisterTitle = "WorkDays:ユーザー本登録のお知らせ";
+    public static String userRegisterText = "/mail/userregister.txt";
+    public static String loginTitle = "WorkDays:登録完了のお知らせ";
     public static String loginText="/mail/login.txt";
+    public static String onetimeTitle = "WorkDays:ユーザー仮登録のお知らせ";
     public static String onetimeText="/mail/onetime.txt";
+    
     //※boxClientIdを変更した場合はlist.htmlページのリンクも編集する事
     public static String boxClientId = "4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6";
 	public static String boxClientSecret = "wE7OWwmsH0V1Z1wYscLQUaOgTpiUqNvJ";

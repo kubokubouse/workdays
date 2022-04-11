@@ -223,10 +223,10 @@ public class AdminController extends WorkdaysProperties{
         //登録されたメアドにユニバーサルユーザー登録orログインのメールを送る
         User universalUser=userService.findEmail(mail);
         if(universalUser==null){
-           mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+           mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle,WorkdaysProperties.userRegisterText);
            return "superuser";
         }
-        mailSendService.mailsend(mail,WorkdaysProperties.loginText);
+        mailSendService.mailsend(mail,WorkdaysProperties.loginTitle,WorkdaysProperties.loginText);
 		return "superuser";
     }
 
@@ -307,7 +307,7 @@ public class AdminController extends WorkdaysProperties{
     @RequestMapping(value="/remail")
 	public String superuserremail(@RequestParam("mail") String mail, Model model){
 		
-		mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+		mailSendService.mailsend(mail, WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
 		return "remail";
 	}
 
@@ -898,7 +898,7 @@ public class AdminController extends WorkdaysProperties{
             //ユーザーが既に登録されているか確認
                 User universalUser=userService.findEmail(mail);
                 if(universalUser==null){
-                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
                     id.setRegistered(1);
                 } else {
                     id.setRegistered(0);
@@ -1177,7 +1177,7 @@ public class AdminController extends WorkdaysProperties{
             //ユーザーが既に登録されているか確認
                 User universalUser=userService.findEmail(mail);
                 if(universalUser==null){
-                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
                     id.setRegistered(1);
                 } else {
                     id.setRegistered(0);
