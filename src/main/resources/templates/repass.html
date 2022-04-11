@@ -14,37 +14,40 @@
 <h1>パスワード再登録処理</h1>
 </header>
 <main id=contents>
-  <h6>登録したメールアドレスを入力し送信ボタンを押してください</h6>
-
 <form id="entryform" th:action="@{/repassmail}"  th:object="${mail}"method="post" >
-<table class="entryTable" border="1">
- <tr>
-    <td><label for="email"></label>
-      <input type="text" class="login-control" placeholder="メールアドレス"
-        th:errorclass="is-invalid" th:field="*{email}">
-      <div class="invalid-feedback" th:errors="*{email}"></div>    
-    </td>
-    
-    <td>
-      <input type="submit" value="送信" class="button">
-    </td>
 
-  </tr>
+<table class="entryTable" border="1">
+
+ <tr>
+        <th>メールアドレス </th>
+      <td><label for="email"></label>
+
+      <input type="text" class="login-control"
+    th:errorclass="is-invalid" th:field="*{email}">
+ <div class="invalid-feedback" th:errors="*{email}">
+            </div>
+
+      
+      </td>
+    </tr>
+
+
+
   </table>
-  
+  <input type="submit" value="メール送信">
 </form>
-<p><a href="/">ログイン画面へ戻る</a></p>
+<p><a href="/">ログイン画面へ</a></p>
 </main>
+<img src="./img/CCCLogo.jpg" alt="CCC" width="160px">
+<p>©株式会社コネクトクルー</p>
 </body>
 </html>
 
 <style>
-  h6 {
-    margin-top: 20px;
-  }
   .entryTable {
     border: 0px none;
     margin: auto;
+    margin-top: 20px;
     border-collapse: separate;
     border-spacing: 0px 10px;
   }
@@ -59,18 +62,14 @@
   }
 
   a {
-    display: inline-block;
-    margin-top: 20px;
-    font-size: 15px;
+    display: block;
+    padding-top: 10px;
   }
 
   img {
     margin-top: 20px;
   }
-  .button {
-    font-size: 15px;
-    padding: 5px 10px;
-  }
+
   p {
     font-size: 10px; 
     color: #808080;

@@ -51,23 +51,16 @@
       <th>パスワード </th>
       <td>
         <label for="password"></label>
-        <input type="password" class="register-control" name="password"
+        <input type="password" class="register-control"
         th:errorclass="is-invalid" th:field="*{password}">
        <div class="invalid-feedback" th:errors="*{password}"></div>
-        <p>※半角英数</p>
+        <small>※半角英数</small>
       </td>
     </tr>
 
-    <tr>
-      <th>確認用パスワード </th>
-      <td>
-        <label for="confirm"></label>
-        <input type="password" class="register-control" name="confirm" oninput="CheckPassword(this)">
-        <p>※半角英数</p>
-      </td>
-    </tr>
+    
 
-    <p th:text="${error}"></p>
+
 
   </table>
   <div class="send">
@@ -86,13 +79,13 @@
 <style>
   .entryTable {
     margin: auto;
-    margin-top: 10px;
     border: 0px none;
     text-align: center;
   }
 
   th {
-    text-align: right;
+    background-color: #CCCCFF;
+    color: black;
   }
   
   td {
@@ -103,10 +96,7 @@
   .send {
     margin-top: 20px;
   }
-  p {
-    margin-top: 0px;
-    font: 8px;
-  }
+
   a {
     display: block;
     padding-top: 10px;
