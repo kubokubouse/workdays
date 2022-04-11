@@ -205,75 +205,72 @@ table tr {
   
 
  
-    <div  class="text-end">
-       
-    </div><br />
-    <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>開始時刻</th>
-            <th>終了時刻</th>
-            <th>休憩時間</th>
-            <th>作業時間</th>
-            <th>削除・登録</th>
-            
-          </tr>
-        </thead>
+  <div  class="text-end"></div><br />
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>開始時刻</th>
+        <th>終了時刻</th>
+        <th>休憩時間</th>
+        <th>作業時間</th>
+        <th>削除・登録</th>
+      </tr>
+    </thead>    
+    
+    <tbody>
+      <tr th:each="regulartime, st : *{rtList}" >
+        <td>
+           <input type="text" onclick="this.select()" th:id="|${regulartime.id}:start|"  th:day="${regulartime.id}" class="mamTimePicker" th:name="start" th:value="${regulartime.start}"  >
+        </td>
+        <td>
+          <input type="text" onclick="this.select()" th:id="|${regulartime.id}:end|"  th:day="${regulartime.id}" class="mamTimePicker" th:name="end" th:value="${regulartime.end}"  >
+        </td>
+        <td>
+          <input type="text" onclick="this.select()" th:id="|${regulartime.id}:halftime|" th:day="${regulartime.id}"  class="mamTimePicker" th:name="halftime" th:value="${regulartime.halftime}"  >
+        </td>
+        <td>
+          <input type="text" onclick="this.select()" th:id="|${regulartime.id}:worktime|" th:day="${regulartime.id}"  class="mamTimePicker" th:name="worktime" th:value="${regulartime.worktime}"  >
+        </td>
         
-
-        <tbody>
-            <tr th:each="regulartime, st : *{rtList}" >
-           
-                <td>
-                 <input type="text" onclick="this.select()" th:id="|${regulartime.id}:start|"  th:day="${regulartime.id}" class="mamTimePicker" th:name="start" th:value="${regulartime.start}"  >
-                </td>
-                <td>
-                 <input type="text" onclick="this.select()" th:id="|${regulartime.id}:end|"  th:day="${regulartime.id}" class="mamTimePicker" th:name="end" th:value="${regulartime.end}"  >
-                </td>
-                <td>
-                 <input type="text" onclick="this.select()" th:id="|${regulartime.id}:halftime|" th:day="${regulartime.id}"  class="mamTimePicker" th:name="halftime" th:value="${regulartime.halftime}"  >
-                </td>
-                <td>
-                 <input type="text" onclick="this.select()" th:id="|${regulartime.id}:worktime|" th:day="${regulartime.id}"  class="mamTimePicker" th:name="worktime" th:value="${regulartime.worktime}"  >
-                </td>
-                <td>
-                 <form th:action="@{/regulardelete}">
-                  <input type="hidden" name="id" th:value="${regulartime.id}" />
-                  <input type="submit" value="削除" class="button">
-                 </form>
-                </td>
-            </tr>
-            <form id="entryForm" th:action="@{/br_regist}" th:object="${Brtime}"method="post" novalidate>
-             <td>
-              <label for="start"></label>
-              <input type="text" class="mamTimePicker"
-               th:errorclass="is-invalid" th:field="*{start}">
-               <div class="invalid-feedback" th:errors="*{start}"></div>
-             </td>
-           
-             <td>
-              <label for="end"></label>
-              <input type="text" class="mamTimePicker"
-               th:errorclass="is-invalid" th:field="*{end}">
-              <div class="invalid-feedback" th:errors="*{end}"></div>
-             </td>
-            
-             <td>
-              <label for="halftime"></label>
-              <input type="text" class="mamTimePicker"
-              th:errorclass="is-invalid" th:field="*{halftime}">
-              <div class="invalid-feedback" th:errors="*{halftime}"></div>
-             </td>
-             <td>
-                <label for="worktime"></label>
-                <input type="text" class="mamTimePicker"
-                th:errorclass="is-invalid" th:field="*{worktime}" >
-                <div class="invalid-feedback" th:errors="*{worktime}"></div>
-            </td>
-             <td><input type="submit" value="登録" class="button"></td>
-            </form>
-        </tbody>
-    </table>
+        <td>
+          <form th:action="@{/regulardelete}">
+           <input type="hidden" name="id" th:value="${regulartime.id}" />
+           <input type="submit" value="削除" class="button">
+          </form>
+        </td>  
+      </tr>
+      
+      <form id="entryForm" th:action="@{/br_regist}" th:object="${Brtime}"method="post" novalidate>
+       <td>
+          <label for="start"></label>
+          <input type="text" class="mamTimePicker"
+          th:errorclass="is-invalid" th:field="*{start}">
+          <div class="invalid-feedback" th:errors="*{start}"></div>
+       </td>
+     
+       <td>
+        <label for="end"></label>
+        <input type="text" class="mamTimePicker"
+         th:errorclass="is-invalid" th:field="*{end}">
+        <div class="invalid-feedback" th:errors="*{end}"></div>
+       </td>
+      
+       <td>
+        <label for="halftime"></label>
+        <input type="text" class="mamTimePicker"
+        th:errorclass="is-invalid" th:field="*{halftime}">
+        <div class="invalid-feedback" th:errors="*{halftime}"></div>
+       </td>
+       <td>
+          <label for="worktime"></label>
+          <input type="text" class="mamTimePicker"
+          th:errorclass="is-invalid" th:field="*{worktime}" >
+          <div class="invalid-feedback" th:errors="*{worktime}"></div>
+        </td>
+        <td><input type="submit" value="登録" class="button"></td>
+      </form>
+    </tbody>
+  </table>
     
   </div>
 </div>

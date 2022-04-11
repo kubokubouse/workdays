@@ -96,9 +96,6 @@ table tr {
         // 常に実行する処理
       });
 
-      
-
-
 
 
     });
@@ -114,51 +111,50 @@ table tr {
     <h1>管理者一覧</h1>
     
 
-      <br/>
+    <br/>
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
+    <table class="table table-striped">
+      <thead>
+        <tr>
             
-            <th>会社ID</th>
-            <th>メールアドレス</th>
-            <th>パスワード</th>
+          <th>会社ID</th>
+          <th>メールアドレス</th>
+          <th>パスワード</th>
            
             
-            <th>ユーザー削除</th>
+          <th>ユーザー削除</th>
   
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="superUser, st : *{superUserListParam.superUserDataList}" >
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr th:each="superUser, st : *{superUserListParam.superUserDataList}" >
 
-            <td>
-              <input type="text" th:superuserid="${superUser.id}" th:id="${superUser.companyID}" class="form-control" th:name="companyID" th:value="${superUser.companyID}" >
-            </td>
+          <td>
+            <input type="text" th:superuserid="${superUser.id}" th:id="${superUser.companyID}" class="form-control" th:name="companyID" th:value="${superUser.companyID}" >
+          </td>
             
-            <td>
-              <input type="text" th:superuserid="${superUser.id}" th:id="${superUser.email}" class="form-control" th:name="email" th:value="${superUser.email}" >
-            </td>
+          <td>
+            <input type="text" th:superuserid="${superUser.id}" th:id="${superUser.email}" class="form-control" th:name="email" th:value="${superUser.email}" >
+          </td>
             
-            <td>
-              <input type="text" th:superuserid="${superUser.id}" th:id="${superUser.pass}" class="form-control" th:name="pass" th:value="${superUser.pass}" >
-            </td>
+          <td>
+            <input type="text" th:superuserid="${superUser.id}" th:id="${superUser.pass}" class="form-control" th:name="pass" th:value="${superUser.pass}" >
+          </td>
             
-           
-            
-            <td>
-              <form th:action="@{/superuserdelete}" >
-                <input type="hidden" name="id" th:value="${superUser.id}" />
-                <input type="submit" value="削除" class="button">
+          <td>
+            <form th:action="@{/superuserdelete}" >
+              <input type="hidden" name="id" th:value="${superUser.id}" />
+              <input type="submit" value="削除" class="button">
 
-              </form>
-            </td>
+            </form>
+          </td>
             
             
-          </tr>
-        </tbody>
+        </tr>
+      </tbody>
     
-      </table>
+    </table>
    
     
     
