@@ -14,21 +14,29 @@
     <p>※ファイルのセルやシートが保護されていない状態であること</p>
     <p>※ファイル名が.xlsで終わっていること</p>
     <p>※ファイルに入力した値が以下の規則に基づいていること</p>
-    <p>アルファベットは小文字で記載し、続く数字は日付と同じであること</p>
+    <p>※アルファベットは小文字で記載し、続く数字は日付と同じであること</p>
+    
+    <div class="tags">
     <ul>
-        <li type="disc">開始 (時間[sth1],　分[stm1])</li>
-        <li type="disc">終了(時間[edh1],　分[edm1])</li>
-        <li type="disc">休憩(時間[lth1],　分[ltm1])</li>
-        <li type="disc">就業時間(時間[tth1],  分[ttm1])</li>
-        <li type="disc">備考１([oa1])</li>
-        <li type="disc">備考2([ob1])</li>
-        <li type="disc">備考3([oc1])</li>
-        <li type="disc">管理番号([ID])</li>
-        <li type="disc">名前([NAME])</li>
-        <li type="disc">メールアドレス([MAIL])</li>
+        <li type="disc">開始時間 [sth1], 分 [stm1]</li>
+        <li type="disc">終了時間 [edh1], 分 [edm1]</li>
+        <li type="disc">休憩時間 [lth1], 分 [ltm1]</li>
+        <li type="disc">就業時間 [tth1], 分 [ttm1]</li>
     </ul>
-    <p>例）４日の就業時間を(00:00)表記で記入する場合 tth4:ttm4</p>        
+    <ul>
+        <li type="disc">備考1 [oa1] </li>
+        <li type="disc">備考2 [ob1]</li>
+        <li type="disc">備考3 [oc1]</li>
+    </ul>
+    <ul>
+        <li type="disc">管理番号 [ID]</li>
+        <li type="disc">名前 [NAME]</li>
+        <li type="disc">メールアドレス [MAIL]</li>
+    </ul>
     </div>
+    </div>
+        <p>例）４日の就業時間を(00:00)表記で記入する場合 [tth4]:[ttm4]</p>        
+    
 
     <table>
         <tr>
@@ -64,25 +72,10 @@
     .example {
         padding-left: 100px;
     }
-      .reicon {
-          text-align: right;
-          margin-right: 100px;
-      }
-
-      .redirect {
-        text-decoration: none;
-        display       : inline-block;
-        border-radius : 5%;          /* 角丸       */
-        font-size     : 12pt;        /* 文字サイズ */
-        text-align    : center;      /* 文字位置   */
-        cursor        : pointer;     /* カーソル   */
-        padding       : 10px 10px;   /* 余白       */
-        background    : #1a1aff;     /* 背景色     */
-        color         : #ffffff;     /* 文字色     */
-        line-height   : 1em;         /* 1行の高さ  */
-        transition    : .3s;         /* なめらか変化 */
-      }
- 
+    .tags{
+        display: flex;
+        justify-content: center;
+    }
       table {
           margin: 3px auto;
       }
