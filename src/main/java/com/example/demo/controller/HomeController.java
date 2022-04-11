@@ -579,7 +579,8 @@ public class HomeController extends WorkdaysProperties{
 
 	//ユニバユーザー登録用リンク踏んだ奴用の処理　会員登録ページに移行
 	@GetMapping("/universalregister")
-	public String universalregister(@ModelAttribute User user, Model model,@RequestParam String email){
+	public String universalregister(@ModelAttribute User user, Model model, @RequestParam String email){
+		
 		user.setEmail(email);
 		session.setAttribute("user",user);
 		model.addAttribute("user",user);
@@ -588,12 +589,19 @@ public class HomeController extends WorkdaysProperties{
 
     //会員情報入力→確認画面へ
 	@PostMapping("/universalregister")
-	public String universalconfirm(@Validated @ModelAttribute User user,BindingResult result){
+	public String universalconfirm(@Validated @ModelAttribute User user,BindingResult result,
+		@RequestParam String password, @RequestParam String confirm, Model model){
 		
         if (result.hasErrors()){
 			// エラーがある場合登録画面に戻る
             return "universalregister";
         }
+		if (!password.equals(confirm)) {
+			model.addAttribute("error", "パスワードが一致しません");
+			user = (User)session.getAttribute("user");
+			model.addAttribute("user",user);
+			return "universalregister";
+		}
 		return "universalconfirm";
 	}
 
