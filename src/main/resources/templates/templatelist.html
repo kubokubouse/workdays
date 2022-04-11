@@ -20,16 +20,17 @@
         <div class="data"> 
         <tr th:each="fileName, fileNameSt : ${fileName}">            
         <form th:action="@{/filedelete}">
-            <input type="hidden" name="deleteFileName" th:value="${fileName}">
+            <input type="hidden" name="deleteFileName" th:value="${fileName}" id="fileName">
             <input type="hidden" name="box" value="local">         
-            <td th:text="${fileName}"></td>
+            <td th:text="${fileName}" ></td>
             <td><input type="submit" value="削除" class="button"></td>
         </form> 
-       
-   
-        <th:block th:each="filePath, filePath : ${filePath}">
-        <td><a th:href="@{${filePath}}" class="button" download> ダウンロード</a></td>
-        </th:block>
+
+        <td>
+            <input type="hidden" th:value="${folder}" id="folder">
+            <a href="https://workdays.jp/download" class="button" id="download" download> ダウンロード</a>
+        </td>
+        
     </tr>
     </div>
     </table>
@@ -45,7 +46,15 @@
 
 </body>
 </html>
-
+<script>
+    var file = document.getElementById("fileName");
+    var folder = document.getElementById("folder");
+    var target = document.getElementById("download");
+    var uri = "https://workdays.jp/download/"+ folder.value + "/" + file.value;
+    console.log(uri)
+    //a要素のhref属性に設定する
+    target.href = uri;
+  </script>
 <style>
     h1 {
         font-size: 20px;

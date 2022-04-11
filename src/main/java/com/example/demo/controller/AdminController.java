@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.*;
-
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -149,13 +149,23 @@ public class AdminController extends WorkdaysProperties{
 
     //会員登録ページに移行
 	@GetMapping("/superuser")
-	public String menue(@ModelAttribute User user){
+	public String menue(@ModelAttribute User user, Model model){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        
+        String id = (String)session.getAttribute("email");
+
         if (superUser == null) {
             return "accessError";
         }
+
+        //管理者がindiviudualDataにも登録していた場合勤怠データにアクセスできるように
+		List<IndividualData> iDataList = individualService.findMail(id);
+		if(CollectionUtils.isEmpty(iDataList)){
+			model.addAttribute("iDuser",0);
+			return "superuser";
+		}
+    
+        model.addAttribute("iDuser",1);
 		return "superuser";
 	}
 
@@ -213,10 +223,10 @@ public class AdminController extends WorkdaysProperties{
         //登録されたメアドにユニバーサルユーザー登録orログインのメールを送る
         User universalUser=userService.findEmail(mail);
         if(universalUser==null){
-           mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+           mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle,WorkdaysProperties.userRegisterText);
            return "superuser";
         }
-        mailSendService.mailsend(mail,WorkdaysProperties.loginText);
+        mailSendService.mailsend(mail,WorkdaysProperties.loginTitle,WorkdaysProperties.loginText);
 		return "superuser";
     }
 
@@ -297,7 +307,7 @@ public class AdminController extends WorkdaysProperties{
     @RequestMapping(value="/remail")
 	public String superuserremail(@RequestParam("mail") String mail, Model model){
 		
-		mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+		mailSendService.mailsend(mail, WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
 		return "remail";
 	}
 
@@ -453,7 +463,6 @@ public class AdminController extends WorkdaysProperties{
             return "accessError";
         }
 
-        List<String> filePathList = new ArrayList<String>();
         List<String> fileNameList = new ArrayList<String>();
         int companyId = (Integer)session.getAttribute("companyId");
         String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
@@ -461,17 +470,18 @@ public class AdminController extends WorkdaysProperties{
         File fileFolder = new File(fileFolderPath);
         File[] fileList = fileFolder.listFiles();
         
+        int fileCount = 0;
         if (fileList != null) {
             for (File file : fileList){
-                fileNameList.add(file.getName());
-                String filePath = "https://workdays.jp/download/"+companyId+"_input/"+file.getName();
-                filePathList.add(filePath);
-            }
-        } else {
+                fileNameList.add(file.getName()); 
+                fileCount++;
+            }  
+        } 
+        if(fileCount == 0) {
             model.addAttribute("error", "ファイルが存在しません");
             return "templatelist";
         }
-        model.addAttribute("filePath", filePathList);
+        model.addAttribute("folder", companyId + "_input");
         model.addAttribute("fileName", fileNameList);
         return "templatelist";
     }
@@ -888,7 +898,7 @@ public class AdminController extends WorkdaysProperties{
             //ユーザーが既に登録されているか確認
                 User universalUser=userService.findEmail(mail);
                 if(universalUser==null){
-                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
                     id.setRegistered(1);
                 } else {
                     id.setRegistered(0);
@@ -1167,7 +1177,7 @@ public class AdminController extends WorkdaysProperties{
             //ユーザーが既に登録されているか確認
                 User universalUser=userService.findEmail(mail);
                 if(universalUser==null){
-                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
+                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
                     id.setRegistered(1);
                 } else {
                     id.setRegistered(0);
@@ -1200,7 +1210,7 @@ public class AdminController extends WorkdaysProperties{
         return "boxcsvfilelist";
     }
 
-    //テンプレファイル一覧画面遷移
+    //テンプレファイルアップロード画面遷移
     @GetMapping("/totemplateupload")
     public String toTemplateUpload() {
 

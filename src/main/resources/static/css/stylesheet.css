@@ -14,7 +14,12 @@ h1 {
   padding-top: 10px;
   margin: 0;
 }
-
+h2 {
+  font-weight: none;
+}
+h3 {
+  font-weight: none;
+}
 
 .button{
   background-color: rgb(245, 245, 245);

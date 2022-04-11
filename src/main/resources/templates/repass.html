@@ -15,21 +15,27 @@
 </header>
 <main id=contents>
 <form id="entryform" th:action="@{/repassmail}"  th:object="${mail}"method="post" >
-  <table class="entryTable" border="1">
 
-    <tr>
-      <th>メールアドレス </th>
+<table class="entryTable" border="1">
+
+ <tr>
+        <th>メールアドレス </th>
       <td><label for="email"></label>
-        <input type="text" class="login-control"
-        th:errorclass="is-invalid" th:field="*{email}">
-        <div class="invalid-feedback" th:errors="*{email}"></div>
-      </td>  
+
+      <input type="text" class="login-control"
+    th:errorclass="is-invalid" th:field="*{email}">
+ <div class="invalid-feedback" th:errors="*{email}">
+            </div>
+
+      
+      </td>
     </tr>
-   
+
+
+
   </table>
   <input type="submit" value="メール送信">
 </form>
-
 <p><a href="/">ログイン画面へ</a></p>
 </main>
 <img src="./img/CCCLogo.jpg" alt="CCC" width="160px">
