@@ -120,61 +120,55 @@ table tr {
     <h1>ユーザー一覧</h1>
    
 
-      <br/>
+    <br/>
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>メールアドレス</th>
-            <th>苗字</th>
-            <th>名前</th>
-            <th>パスワード</th>
-            <th>利用可否</th>
-            
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>メールアドレス</th>
+          <th>苗字</th>
+          <th>名前</th>
+          <th>パスワード</th>
+          <th>利用可否</th>            
 
-          </tr>
-        </thead>
+        </tr>
+      </thead>
         
-        <tbody>
-          <tr th:each="user, st : ${userDataList}" >
+      <tbody>
+        <tr th:each="user, st : ${userDataList}" >
+          <td>
+            [[${user.email}]]
+          </td>
+        
+          <td>
+            [[${user.lastname}]]
+          </td>
 
-            
-            
-            <td>
-                [[${user.email}]]
-            </td>
-            
-            <td>
-                [[${user.lastname}]]
-            </td>
+          <td>
+            [[${user.firstname}]]
+          </td>
 
-            <td>
-                [[${user.firstname}]]
-            </td>
+          <td>
+            [[${user.password}]]
+          </td>
 
-            <td>
-                [[${user.password}]]
-            </td>
-
-            
-            <td>
-                <select name="banned" th:userid="${user.id}">
-                <div th:if="${user.banned==0}">
-                    <option value="0" selected>許可</option>
-                    <option value="1" >禁止</option>
-                </div>
-                <div th:if="${user.banned==1}">
-                  <option value="0" >許可</option>
-                  <option value="1" selected>禁止</option>
-                </div>
-                </select>
-              </td>
-            
-            
-          </tr>
-        </tbody>
-      </table>
-    </form>
+          <td>
+            <select name="banned" th:userid="${user.id}">
+            <div th:if="${user.banned==0}">
+                <option value="0" selected>許可</option>
+                <option value="1" >禁止</option>
+            </div>
+            <div th:if="${user.banned==1}">
+              <option value="0" >許可</option>
+              <option value="1" selected>禁止</option>
+            </div>
+            </select>
+          </td>
+               
+        </tr>
+      </tbody>
+    </table>
+  
     
     
 

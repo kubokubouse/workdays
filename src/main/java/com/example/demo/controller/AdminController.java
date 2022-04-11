@@ -305,7 +305,7 @@ public class AdminController extends WorkdaysProperties{
 	}
 
     @RequestMapping(value="/remail")
-	public String superuserdelete(@RequestParam("mail") String mail, Model model){
+	public String superuserremail(@RequestParam("mail") String mail, Model model){
 		
 		mailSendService.mailsend(mail,WorkdaysProperties.userRegisterText);
 		return "remail";
