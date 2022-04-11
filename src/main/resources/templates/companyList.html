@@ -92,98 +92,93 @@ table tr {
     </div>
     <h1>契約会社一覧</h1>
 
-      <br/>
+    <br/>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>会社ID</th>
+          <th>企業名</th>
+          <th>登録日</th>
+          <th>更新日</th>
+          <th>担当者名 </th>
+          <th>電話番号</th>
+          <th>メールアドレス</th>
+          <th>会社HP</th>
+          <th>上限ユーザー数</th>
+          <th>利用可否</th>
+          <th>削除</th>
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>会社ID</th>
-            <th>企業名</th>
-            <th>登録日</th>
-            <th>更新日</th>
-            <th>担当者名 </th>
-            <th>電話番号</th>
-            <th>メールアドレス</th>
-            <th>会社HP</th>
-            <th>上限ユーザー数</th>
-            <th>利用可否</th>
-            <th>削除</th>
-  
-          </tr>
-        </thead>
-        
-        <tbody>
-          <tr th:each="user, st : ${ciList}" >
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr th:each="user, st : ${ciList}" >
 
-            <td>
-              <input type="text" th:companyid="${user.companyID}" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >
-            </td>
-           
-            <td>
-              <input type="text" th:companyid="${user.companyID}" th:id="${user.companyName}" class="form-control" th:name="companyName" th:value="${user.companyName}" >
-            </td>
-            
-            <td>
-              [[${user.register}]]
-            </td>
+          <td>
+            <input type="text" th:companyid="${user.companyID}" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >
+          </td>
+         
+          <td>
+            <input type="text" th:companyid="${user.companyID}" th:id="${user.companyName}" class="form-control" th:name="companyName" th:value="${user.companyName}" >
+          </td>
+          
+          <td>
+            [[${user.register}]]
+          </td>
 
-            <td>
-              [[${user.topupContract}]]
-            </td>
-            
-            <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="person" th:value="${user.person}">
-            </td>
-            <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="tel" th:value="${user.tel}">
-            </td>
-            <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="mail" th:value="${user.mail}">
-            </td>
-            <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="homepage" th:value="${user.homepage}">
-            </td>
+          <td>
+            [[${user.topupContract}]]
+          </td>
+          
+          <td>
+            <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="person" th:value="${user.person}">
+          </td>
+          <td>
+            <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="tel" th:value="${user.tel}">
+          </td>
+          <td>
+            <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="mail" th:value="${user.mail}">
+          </td>
+          <td>
+            <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="homepage" th:value="${user.homepage}">
+          </td>
 
+          <td>
+            <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="limitedUser" th:value="${user.limitedUser}">
+          </td>
+          
+          <div th:if="${user.banned==0}">
             <td>
-              <input type="text" th:companyid="${user.companyID}" class="form-control" th:name="limitedUser" th:value="${user.limitedUser}">
+              <select name="banned" th:companyid="${user.companyID}">
+                <option value="0" selected>許可</option>
+                <option value="1">禁止</option>
+                
+              </select>
             </td>
-            
-            <div th:if="${user.banned==0}">
-              <td>
-                <select name="banned" th:companyid="${user.companyID}">
-                  <option value="0" selected>許可</option>
-                  <option value="1">禁止</option>
-                  
-                </select>
-              </td>
-            </div>
-  
-              <div th:if="${user.banned==1}">
-              <td>
-                <select name="banned">
-                  <option value="0" >許可</option>
-                  <option value="1" selected>禁止</option>
-                  
-                </select>
-              </td>
-            </div>
+          </div>
 
+            <div th:if="${user.banned==1}">
             <td>
-              <form th:action="@{/cidelete}">
-                <input type="hidden" name="id" th:value="${user.companyID}" />
-                <input type="submit" value="削除" class="button">
-
-              </form>
+              <select name="banned">
+                <option value="0" >許可</option>
+                <option value="1" selected>禁止</option>
+                
+              </select>
             </td>
-            
-            
-          </tr>
-        </tbody>
-      </table>
+          </div>
+
+          <td>
+            <form th:action="@{/cidelete}">
+              <input type="hidden" name="id" th:value="${user.companyID}" />
+              <input type="submit" value="削除" class="button">
+
+            </form>
+          </td>
+          
+        </tr>
+      </tbody>
+    </table>
     
-    
-
-
   </div>
   <p><a href="/masteruser">管理画面へ戻る</a></p>
   <p><a href="/master">ログアウト</a></p>

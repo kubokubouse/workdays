@@ -14,62 +14,56 @@
 
   <main id="contents">
     <form id="entryForm" th:action="@{/universalregister}" th:object="${user}"method="post" novalidate>
-    <table class="entryTable" border="1">
-      <tr>
-        <th>メールアドレス </th>
-      <td><label for="email"></label>
-    
-      <input type="text" class="login-control"
-    th:errorclass="is-invalid" th:field="*{email}">
-    <div class="invalid-feedback" th:errors="*{email}">
-            </div>
-    
-      </td>
-    </tr>
-    <tr>
-      <th>氏 </th>
-      <td>
-        <label for="lastname"></label>
-        <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{lastname}">
-       <div class="invalid-feedback" th:errors="*{lastname}"></div>
-      </td>
-    </tr>
-
-    <tr>
-      <th>名 </th>
-      <td>
-        <label for="firstname"></label>
-        <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{firstname}">
-        <div class="invalid-feedback" th:errors="*{firstname}"></div>
-      </td>
-    </tr>
-
-    
-    <tr>
-      <th>パスワード </th>
-      <td>
-        <label for="password"></label>
-        <input type="password" class="register-control"
-        th:errorclass="is-invalid" th:field="*{password}">
-       <div class="invalid-feedback" th:errors="*{password}"></div>
-        <small>※半角英数</small>
-      </td>
-    </tr>
-
-    
-
-
-
-  </table>
-  <div class="send">
-    
-    <input type="reset" value="クリア" class="button">
-    <input type="submit" value="登録" class="button">
-  </div>
-</form>
-</main>
+      <table class="entryTable" border="1">
+        <tr>
+          <th>メールアドレス </th>
+          <td><label for="email"></label>
+      
+            <input type="text" class="login-control"
+            th:errorclass="is-invalid" th:field="*{email}">
+            <div class="invalid-feedback" th:errors="*{email}"></div>
+      
+          </td>
+        </tr>
+      
+        <tr>
+          <th>氏 </th>
+          <td>
+            <label for="lastname"></label>
+            <input type="text" class="register-control"
+            th:errorclass="is-invalid" th:field="*{lastname}">
+            <div class="invalid-feedback" th:errors="*{lastname}"></div>
+          </td>
+        </tr>
+  
+        <tr>
+          <th>名 </th>
+          <td>
+            <label for="firstname"></label>
+            <input type="text" class="register-control"
+            th:errorclass="is-invalid" th:field="*{firstname}">
+            <div class="invalid-feedback" th:errors="*{firstname}"></div>
+          </td>
+        </tr>
+  
+        <tr>
+          <th>パスワード </th>
+          <td>
+            <label for="password"></label>
+            <input type="password" class="register-control"
+            th:errorclass="is-invalid" th:field="*{password}">
+           <div class="invalid-feedback" th:errors="*{password}"></div>
+            <small>※半角英数</small>
+          </td>
+        </tr>
+  
+      </table>
+      <div class="send">
+        <input type="reset" value="クリア" class="button">
+        <input type="submit" value="登録" class="button">
+      </div>
+    </form>
+  </main>
 
   
 

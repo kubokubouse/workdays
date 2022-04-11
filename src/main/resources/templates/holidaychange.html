@@ -14,47 +14,45 @@
 
   <main id="contents">
     <form id="entryForm" th:action="@{/holidayregister}" th:object="${oneholiday}" method="post" novalidate>
-    <table class="entryTable" border="1">
-
-      <tr> 
-        <th>年</th>
-        <td>[[${oneholiday.year}]]年</td>
-       </tr>
+      <table class="entryTable" border="1">
 
         <tr> 
-        <th>月</th>
-        <td>
-          <label for="number"></label>
-          <input type="number" class="register-control" style="width:50px;"
-            th:errorclass="is-invalid" th:field="*{month}" th:value="${oneholiday.month}" >
-          <div class="invalid-feedback" th:errors="*{month}"></div>月
-        
-          <label for="number"></label>
-          <input type="number" class="register-control" style="width:50px;"
-            th:errorclass="is-invalid" th:field="*{day}" th:value="${oneholiday.day}" >
-          <div class="invalid-feedback" th:errors="*{day}"></div>日
-        </td>
-      </tr>
-    <tr>
-      <th>名称</th>
-      <td>
-        <label for="lastname"></label>
-        <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{name}" th:value="${oneholiday.name}">
-       <div class="invalid-feedback" th:errors="*{name}"></div>
-      </td>
-    </tr>
-    
-
-  </table>
-  <input type="hidden" th:field="*{id}">
-  <input type="hidden" th:field="*{year}">
-  <div class="send">
-    <input type="reset" value="クリア" class="button">
-    <input type="submit" value="登録" class="button">
-  </div>
-</form>
-</main>
+          <th>年</th>
+          <td>[[${oneholiday.year}]]年</td>
+        </tr>
+  
+        <tr> 
+          <th>月</th>
+          <td>
+            <label for="number"></label>
+            <input type="number" class="register-control" style="width:50px;"
+              th:errorclass="is-invalid" th:field="*{month}" th:value="${oneholiday.month}" >
+            <div class="invalid-feedback" th:errors="*{month}"></div>月
+          
+            <label for="number"></label>
+            <input type="number" class="register-control" style="width:50px;"
+              th:errorclass="is-invalid" th:field="*{day}" th:value="${oneholiday.day}" >
+            <div class="invalid-feedback" th:errors="*{day}"></div>日
+          </td>
+        </tr>
+        <tr>
+          <th>名称</th>
+          <td>
+            <label for="lastname"></label>
+            <input type="text" class="register-control"
+            th:errorclass="is-invalid" th:field="*{name}" th:value="${oneholiday.name}">
+           <div class="invalid-feedback" th:errors="*{name}"></div>
+          </td>
+        </tr>
+      </table>
+      <input type="hidden" th:field="*{id}">
+      <input type="hidden" th:field="*{year}">
+      <div class="send">
+        <input type="reset" value="クリア" class="button">
+        <input type="submit" value="登録" class="button">
+      </div>
+    </form>
+  </main>
 
   <p><a href="/holidaylist">祝日一覧へ戻る</a></p>
   <p><a href="/master">ログアウト</a></p>

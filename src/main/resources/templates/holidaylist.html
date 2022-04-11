@@ -111,88 +111,77 @@ table tr {
     <h1>[[${yearMonth.year}]]年 祝日設定</h1>
     
     <form th:action="@{/selectyear}" >
-    <select name="nowyear">
-      <option th:value="0">去年</option>
-      <option th:value="1" selected>現在</option>
-      <option th:value="2">来年</option>
-    </select>
-    <input type="submit" value="年変更" class="button">
-  </form>
-      <br/>
+      <select name="nowyear">
+        <option th:value="0">去年</option>
+        <option th:value="1" selected>現在</option>
+        <option th:value="2">来年</option>
+      </select>
+      <input type="submit" value="年変更" class="button">
+    </form>
+    <br/>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>日付</th>
+          <th>祝日名</th>
+          <th>変更</th>
+          <th>削除</th>
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            
-            <th>日付</th>
-            <th>祝日名</th>
-            <th>変更</th>
-            <th>削除</th>
-           
-        
-  
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="holiday, st : ${holidayList}" >
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr th:each="holiday, st : ${holidayList}" >
 
-            <td>
-             [[${holiday.month}]]月[[${holiday.day}]]日
-            </td>
-           
-            
-            <td>
-             [[${holiday.name}]]
-            </td>
+          <td>
+           [[${holiday.month}]]月[[${holiday.day}]]日
+          </td>
+         
+          <td>
+           [[${holiday.name}]]
+          </td>
 
-            <td>
-                <form th:action="@{/holidaychange}" >
-                    <input type="hidden" name="id" th:value="${holiday.id}" />
-                    <input type="submit" value="変更" class="button">
-    
-                  </form>
-            </td>
-
-            <td>
-            <form th:action="@{/holidaydelete}" >
-                <input type="hidden" name="id" th:value="${holiday.id}" />
-                <input type="submit" value="削除" class="button">
+          <td>
+            <form th:action="@{/holidaychange}" >
+              <input type="hidden" name="id" th:value="${holiday.id}" />
+              <input type="submit" value="変更" class="button">
             </form>
-            </td>
-            
-            
-          </tr>
-        </tbody>
-    
-      </table>
-   
-    
-    
+          </td>
 
+          <td>
+            <form th:action="@{/holidaydelete}" >
+              <input type="hidden" name="id" th:value="${holiday.id}" />
+              <input type="submit" value="削除" class="button">
+            </form>
+          </td> 
+        </tr>
+      </tbody>
+  
+    </table>
 
   </div>
 
   <div class="action">
     <form th:action="@{/holidayplus}" >
-        <input type="hidden" name="year" th:value="${yearMonth.year}" />
-        <input type="submit" value="追加" class="button">
+      <input type="hidden" name="year" th:value="${yearMonth.year}" />
+      <input type="submit" value="追加" class="button">
     </form>
     
-      <form th:action="@{/holidayalldelete}" >
-          <input type="hidden" name="year" th:value="${yearMonth.year}" />
-          <input type="submit" value="全削除" class="button">
-      </form>
+    <form th:action="@{/holidayalldelete}" >
+      <input type="hidden" name="year" th:value="${yearMonth.year}" />
+      <input type="submit" value="全削除" class="button">
+    </form>
       
-    </div>
-      <form th:action="@{/transition}" class="register">
-        <input type="hidden" name="local" value="/holidayupload">
-        <input type="hidden" name="box" value="/boxuploadholiday">
-        <input type="submit" value="祝日一括登録" class="button">
-      </form>
-
-    <div class="tabs">
-      <p><a href="/masteruser">管理画面へ戻る</a></p>
-      <p><a href="/master">ログアウト</a></p>
-    </div>
+  </div>
+  <form th:action="@{/transition}" class="register">
+    <input type="hidden" name="local" value="/holidayupload">
+    <input type="hidden" name="box" value="/boxuploadholiday">
+    <input type="submit" value="祝日一括登録" class="button">
+  </form>    
+  <div class="tabs">
+    <p><a href="/masteruser">管理画面へ戻る</a></p>
+    <p><a href="/master">ログアウト</a></p>
+  </div>
+    
 </body>
 </html>
