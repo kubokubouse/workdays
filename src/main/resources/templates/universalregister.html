@@ -51,14 +51,23 @@
       <th>パスワード </th>
       <td>
         <label for="password"></label>
-        <input type="password" class="register-control"
+        <input type="password" class="register-control" id="password"
         th:errorclass="is-invalid" th:field="*{password}">
        <div class="invalid-feedback" th:errors="*{password}"></div>
         <p>※半角英数</p>
       </td>
     </tr>
 
-    
+    <tr>
+      <th>確認用パスワード </th>
+      <td>
+        <label for="password"></label>
+        <input type="password" class="register-control" name="confirm"
+        th:errorclass="is-invalid" th:field="*{password}" oninput="CheckPassword(this)">
+       <div class="invalid-feedback" th:errors="*{password}"></div>
+        <p>※半角英数</p>
+      </td>
+    </tr>
 
 
 
@@ -75,7 +84,19 @@
 
 </body>
 </html>
-
+<script>
+	function CheckPassword(confirm){
+		// 入力値取得
+		var input1 = document.getElementById("password").value;
+		var input2 = confirm.value;
+		// パスワード比較
+		if(input1 != input2){
+			confirm.setCustomValidity("入力値が一致しません。");
+		}else{
+			confirm.setCustomValidity('');
+		}
+	}
+</script>
 <style>
   .entryTable {
     margin: auto;
