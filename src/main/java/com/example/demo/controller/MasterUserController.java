@@ -328,7 +328,7 @@ public class MasterUserController extends WorkdaysProperties{
 		@ModelAttribute ContractData cData, Model model){
 		
         if (result.hasErrors()){
-			return "confirm_companyInfo";
+			return "masteruser";
 		}
 		//Brtimeの値をRegularTime型regulartimeに詰め込みDBに登録
 		//Brtimeの値はStringなのでtime型に変換
