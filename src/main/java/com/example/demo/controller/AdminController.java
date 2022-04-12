@@ -139,7 +139,8 @@ public class AdminController extends WorkdaysProperties{
 
 		//備考1,2,3に会社名を添付する処理をする
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
-		List<Otherpa>opList=workdaysService.oplist(users);
+        int companyid = (int)session.getAttribute("companyId");
+		List<Otherpa>opList=workdaysService.oplist(users, companyid);
 		model.addAttribute("opList", opList);
 		model.addAttribute("yearMonth",yearMonth);
 		model.addAttribute("Brtime",Brtime);
