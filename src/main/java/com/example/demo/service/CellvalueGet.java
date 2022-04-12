@@ -16,14 +16,14 @@ import com.example.demo.model.Judgeused;
 public class CellvalueGet {
     WorkdaysProperties wp;
     
-    public Judgeused GetCellvalue(String companyname){
+    public Judgeused GetCellvalue(int companyID, String companyname){
         
         Judgeused judgeused=new Judgeused();
         judgeused.setOa(0);
         judgeused.setOb(0);
         judgeused.setOc(0);
         //使用するテンプレートファイルのパスを定義する
-        String inputFilePath = WorkdaysProperties.basePath + "/" + companyname + ".xls";
+        String inputFilePath = WorkdaysProperties.downloadPath + companyID+"_output/" + companyname + ".xls";
         //ファイルのコピー
         File inputFileObject = new File(inputFilePath);
 

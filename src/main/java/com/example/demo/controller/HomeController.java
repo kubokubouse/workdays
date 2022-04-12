@@ -234,7 +234,8 @@ public class HomeController extends WorkdaysProperties{
 		
 		for(IndividualData iData:iDataList){
 			IdUser idUser=individualService.getIdUser(iData);
-			
+			int companyid = idUser.getCompanyID();
+			session.setAttribute("companyID", companyid);
 			idUserList.add(idUser);
 		}
 
@@ -398,10 +399,12 @@ public class HomeController extends WorkdaysProperties{
 	    userService.updateAll(workingListParam);
 		User users=(User)session.getAttribute("Data");
 		model.addAttribute("users", users);
+		
 
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
+		int companyid = (int)session.getAttribute("companyID");
 		CellvalueGet cellgetvalue=new CellvalueGet();
-		Judgeused judgeused=cellgetvalue.GetCellvalue(users.getCompany2());
+		Judgeused judgeused=cellgetvalue.GetCellvalue(companyid, users.getCompany2());
 		model.addAttribute("judgeused", judgeused);
 		return "list";
 	}
@@ -518,7 +521,7 @@ public class HomeController extends WorkdaysProperties{
 		File file = new File(outputFilePath);
 		model.addAttribute("outputFileName", "ファイル名：" + file.getName());
 		
-		model.addAttribute("filePath", "https://workdays.jp/download/"+companyID+"_output/"+individualID + "_" + companyName + ".xls");
+		model.addAttribute("filePath", WorkdaysProperties.downloadPath + companyID +"_output/"+individualID + "_" + companyName + ".xls");
 
 		return "done";
 	}	
