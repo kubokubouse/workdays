@@ -13,7 +13,7 @@ public interface WorkdaysRepository extends JpaRepository<Workdays, Long>
 {	
 	@Transactional
 	@Modifying
-	@Query(value ="insert into workdays(userid,year,month,day,start,end,halftime,worktime,other1,other2,other3,weekday) values(?1,?2,?3,?4,'00:00:00','00:00:00','01:00:00','00:00:00','','','',?5) ",
+	@Query(value ="insert into workdays(userid,year,month,day,start,end,halftime,worktime,other1,other2,other3,weekday,holiday) values(?1,?2,?3,?4,'00:00:00','00:00:00','01:00:00','00:00:00','','','',?5,0) ",
 
 	        nativeQuery = true)
 	//1から順にuserid,year,month,day,id,weekdayが入る感じ　
@@ -24,5 +24,9 @@ public interface WorkdaysRepository extends JpaRepository<Workdays, Long>
 	    List<Workdays> findByUseridAndYearAndMonth(int userid,int year, int month);
 
 	    Workdays findByUseridAndYearAndMonthAndDay(int userid,int year, int month,int Day);
+
+		List<Workdays> findByHoliday(String holiday);
+
+		List<Workdays> findByWeekday(String weekday);
 }
 
