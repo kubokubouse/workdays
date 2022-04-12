@@ -193,16 +193,16 @@ public class WorkdaysService {
 		return worktime;
 	}
     //ユーザーから備考が使われているかの確認
-    public List<Otherpa> oplist(User user){
+    public List<Otherpa> oplist(User user, int companyid){
         CellvalueGet cellgetvalue=new CellvalueGet();
 		
 		//ユーザーが所属する企業を引数として渡し
 		//その企業の名前がファイル名になっているテンプレートにおいて備考1,2,3(oa,ob,oc)が使用されているかを判定する
 		//例えば会社1において備考1,2が使用されていた場合はjudgeued.oa=1,ob=1,oc=0になる
 		List<Otherpa>opList=new ArrayList<Otherpa>();
-		Judgeused judgeused1=cellgetvalue.GetCellvalue(user.getCompany1());
-		Judgeused judgeused2=cellgetvalue.GetCellvalue(user.getCompany2());
-		Judgeused judgeused3=cellgetvalue.GetCellvalue(user.getCompany3());
+		Judgeused judgeused1=cellgetvalue.GetCellvalue(companyid, user.getCompany1());
+		Judgeused judgeused2=cellgetvalue.GetCellvalue(companyid, user.getCompany2());
+		Judgeused judgeused3=cellgetvalue.GetCellvalue(companyid, user.getCompany3());
 		
 		//会社1,2,3,においてoaが使用されているかどうかのクラスを作る
 		

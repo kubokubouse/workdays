@@ -12,7 +12,7 @@ public class WorkdaysProperties {
     // public static String host = "http://localhost:8080";
    
     public static String basePath = "/var/www/html/download";//aws用のpath
-
+    public static String downloadPath = "https://workdays.jp/download/"; //templatelist.htmlでも使用中
 
     public static String cccExcelFile = "/apache/htdocs/image/test.xlsx";
     public static String fromMailAdress="ent_workdays@connectcrew.co.jp";
