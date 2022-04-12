@@ -46,13 +46,21 @@ public class WorkdaysService {
     	return workdaysRepository.findByUseridAndYearAndMonthAndDay(userid,year,month,day);
     }
 
-    public  int insertdata(int userid,int year,int month,int day,String weekday){
+    public  int insertdata(int userid,int year,int month,int day, String weekday){
     	return workdaysRepository.InsertData(userid,year,month,day,weekday);
     }
     public void update(Workdays workdays){
         workdaysRepository.save(workdays);
     }
-	
+
+	public List <Workdays> findHoliday(String holiday){
+    	return workdaysRepository.findByHoliday(holiday);
+    }
+
+	public List <Workdays> findWeekday(String weekday){
+    	return workdaysRepository.findByWeekday(weekday);
+    }
+
 	//指定された年月が既に存在するかどうかの確認＋なかったらデータを追加
 	public void checkYearMonth(int year,int month){
 		User user=(User)session.getAttribute("Data");
@@ -69,13 +77,35 @@ public class WorkdaysService {
 				String weekday=yobi[cal.get(Calendar.DAY_OF_WEEK)-1];
 				insertdata(userid, year, month, i+1, weekday);//int d=が左辺にあったから動かなくなったら足すこと
 			}
+			//祝日の場合はテーブルの祝日カラムに1を挿入する+休憩時間を00:00:00にする
 			List<Holiday> holidays=holidayService.findyearmonth(year, month);
 			for(Holiday holiday:holidays) {
 				int holiday2=holiday.getDay();
 				workdays =findUseridYearMonthDay(userid,year, month,holiday2);
 				workdays.setHoliday(1);
+				workdays.setHalftime(userService.toTime("00:00"));
 				update(workdays);
 			}
+
+			List<Workdays>workdaysList=findWeekday("土");
+			for(Workdays workday:workdaysList){
+				workday.setHalftime(userService.toTime("00:00"));
+				update(workday);
+
+			}
+
+			workdaysList=findWeekday("日");
+			for(Workdays workday:workdaysList){
+				workday.setHalftime(userService.toTime("00:00"));
+				update(workday);
+
+			}
+
+
+
+			
+			
+
         }
 	}
 
@@ -192,7 +222,6 @@ public class WorkdaysService {
 
 		return opList;
     }
-		
 		
 		
 }
