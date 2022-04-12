@@ -200,6 +200,7 @@ public class HomeController extends WorkdaysProperties{
 			session.setAttribute("superUser", superUser);
 			int companyId=superUser.getCompanyID();
 			session.setAttribute("companyId", companyId);
+			
 			//管理者がindiviudualDataにも登録していた場合勤怠データにアクセスできるように
 			List<IndividualData>iDataList=individualService.findMail(id);
 			User user=userService.findEmail(id);
