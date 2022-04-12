@@ -21,7 +21,7 @@
         <td>[[${oneholiday.year}]]年</td>
       </tr>
       
-        <tr>
+      <tr>
         <th>日付</th>
         <td class="month">
           <label for="number"></label>
@@ -32,8 +32,8 @@
          <label for="number"></label>
          <input type="number" class="register-control" style="width:50px;"
          th:errorclass="is-invalid" th:field="*{day}" th:value="${oneholiday.day}" >
-        <div class="invalid-feedback" th:errors="*{day}"></div>日
-         </td>
+          <div class="invalid-feedback" th:errors="*{day}"></div>日
+        </td>
       </tr>
     
       <th>名称</th>

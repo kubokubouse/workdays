@@ -127,72 +127,72 @@ h1 {
       <label class="text-danger" th:text="${error}"></label>
     </div>
     <h1>ユーザー一覧</h1>
-    
+    <br/>
 
-      <br/>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>管理番号</th>
+          <th>氏名</th>
+          <th>メール</th>
+          <th>会社1</th>
+          <th>会社2</th>
+          <th>会社3</th>
+          <th>登録</th>
+          <th>削除</th>
+          
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>管理番号</th>
-            <th>氏名</th>
-            <th>メール</th>
-            <th>会社1</th>
-            <th>会社2</th>
-            <th>会社3</th>
-            <th>登録</th>
-            <th>削除</th>
-            
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr th:each="user, st : ${userListParam}" >
+          <td>
+            <input type="text" th:userid="${user.mail}" class="form-control" th:name="number" th:value="${user.number}" >
+          </td>
+          
+          <td>
+            <input type="text" th:userid="${user.mail}" class="form-control" th:name="name" th:value="${user.name}" >
+          </td>
+          
+          <td>
+            <input type="text" th:userid="${user.mail}" class="form-control" th:name="mail" th:value="${user.mail}" >
+          </td>
 
-          </tr>
-        </thead>
-        
-        <tbody>
-          <tr th:each="user, st : ${userListParam}" >
-            <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="number" th:value="${user.number}" >
-            </td>
-            
-            <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="name" th:value="${user.name}" >
-            </td>
-            
-            <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="mail" th:value="${user.mail}" >
-            </td>
+          <td>
+            <input type="text" th:userid="${user.mail}" class="form-control" th:name="company1" th:value="${user.company1}">
+          </td>
 
-            <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="company1" th:value="${user.company1}">
-            </td>
+          <td>
+            <input type="text" th:userid="${user.mail}" class="form-control" th:name="company2" th:value="${user.company2}">
+          </td>
 
-            <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="company2" th:value="${user.company2}">
-            </td>
+          <td>
+            <input type="text" th:userid="${user.mail}" class="form-control" th:name="company3" th:value="${user.company3}">
+          </td>
 
-            <td>
-              <input type="text" th:userid="${user.mail}" class="form-control" th:name="company3" th:value="${user.company3}">
-            </td>
-
-            <td>
-              <div th:if="${user.registered==0}">[[${user.regist}]]</div>
-              <div th:if="${user.registered==1}">
-                <form th:action="@{/remail}" >
-                  <input type="hidden" name="mail" th:value="${user.mail}" />
-                  <input type="submit" value="メール再送信" class="button">
-                </form>
-              </div>
-            </td>
-
-            <td>
-              <form th:action="@{/userdelete}" >
-                <input type="hidden" name="id" th:value="${user.mail}" />
-                <input type="submit" value="削除" class="button">
-
+          <td>
+            <div th:if="${user.registered==0}">[[${user.regist}]]</div>
+            <div th:if="${user.registered==1}">
+              <form th:action="@{/remail}" >
+                <input type="hidden" name="mail" th:value="${user.mail}" />
+                <input type="submit" value="メール再送信" class="button">
               </form>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+          </td>
+
+          <td>
+            <form th:action="@{/userdelete}" >
+              <input type="hidden" name="id" th:value="${user.mail}" />
+              <input type="submit" value="削除" class="button">
+
+            </form>
+          </td>
+        </tr>
+      </tbody> 
+        
+        
+    </table>
   
   </div>
 

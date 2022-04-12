@@ -94,78 +94,76 @@ table tr {
       <label class="text-danger" th:text="${error}"></label>
     </div>
     <h1>契約一覧</h1>
-      <br/>
+    <br/>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>会社ID</th>
+          <th>契約ID</th>
+          <th>登録日</th>
+          <th>更新日</th>
+          <th>開始予定日</th>
+          <th>終了予定日</th>
+          <th>上限ユーザー数</th>
+          <th>ランク</th>
+          <th>税抜き価格</th>
+          <th>税込み価格</th>
+          <th>容量上限</th>
+          <th>削除</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr th:each="user, st : ${contractDataList}" >
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>会社ID</th>
-            <th>契約ID</th>
-            <th>登録日</th>
-            <th>更新日</th>
-            <th>開始予定日</th>
-            <th>終了予定日</th>
-            <th>上限ユーザー数</th>
-            <th>ランク</th>
-            <th>税抜き価格</th>
-            <th>税込み価格</th>
-            <th>容量上限</th>
-            <th>削除</th>
-            
-          </tr>
-        </thead>
-        
-        <tbody>
-          <tr th:each="user, st : ${contractDataList}" >
+          <td>
+            <input type="text" th:companyid="${user.companyID}" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >
+          </td>
+          <td>
+            [[${user.contractID}]]
+          </td>
+          <td>
+            [[${user.register}]]
+          </td>
+          <td>
+            [[${user.topupContract}]]
+          </td>
+          <td>
+            <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="startContract" th:value="${user.startContract}" >
+          </td>
+          
+          <td>
+            <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="endContract" th:value="${user.endContract}">
+          </td>
+         
+          <td>
+            <input type="text" th:companyid="|${user.companyID}:${user.contractID}|"class="form-control" th:name="limitedUser" th:value="${user.limitedUser}">
+          </td>
+          <td>
+            <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="userRank" th:value="${user.userRank}">
+          </td>
+          <td>
+            <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="taxInclude" th:value="${user.taxInclude}">
+          </td>
+          <td>
+            <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="taxExclude" th:value="${user.taxExclude}">
+          </td>
+          <td>
+            <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="limitedCapacity" th:value="${user.limitedCapacity}">
+          </td>
+          
+          <td>
+            <form th:action="@{/cddelete}" th:companyid="${user.companyID}">
+              <input type="hidden" name="id" th:value="|${user.companyID}:${user.contractID}|" />
+              <input type="submit" value="削除" class="button">
 
-            <td>
-              <input type="text" th:companyid="${user.companyID}" th:id="${user.companyID}" class="form-control" th:name="companyID" th:value="${user.companyID}" >
-            </td>
-            <td>
-              [[${user.contractID}]]
-            </td>
-            <td>
-              [[${user.register}]]
-            </td>
-            <td>
-              [[${user.topupContract}]]
-            </td>
-            <td>
-              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="startContract" th:value="${user.startContract}" >
-            </td>
-            
-            <td>
-              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="endContract" th:value="${user.endContract}">
-            </td>
-           
-            <td>
-              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|"class="form-control" th:name="limitedUser" th:value="${user.limitedUser}">
-            </td>
-            <td>
-              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="userRank" th:value="${user.userRank}">
-            </td>
-            <td>
-              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="taxInclude" th:value="${user.taxInclude}">
-            </td>
-            <td>
-              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="taxExclude" th:value="${user.taxExclude}">
-            </td>
-            <td>
-              <input type="text" th:companyid="|${user.companyID}:${user.contractID}|" class="form-control" th:name="limitedCapacity" th:value="${user.limitedCapacity}">
-            </td>
-            
-            <td>
-              <form th:action="@{/cddelete}" th:companyid="${user.companyID}">
-                <input type="hidden" name="id" th:value="|${user.companyID}:${user.contractID}|" />
-                <input type="submit" value="削除" class="button">
-
-              </form>
-            </td>
-            
-            
-          </tr>
-        </tbody>
-      </table>
+            </form>
+          </td>
+    
+        </tr>
+      </tbody>
+    </table>
+      
 
   </div>
   <p><a href="/masteruser">管理画面へ戻る</a></p>
