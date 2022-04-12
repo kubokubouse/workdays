@@ -62,14 +62,14 @@
       <th>確認用パスワード </th>
       <td>
         <label for="confirm"></label>
-        <input type="password" class="register-control" name="confirm" oninput="CheckPassword(this)">
+        <input type="password" class="register-control" name="confirm">
         <p>※半角英数</p>
       </td>
     </tr>
-
-
-
   </table>
+
+  <p th:text="${error}"></p>
+
   <div class="send">
     
     <input type="reset" value="クリア" class="button">
