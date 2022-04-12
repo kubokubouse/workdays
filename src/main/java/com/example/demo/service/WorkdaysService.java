@@ -196,10 +196,15 @@ public class WorkdaysService {
     public List<Otherpa> oplist(User user){
         CellvalueGet cellgetvalue=new CellvalueGet();
 		
+		//ユーザーが所属する企業を引数として渡し
+		//その企業の名前がファイル名になっているテンプレートにおいて備考1,2,3(oa,ob,oc)が使用されているかを判定する
+		//例えば会社1において備考1,2が使用されていた場合はjudgeued.oa=1,ob=1,oc=0になる
 		List<Otherpa>opList=new ArrayList<Otherpa>();
 		Judgeused judgeused1=cellgetvalue.GetCellvalue(user.getCompany1());
 		Judgeused judgeused2=cellgetvalue.GetCellvalue(user.getCompany2());
 		Judgeused judgeused3=cellgetvalue.GetCellvalue(user.getCompany3());
+		
+		//会社1,2,3,においてoaが使用されているかどうかのクラスを作る
 		
 		Otherpa opa_oa=new Otherpa();
 		opa_oa.setCompany1(judgeused1.getOa());
@@ -208,18 +213,25 @@ public class WorkdaysService {
 
 		opList.add(opa_oa);
 		
+		//会社1,2,3,においてobが使用されているかどうかのクラスを作る
 		Otherpa opa_ob=new Otherpa();
 		opa_ob.setCompany1(judgeused1.getOb());
 		opa_ob.setCompany2(judgeused2.getOb());
 		opa_ob.setCompany3(judgeused3.getOb());
 		opList.add(opa_ob);
 
+		//会社1,2,3,においてocが使用されているかどうかのクラスを作る
 		Otherpa opa_oc=new Otherpa();
 		opa_oc.setCompany1(judgeused1.getOc());
 		opa_oc.setCompany2(judgeused2.getOc());
 		opa_oc.setCompany3(judgeused3.getOc());
 		opList.add(opa_oc);
 
+		//opListは
+		//oaが会社1,2,3で使われているかどうか分かるopa_oa
+		//oaが会社1,2,3で使われているかどうか分かるopa_ob
+		//oaが会社1,2,3で使われているかどうか分かるopa_oc
+		//から成るListである
 		return opList;
     }
 		
