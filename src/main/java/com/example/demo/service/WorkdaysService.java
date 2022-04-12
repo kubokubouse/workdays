@@ -193,13 +193,13 @@ public class WorkdaysService {
 		return worktime;
 	}
     //ユーザーから備考が使われているかの確認
-    public List<Otherpa> oplist(User user){
+    public List<Otherpa> oplist(User user, int companyid){
         CellvalueGet cellgetvalue=new CellvalueGet();
 		
 		List<Otherpa>opList=new ArrayList<Otherpa>();
-		Judgeused judgeused1=cellgetvalue.GetCellvalue(user.getCompany1());
-		Judgeused judgeused2=cellgetvalue.GetCellvalue(user.getCompany2());
-		Judgeused judgeused3=cellgetvalue.GetCellvalue(user.getCompany3());
+		Judgeused judgeused1=cellgetvalue.GetCellvalue(companyid, user.getCompany1());
+		Judgeused judgeused2=cellgetvalue.GetCellvalue(companyid, user.getCompany2());
+		Judgeused judgeused3=cellgetvalue.GetCellvalue(companyid, user.getCompany3());
 		
 		Otherpa opa_oa=new Otherpa();
 		opa_oa.setCompany1(judgeused1.getOa());

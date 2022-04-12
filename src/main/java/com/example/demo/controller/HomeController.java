@@ -233,10 +233,11 @@ public class HomeController extends WorkdaysProperties{
 		//個別ユーザーから会社IDを取得し会社名のリストを作る
 		List<IdUser>idUserList=new ArrayList<IdUser>();
 		
+		int companyid = 0;
 		for(IndividualData iData:iDataList){
 			IdUser idUser=individualService.getIdUser(iData);
-			int companyid = idUser.getCompanyID();
-			session.setAttribute("companyID", companyid);
+			companyid = idUser.getCompanyID();
+			session.setAttribute("companyId", companyid);
 			idUserList.add(idUser);
 		}
 
@@ -259,7 +260,8 @@ public class HomeController extends WorkdaysProperties{
 
 		//備考1,2,3に会社名を添付する処理をする
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
-		List<Otherpa>opList=workdaysService.oplist(users);
+
+		List<Otherpa>opList=workdaysService.oplist(users, companyid);
 		model.addAttribute("opList", opList);
 		model.addAttribute("yearMonth",yearMonth);
 		model.addAttribute("Brtime",Brtime);
@@ -320,8 +322,10 @@ public class HomeController extends WorkdaysProperties{
 		//個別ユーザーから会社IDを取得し会社のリストを作る
 		List<IdUser>idUserList=new ArrayList<IdUser>();
 		
+		int companyid = 0;
 		for(IndividualData iData:iDataList){
 			IdUser idUser=individualService.getIdUser(iData);
+			companyid = idUser.getCompanyID();
 			idUserList.add(idUser);
 		}
 
@@ -336,7 +340,7 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("users", user);
 
 		//備考仕様の有無を確認
-		List<Otherpa>opList=workdaysService.oplist(user);
+		List<Otherpa>opList=workdaysService.oplist(user, companyid);
 		model.addAttribute("opList", opList);
 		session.setAttribute("yearMonth",yearMonth);
 		model.addAttribute("Brtime",Brtime);
@@ -356,10 +360,11 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("iDataList", iDataList);
 		
 		//個別ユーザーから会社IDを取得し会社のリストを作る
+		int companyid = 0;
 		List<IdUser>idUserList=new ArrayList<IdUser>();
-		
 		for(IndividualData iData:iDataList){
 			IdUser idUser=individualService.getIdUser(iData);
+			companyid = idUser.getCompanyID();
 			idUserList.add(idUser);
 		}
 
@@ -374,7 +379,7 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("users", user);
 
 		//備考仕様の有無を確認
-		List<Otherpa>opList=workdaysService.oplist(user);
+		List<Otherpa>opList=workdaysService.oplist(user, companyid);
 		model.addAttribute("opList", opList);
 		session.setAttribute("yearMonth",yearMonth);
 		model.addAttribute("yearMonth",yearMonth);
@@ -403,7 +408,7 @@ public class HomeController extends WorkdaysProperties{
 		
 
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
-		int companyid = (int)session.getAttribute("companyID");
+		int companyid = (int)session.getAttribute("companyId");
 		CellvalueGet cellgetvalue=new CellvalueGet();
 		Judgeused judgeused=cellgetvalue.GetCellvalue(companyid, users.getCompany2());
 		model.addAttribute("judgeused", judgeused);
@@ -770,7 +775,8 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		model.addAttribute("users", users);
 
 		//備考仕様の有無を確認
-		List<Otherpa>opList=workdaysService.oplist(users);
+		int companyid = (int)session.getAttribute("companyId");
+		List<Otherpa>opList=workdaysService.oplist(users, companyid);
 		model.addAttribute("opList", opList);
 		model.addAttribute("yearMonth", yearMonth);
 		model.addAttribute("Brtime",Brtime);
