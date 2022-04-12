@@ -265,6 +265,7 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("opList", opList);
 		model.addAttribute("yearMonth",yearMonth);
 		model.addAttribute("Brtime",Brtime);
+		System.out.println(opList);
 		return "list";
 	}
 
