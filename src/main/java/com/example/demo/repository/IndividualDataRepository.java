@@ -20,5 +20,6 @@ public interface IndividualDataRepository extends JpaRepository<IndividualData, 
 	IndividualData findById(int id);
 	IndividualData findByMailAndCompanyID(String mail,int companyID);
 	List<IndividualData> findByCompanyID(int companyID);
+	List<IndividualData> findByCompanyIDAndRegistered(int companyID,int registered);
 	List<IndividualData> findByMail(String mail);
 }

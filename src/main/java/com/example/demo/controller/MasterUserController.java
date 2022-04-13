@@ -273,7 +273,7 @@ public class MasterUserController extends WorkdaysProperties{
 
 	//定時情報一覧表示
 	@GetMapping("/regulartimelist")
-	public String regulartimelist(Model model,@ModelAttribute BeanRegularTime Brtime){
+	public String regulartimelist(Model model,@ModelAttribute BeanRegularTime beanRegularTime){
 
 		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
         if(masterUser==null){
@@ -295,19 +295,19 @@ public class MasterUserController extends WorkdaysProperties{
 		}
 		
 		model.addAttribute("rtList", rtList);
-		model.addAttribute("Brtime", Brtime);
+		//model.addAttribute("Brtime", Brtime);
 		return "regulartimelist";
 	}  
 	
 
 	//定時登録画面
     @GetMapping("/regulartime")
-	public String register_regulartime(@ModelAttribute BeanRegularTime Brtime, Model model){
+	public String register_regulartime(@ModelAttribute BeanRegularTime beanRegularTime, Model model){
 		MasterUser masterUser = (MasterUser)session.getAttribute("masterUser");
         if(masterUser==null){
             return "masterloginfault";
         }
-		model.addAttribute("Brtime",Brtime);
+		//model.addAttribute("Brtime",beanRegularTime);
 		return "regulartime";
 	}
 
@@ -324,27 +324,42 @@ public class MasterUserController extends WorkdaysProperties{
 
     //定時情報をDBに登録
 	@PostMapping("/br_regist")
-    public String regist_regulartime(@Validated @ModelAttribute BeanRegularTime Brtime, BindingResult result, 
+    public String regist_regulartime(@Validated @ModelAttribute BeanRegularTime beanRegularTime, BindingResult result, 
 		@ModelAttribute ContractData cData, Model model){
 		
         if (result.hasErrors()){
-			return "masteruser";
+			List<RegularTime> rtbList = new ArrayList<RegularTime>();
+			rtbList = rtService.findAll();
+			List<BeanRegularTime> rtList=new ArrayList<BeanRegularTime>();
+			for(RegularTime brt:rtbList){
+			BeanRegularTime BRtime=new BeanRegularTime();
+			BRtime.setStart(brt.getStart().toString().substring(0,5));
+			BRtime.setEnd(brt.getEnd().toString().substring(0,5));
+			BRtime.setHalftime(brt.getHalftime().toString().substring(0,5));
+			BRtime.setWorktime(brt.getWorktime().toString().substring(0,5));
+			BRtime.setId(brt.getId());
+			rtList.add(BRtime);
 		}
+		
+		model.addAttribute("rtList", rtList);
+			return "regulartimelist";
+		}
+		
 		//Brtimeの値をRegularTime型regulartimeに詰め込みDBに登録
 		//Brtimeの値はStringなのでtime型に変換
 
 		//終了-開始-休憩で労働時間の合計を算出
-		int sminutes=userService.allminutes(Brtime.getStart());
-		int hminutes=userService.allminutes(Brtime.getHalftime());
-		int eminutes=userService.allminutes(Brtime.getEnd());
+		int sminutes=userService.allminutes(beanRegularTime.getStart());
+		int hminutes=userService.allminutes(beanRegularTime.getHalftime());
+		int eminutes=userService.allminutes(beanRegularTime.getEnd());
 		int wminutes=eminutes-hminutes-sminutes;
 		//分になった労働時間を00:00形式に変換
 		String worktime=userService.wminutes(wminutes);
 
 		RegularTime regularTime=new RegularTime();
-		regularTime.setStart(userService.toTime(Brtime.getStart()));
-		regularTime.setEnd(userService.toTime(Brtime.getEnd()));
-		regularTime.setHalftime(userService.toTime(Brtime.getHalftime()));
+		regularTime.setStart(userService.toTime(beanRegularTime.getStart()));
+		regularTime.setEnd(userService.toTime(beanRegularTime.getEnd()));
+		regularTime.setHalftime(userService.toTime(beanRegularTime.getHalftime()));
 		regularTime.setWorktime(userService.toTime(worktime));
 		rtService.insert(regularTime);
 
@@ -363,14 +378,14 @@ public class MasterUserController extends WorkdaysProperties{
 		}
 		
 		model.addAttribute("rtList", rtList);
-		model.addAttribute("Brtime", Brtime);
+		//model.addAttribute("Brtime", Brtime);
 
 		return "regulartimelist";
     }
 
 	//定時削除
 	@RequestMapping("/regulardelete")
-	public String deleteregular(@RequestParam("id") String id, @ModelAttribute BeanRegularTime Brtime, Model model ){
+	public String deleteregular(@RequestParam("id") String id, @ModelAttribute BeanRegularTime beanRegularTime, Model model ){
 		rtService.delete(Integer.valueOf(id));
 		
 		List<RegularTime> rtbList = new ArrayList<RegularTime>();
@@ -387,7 +402,7 @@ public class MasterUserController extends WorkdaysProperties{
 		}
 		
 		model.addAttribute("rtList", rtList);
-		model.addAttribute("Brtime", Brtime);
+		
 
 		return "regulartimelist";
 	}

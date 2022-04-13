@@ -172,13 +172,7 @@ h1 {
           </td>
 
           <td>
-            <div th:if="${user.registered==0}">[[${user.regist}]]</div>
-            <div th:if="${user.registered==1}">
-              <form th:action="@{/remail}" >
-                <input type="hidden" name="mail" th:value="${user.mail}" />
-                <input type="submit" value="メール再送信" class="button">
-              </form>
-            </div>
+            [[${user.regist}]]
           </td>
 
           <td>
@@ -195,8 +189,12 @@ h1 {
     </table>
   
   </div>
-
+  <small th:text="${regist}" class="message"></small>
 <div class="tabs">
+  <form th:action="@{/mailallsend}">
+    <input class="button" type="submit" value="未登録者にメール一斉送信">
+  </form>
+  </br>
   <p><a href="/register">新規ユーザー登録はこちら</a></p>
   <p><a href="/superuser">管理画面へ戻る</a></p>
   <p><a href="/">ログアウト</a></p>
