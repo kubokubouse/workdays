@@ -258,6 +258,8 @@ public class HomeController extends WorkdaysProperties{
 		workingListParam.setMonth(yearMonth.getMonth());
 		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
+		model.addAttribute("users", users);
+		System.out.println(users);
 
 		//備考1,2,3に会社名を添付する処理をする
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
