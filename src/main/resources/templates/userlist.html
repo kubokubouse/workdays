@@ -15,31 +15,31 @@
     padding: 0;
     max-width: 100%;
   }
-  form {
-    margin: 0;
+  .mail{
+    max-width: 80%;
+    margin: 0 auto;
+    text-align: right;
   }
-  .tr_color0 {
-
- vertical-align: middle;
-}
-
-  .tr_color1 {
-  background-color: #EAF6FD;
-  vertical-align: middle;
-}
-.tr_color2 {
-  background-color: #ED5353;
- vertical-align: middle;
-}
-
-table {
-  border-collapse: collapse;
-  margin: 0 auto;
-  margin-top: 10px;
-  padding: 0;
-  max-width: 80%;
-  table-layout: fixed;
-}
+  .button_mail{
+    margin-top: 10px;
+    background-color: rgb(245, 245, 245);
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid rgb(143, 140, 140);
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+  }
+  form {
+    margin: 0 auto;
+  }
+  table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 80%;
+    table-layout: fixed;
+  }
 thead th{
   padding: 1em .8em;
   border-right: 5px solid #fff;
@@ -129,11 +129,14 @@ h1 {
     </div>
     <h1>ユーザー一覧</h1>
 
+  <div class="mail">
+    <form th:action="@{/mailallsend}">
+      <input class="button_mail" type="submit" value="未登録者にメール一斉送信">
+    </form>
+    <p th:text="${regist}" class="message"></p>
+  </div>
+
     <table class="table table-striped">
-      <form th:action="@{/mailallsend}">
-        <input class="button" type="submit" value="未登録者にメール一斉送信">
-      </form>
-      <p th:text="${regist}" class="message"></p>
       <thead>
         <tr>
           <th>管理番号</th>
