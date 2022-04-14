@@ -18,6 +18,9 @@ public class IndividualService {
     @Autowired
     CompanyInfoService companyInfoService;
 
+    public void delete(IndividualData iData){
+        individualRepository.delete(iData);
+    }
     public List <IndividualData> findMail(String mail){
     	return individualRepository.findByMail(mail);
     }

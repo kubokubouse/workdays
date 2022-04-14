@@ -21,13 +21,17 @@ import org.springframework.validation.BindingResult;
 
 import com.example.demo.model.MasterUser;
 import com.example.demo.model.RegularTime;
+import com.example.demo.model.SuperUser;
 import com.example.demo.model.BeanContractData;
 import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.ContractData;
+import com.example.demo.model.IndividualData;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.ContractService;
+import com.example.demo.service.IndividualService;
 import com.example.demo.service.RegularTimeService;
+import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WorkdaysService;
 import com.example.demo.repository.CompanyInfoRepository;
@@ -58,6 +62,11 @@ public class MasterUserController extends WorkdaysProperties{
     RegularTimeService rtService;
 	@Autowired
     WorkdaysService workdaysService;
+	@Autowired
+    IndividualService individualService;
+	@Autowired
+    SuperUserService superUserService;
+
 	//メニュー画面へ戻る
 	@GetMapping("/masteruser")
 	public String showMenue(@ModelAttribute CompanyInfo companyInfo){
@@ -192,17 +201,33 @@ public class MasterUserController extends WorkdaysProperties{
 	//会社情報削除
 	@RequestMapping("/cidelete")
 	public String deleteCompany(@RequestParam("id") String id, Model model){
-		ciService.deleteCompany(Integer.valueOf(id));
+		int cid=Integer.valueOf(id);
+		ciService.deleteCompany(cid);
 		List<CompanyInfo> ciList = ciService.searchAllCompanyInfo();
 		model.addAttribute("ciList", ciList);
 
 		//テンプレ格納フォルダも削除
-		File input = getInputFolder(Integer.valueOf(id));
-		File output = getOutputFolder(Integer.valueOf(id));
+		File input = getInputFolder(cid);
+		File output = getOutputFolder(cid);
 
 		input.delete();
 		output.delete();
 
+		//会社IDから契約リストを取得し削除
+		List<ContractData>cdList= contractService.findCompanyID(cid);
+		for(ContractData contractdata:cdList){
+			contractService.deleteContract(cid,contractdata.getContractID());
+		}
+		//会社IDから管理者リストを取得し削除
+		List<SuperUser>superList=superUserService.findCompanyID(cid);
+		for(SuperUser superUser:superList){
+			superUserService.delete(superUser.getId());
+		}
+		//会社IDから個別ユーザーリストを取得し削除
+		List <IndividualData>iDataList= individualService.findCompanyId(cid);
+		for(IndividualData iData:iDataList){
+			individualService.delete(iData);
+		}
 		return "companyList";
 	}
 
