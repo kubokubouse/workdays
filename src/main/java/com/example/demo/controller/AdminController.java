@@ -136,7 +136,7 @@ public class AdminController extends WorkdaysProperties{
 		workingListParam.setMonth(yearMonth.getMonth());
 		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
-
+        model.addAttribute("users", users);
 		//備考1,2,3に会社名を添付する処理をする
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
         int companyid = (int)session.getAttribute("companyId");
