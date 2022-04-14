@@ -641,7 +641,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	Onetime onetime=userService.inOnetime(user);
 	//ワンタイムテーブルに情報を登録しメールを送る
 	onetimeService.insert(onetime);
-	mailsendService.mailsend(user.getEmail(), WorkdaysProperties.onetimeTitle, onetimeText);
+	mailsendService.mailsend(user.getEmail(), WorkdaysProperties.userRegisterTitle, onetimeText);
 
 	//エラーがなければ仮登録完了ページに遷移
 	return "onetime";
