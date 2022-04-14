@@ -370,12 +370,7 @@ public class MasterController {
 	@PostMapping("/holidayregister")
 	public String holidayregister(Model model, @ModelAttribute Holiday oneholiday, BindingResult result){
 		
-		if (oneholiday.getMonth() < 1 || oneholiday.getDay() < 1) {
-			oneholiday = (Holiday)session.getAttribute("oneholiday");
-			model.addAttribute("oneholiday", oneholiday);
-			model.addAttribute("error", "存在しない日付です");
-			return "holidayregister";
-		} else if (oneholiday.getDay() > 31) {
+		if (oneholiday.getMonth() < 1 || oneholiday.getDay() < 1 || oneholiday.getDay() > 31) {
 			oneholiday = (Holiday)session.getAttribute("oneholiday");
 			model.addAttribute("oneholiday", oneholiday);
 			model.addAttribute("error", "存在しない日付です");

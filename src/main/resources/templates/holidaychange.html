@@ -25,12 +25,12 @@
           <th>月</th>
           <td>
             <label for="number"></label>
-            <input type="number" class="register-control" style="width:50px;"
+            <input type="number" min="1" class="register-control" style="width:50px;"
               th:errorclass="is-invalid" th:field="*{month}" th:value="${oneholiday.month}" >
             <div class="invalid-feedback" th:errors="*{month}"></div>月
           
             <label for="number"></label>
-            <input type="number" class="register-control" style="width:50px;"
+            <input type="number" min="1" class="register-control" style="width:50px;"
               th:errorclass="is-invalid" th:field="*{day}" th:value="${oneholiday.day}" >
             <div class="invalid-feedback" th:errors="*{day}"></div>日
           </td>
