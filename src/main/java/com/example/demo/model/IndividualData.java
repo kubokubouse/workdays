@@ -40,6 +40,7 @@ public class IndividualData
 	  private String mail;
 
 	  @Column(name="individual_id")
+	  @NotEmpty
 	  private String number;
 
 	  @Column
