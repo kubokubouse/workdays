@@ -327,6 +327,9 @@ public class AdminController extends WorkdaysProperties{
             case "company3":
 			  iData.setCompany3(inputvalue);
 			  break;
+            case "banned":
+			  iData.setBanned(Integer.parseInt(inputvalue));
+			  break;
 			} 
 		userService.updateIndividualData(iData);
 		

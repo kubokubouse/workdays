@@ -2,8 +2,8 @@ function TMamTimePicker(){
     'use strict';
     let i;
     this.delimiter=":";
-    this.width='180px';
-    this.size=20;
+    this.width='180px';//00:00の横幅　枠の横幅ではない
+    this.size=20;//00:00の数字のデカさ
     this.family=
       'Verdana,Roboto,"Droid Sans","游ゴシック",YuGothic,"メイリオ",Meiryo,'+
       '"ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","ＭＳ Ｐゴシック",sans-serif';
@@ -44,7 +44,7 @@ function TMamTimePicker(){
         '#mamTimePicker{position:absolute;display:none;width:'+this.width+';font-size:0;'+
         'max-width:'+this.width+';min-width:'+this.width+';border:1px solid #000;'+
         'px;background-color:#fff;letter-spacing:0px;left:0px;top:100px;padding:0;margin:0;}' ,0);
-      style.sheet.insertRule('.mamTimePickerCanvas{width:80px;height:100px;margin:0;padding:0;}',0);
+      style.sheet.insertRule('.mamTimePickerCanvas{width:80px;height:100px;margin:0;padding:0;}',0);//height 大枠の高さ　width 入力項目の横幅　枠ではない
   
       let obj=document.createElement("div");
       obj.setAttribute("id","mamTimePicker");
@@ -85,9 +85,9 @@ function TMamTimePicker(){
         '  </div>'+
         '</div>'+
         '<div style="width:100%;text-align:center;" onMouseOver="this.style.background=\'#ccc\'" onMouseOut="this.style.background=\'\'" id="mamTimePickerSet">'+
-        '  <svg style="width:40px;height:30px;margin:auto;padding:0;" viewBox="0 0 40 30">'+
-        '    <polyline points="5,18 14,28 34,2" stroke="#666" fill="none" stroke-width="4" stroke-linejoin="round"></polyline>'+
-        '  </svg>'+
+        '  <button style="width:40px;height:30px;margin:auto;padding:0;" viewBox="0 0 40 30">'+
+        '   ok</button>'+
+        
         '</div>';
       obj.innerHTML=html;
   

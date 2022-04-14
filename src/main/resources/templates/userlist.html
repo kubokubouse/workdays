@@ -85,7 +85,7 @@ h1 {
         
       }).fail(function () {
         // 通信失敗時のコールバック
-        alert("更新に失敗しました");
+        //alert("更新に失敗しました");
       }).always(function (result) {
         // 常に実行する処理
       });
@@ -104,10 +104,10 @@ h1 {
         }
       }).done(function (result) {
         // 通信成功時のコールバック
-        alert("更新成功")
+        //alert("更新成功")
       }).fail(function () {
         // 通信失敗時のコールバック
-        alert("更新失敗");
+        //alert("更新失敗");
       }).always(function (result) {
         // 常に実行する処理
       });
@@ -180,6 +180,18 @@ h1 {
 
           <td>
             [[${user.regist}]]
+          </td>
+          <td>
+            <select name="banned" th:userid="${user.mail}">
+            <div th:if="${user.banned==0}">
+                <option value="0" selected>許可</option>
+                <option value="1" >禁止</option>
+            </div>
+            <div th:if="${user.banned==1}">
+              <option value="0" >許可</option>
+              <option value="1" selected>禁止</option>
+            </div>
+            </select>
           </td>
 
           <td>

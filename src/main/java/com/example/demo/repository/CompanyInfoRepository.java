@@ -6,5 +6,6 @@ import com.example.demo.model.CompanyInfo;
 public interface CompanyInfoRepository extends JpaRepository<CompanyInfo, Integer> {
 	CompanyInfo findById(int id);
 	List<CompanyInfo> findByCompanyName(String company_name);
+	List<CompanyInfo> findByBanned(int banned);
 
 }
