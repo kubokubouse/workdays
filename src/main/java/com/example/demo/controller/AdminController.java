@@ -136,7 +136,7 @@ public class AdminController extends WorkdaysProperties{
 		workingListParam.setMonth(yearMonth.getMonth());
 		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
-
+        model.addAttribute("users", users);
 		//備考1,2,3に会社名を添付する処理をする
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
         int companyid = (int)session.getAttribute("companyId");
@@ -267,7 +267,7 @@ public class AdminController extends WorkdaysProperties{
        List<IndividualData>IdataList=individualService.findCompanyIdRegistered(superUser.getCompanyID(),1);
         //して1人1人にメールを送る
         for(IndividualData idata:IdataList){
-            mailSendService.mailsend(idata.getMail(),WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
+            mailSendService.mailsend(idata.getMail(),WorkdaysProperties.onetimeTitle, WorkdaysProperties.userRegisterText);
 
         }
         List<IndividualData> iList = userService.findCompanyID(superUser.getCompanyID());
@@ -341,7 +341,7 @@ public class AdminController extends WorkdaysProperties{
     @RequestMapping(value="/remail")
 	public String superuserremail(@RequestParam("mail") String mail, Model model){
 		
-		mailSendService.mailsend(mail, WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
+		mailSendService.mailsend(mail, WorkdaysProperties.onetimeTitle, WorkdaysProperties.userRegisterText);
 		return "remail";
 	}
 

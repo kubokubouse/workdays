@@ -12,5 +12,6 @@ public interface HolidayRepository extends JpaRepository<Holiday, String>{
 	List<Holiday> findByYearAndMonth(int year,int month);
 	List<Holiday> findByYear(int year);
 	Holiday findById(int id);
+    List<Holiday> findByYearAndMonthAndDay(int year, int month, int day);
 
 }

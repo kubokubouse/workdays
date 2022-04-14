@@ -227,7 +227,7 @@ public class MasterController {
 		superUserService.delete(id);
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
-		return "superUserlist";
+		return "superuserlist";
 	}
 
     @PostMapping("/SuperUserAjaxServlet")
@@ -360,16 +360,36 @@ public class MasterController {
 	public String holidayplus(@RequestParam("year") String year, Model model,@ModelAttribute Holiday holiday,BindingResult result){
 		Holiday oneholiday=new Holiday();
 		oneholiday.setYear(Integer.parseInt(year));
+		session.removeAttribute("oneholiday");
+		session.setAttribute("oneholiday", oneholiday);
 		model.addAttribute("oneholiday", oneholiday);
 		return "holidayregister";
 	}
 
 	//祝日の追加
 	@PostMapping("/holidayregister")
-	public String holidayregister(Model model,@ModelAttribute Holiday oneholiday, BindingResult result){
-		//oneholiday.setYear();
-		System.out.println(oneholiday);
-		holidayService.insert(oneholiday);
+	public String holidayregister(Model model, @ModelAttribute Holiday oneholiday, BindingResult result){
+		
+		if (oneholiday.getMonth() < 1 || oneholiday.getDay() < 1 || oneholiday.getDay() > 31) {
+			oneholiday = (Holiday)session.getAttribute("oneholiday");
+			model.addAttribute("oneholiday", oneholiday);
+			model.addAttribute("error", "存在しない日付です");
+			return "holidayregister";
+		} else {
+			//既に登録されていないか検索;
+			List<Holiday> holidayList = holidayService.findyearmonthday(
+				oneholiday.getYear(), oneholiday.getMonth(), oneholiday.getDay());
+			if (holidayList == null || holidayList.isEmpty()) {
+				System.out.println(oneholiday);
+				holidayService.insert(oneholiday);
+			} else {
+			oneholiday = (Holiday)session.getAttribute("oneholiday");
+			model.addAttribute("oneholiday", oneholiday);
+			model.addAttribute("error", "既に登録されています");
+			return "holidayregister";
+			}
+		}
+		
 		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
 		//その年の昇順ソートされたリストを入手
         List<Holiday>holidayList=holidayService.getholidayList(yearMonth.getYear());

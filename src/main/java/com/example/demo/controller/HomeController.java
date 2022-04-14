@@ -555,7 +555,8 @@ public class HomeController extends WorkdaysProperties{
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
-			totalHourMap, totalMinMap, other1Map,other2Map,other3Map, mail, individualID, name
+			totalHourMap, totalMinMap, other1Map,other2Map,other3Map, mail, individualID, name,
+			year, month
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {
@@ -675,7 +676,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	Onetime onetime=userService.inOnetime(user);
 	//ワンタイムテーブルに情報を登録しメールを送る
 	onetimeService.insert(onetime);
-	mailsendService.mailsend(user.getEmail(), WorkdaysProperties.onetimeTitle, onetimeText);
+	mailsendService.mailsend(user.getEmail(), WorkdaysProperties.userRegisterTitle, onetimeText);
 
 	//エラーがなければ仮登録完了ページに遷移
 	return "onetime";
@@ -939,7 +940,8 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
-			totalHourMap, totalMinMap, other1Map,other2Map,other3Map, mail, individualID, name
+			totalHourMap, totalMinMap, other1Map,other2Map,other3Map, mail, individualID, name,
+			year, month
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {

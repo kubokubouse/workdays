@@ -381,13 +381,17 @@ public class MasterUserController extends WorkdaysProperties{
 		//分になった労働時間を00:00形式に変換
 		String worktime=userService.wminutes(wminutes);
 
+		//現在id=1の定時時間のみ反映される仕様となっているためid=1にデータが入るようにする（2022年4月記載）
+		RegularTime rTime=rtService.findId(1);		
 		RegularTime regularTime=new RegularTime();
 		regularTime.setStart(userService.toTime(beanRegularTime.getStart()));
 		regularTime.setEnd(userService.toTime(beanRegularTime.getEnd()));
 		regularTime.setHalftime(userService.toTime(beanRegularTime.getHalftime()));
 		regularTime.setWorktime(userService.toTime(worktime));
+		if (rTime == null) {
+			regularTime.setId(1);
+		}
 		rtService.insert(regularTime);
-
 
 		List<RegularTime> rtbList = new ArrayList<RegularTime>();
 		rtbList = rtService.findAll();
@@ -415,6 +419,7 @@ public class MasterUserController extends WorkdaysProperties{
 		
 		List<RegularTime> rtbList = new ArrayList<RegularTime>();
 		rtbList = rtService.findAll();
+
 		List<BeanRegularTime> rtList=new ArrayList<BeanRegularTime>();
 		for(RegularTime brt:rtbList){
 			BeanRegularTime BRtime=new BeanRegularTime();
