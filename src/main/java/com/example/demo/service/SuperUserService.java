@@ -31,6 +31,11 @@ public class SuperUserService {
         return  superRepository2.findByEmail(Email);
 
     }
+
+    public List<SuperUser> findCompanyID(int companyID){
+        return  superRepository2.findByCompanyID(companyID);
+
+    }
     public void update(SuperUser superUser){
         superRepository2.save(superUser);
     }
@@ -40,6 +45,10 @@ public class SuperUserService {
     }
     public void delete(String superUserid){
         SuperUser superUser=superRepository2.findById(Integer.parseInt(superUserid));
+        superRepository2.delete(superUser);
+    }
+    public void delete(int superUserid){
+        SuperUser superUser=superRepository2.findById(superUserid);
         superRepository2.delete(superUser);
     }
     public SuperUserListParam searchAllSuperUser() {
