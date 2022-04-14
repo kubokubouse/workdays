@@ -375,6 +375,11 @@ public class MasterController {
 			model.addAttribute("oneholiday", oneholiday);
 			model.addAttribute("error", "存在しない日付です");
 			return "holidayregister";
+		} else if (oneholiday.getDay() > 31) {
+			oneholiday = (Holiday)session.getAttribute("oneholiday");
+			model.addAttribute("oneholiday", oneholiday);
+			model.addAttribute("error", "存在しない日付です");
+			return "holidayregister";
 		} else {
 			//既に登録されていないか検索;
 			List<Holiday> holidayList = holidayService.findyearmonthday(
