@@ -21,6 +21,13 @@ public class IndividualService {
     public List <IndividualData> findMail(String mail){
     	return individualRepository.findByMail(mail);
     }
+
+    public List <IndividualData> findCompanyId(int cid){
+    	return individualRepository.findByCompanyID(cid);
+    }
+    public List <IndividualData> findCompanyIdRegistered(int cid,int registered){
+    	return individualRepository.findByCompanyIDAndRegistered(cid,registered);
+    }
    
     public int insert(int companyID, String mail, int individual_id,String name, int banned, int registered, String company1,String company2,String company3){
         return individualRepository.InsertIndividualData(companyID, mail, individual_id,name, banned, registered,company1,company2,company3);

@@ -224,10 +224,10 @@ public class AdminController extends WorkdaysProperties{
         //登録されたメアドにユニバーサルユーザー登録orログインのメールを送る
         User universalUser=userService.findEmail(mail);
         if(universalUser==null){
-           mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle,WorkdaysProperties.userRegisterText);
+           //mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle,WorkdaysProperties.userRegisterText);
            return "superuser";
         }
-        mailSendService.mailsend(mail,WorkdaysProperties.loginTitle,WorkdaysProperties.loginText);
+        //mailSendService.mailsend(mail,WorkdaysProperties.loginTitle,WorkdaysProperties.loginText);
 		return "superuser";
     }
 
@@ -247,7 +247,7 @@ public class AdminController extends WorkdaysProperties{
             if (id.getRegistered() == 0) {
                 id.setRegist("済");
             } else {
-                id.setRegist("");
+                id.setRegist("未");
             }
         }
         System.out.println(iList);
@@ -255,6 +255,36 @@ public class AdminController extends WorkdaysProperties{
 
 		return "userlist";
 	}
+
+    //メール全員に送る
+    @GetMapping("/mailallsend")
+    public String mailallsend(@Validated  Model model){
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        if (superUser == null) {
+            return "accessError";
+        }
+        //セッションの管理者から企業idを特定して企業内で登録してないやつをリスト化
+       List<IndividualData>IdataList=individualService.findCompanyIdRegistered(superUser.getCompanyID(),1);
+        //して1人1人にメールを送る
+        for(IndividualData idata:IdataList){
+            mailSendService.mailsend(idata.getMail(),WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
+
+        }
+        List<IndividualData> iList = userService.findCompanyID(superUser.getCompanyID());
+
+         //ユニバーサルユーザーテーブルに登録済みの場合は済と表示する
+         for (IndividualData id : iList) {
+            if (id.getRegistered() == 0) {
+                id.setRegist("済");
+            } else {
+                id.setRegist("未");
+            }
+        }
+		model.addAttribute("userListParam", iList);
+
+        model.addAttribute("regist","メール送信が完了しました");
+        return "userlist";
+    }
 
     //個別ユーザー削除
     //ここで使用されるユーザーIDはメアドのこと
@@ -899,7 +929,7 @@ public class AdminController extends WorkdaysProperties{
             //ユーザーが既に登録されているか確認
                 User universalUser=userService.findEmail(mail);
                 if(universalUser==null){
-                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
+                 //mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
                     id.setRegistered(1);
                 } else {
                     id.setRegistered(0);
@@ -1178,7 +1208,7 @@ public class AdminController extends WorkdaysProperties{
             //ユーザーが既に登録されているか確認
                 User universalUser=userService.findEmail(mail);
                 if(universalUser==null){
-                 mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
+                 //mailSendService.mailsend(mail,WorkdaysProperties.userRegisterTitle, WorkdaysProperties.userRegisterText);
                     id.setRegistered(1);
                 } else {
                     id.setRegistered(0);

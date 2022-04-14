@@ -217,6 +217,7 @@ public class HomeController extends WorkdaysProperties{
 		}
 		
 		User users=userService.findEmailPassword(login.getEmail(),login.getPassword());
+
 		if (result.hasErrors()||users==null){
 			// 
 			return "loginfalse";
@@ -257,6 +258,8 @@ public class HomeController extends WorkdaysProperties{
 		workingListParam.setMonth(yearMonth.getMonth());
 		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
+		model.addAttribute("users", users);
+		System.out.println(users);
 
 		//備考1,2,3に会社名を添付する処理をする
 		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
@@ -339,7 +342,7 @@ public class HomeController extends WorkdaysProperties{
 		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
 		model.addAttribute("users", user);
-
+		System.out.println(user);
 		//備考仕様の有無を確認
 		List<Otherpa>opList=workdaysService.oplist(user, companyid);
 		model.addAttribute("opList", opList);
