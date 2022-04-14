@@ -31,12 +31,11 @@
   background-color: #ED5353;
  vertical-align: middle;
 }
-.main {
-  max-width: 80%;
-}
+
 table {
   border-collapse: collapse;
   margin: 0 auto;
+  margin-top: 10px;
   padding: 0;
   max-width: 80%;
   table-layout: fixed;
@@ -130,13 +129,11 @@ h1 {
     </div>
     <h1>ユーザー一覧</h1>
 
-  <div class="main">
-    <form th:action="@{/mailallsend}">
-      <input class="button" type="submit" value="未登録者にメール一斉送信">
-    </form>
-    <p th:text="${regist}" class="message"></p>
-
     <table class="table table-striped">
+      <form th:action="@{/mailallsend}">
+        <input class="button" type="submit" value="未登録者にメール一斉送信">
+      </form>
+      <p th:text="${regist}" class="message"></p>
       <thead>
         <tr>
           <th>管理番号</th>
@@ -193,7 +190,7 @@ h1 {
       </tbody> 
     </table>
   </div>
-</div>
+
 
   <div class="tabs">
   <p><a href="/register">新規ユーザー登録はこちら</a></p>
