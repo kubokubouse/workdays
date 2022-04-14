@@ -227,7 +227,7 @@ public class MasterController {
 		superUserService.delete(id);
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
-		return "superUserlist";
+		return "superuserlist";
 	}
 
     @PostMapping("/SuperUserAjaxServlet")
