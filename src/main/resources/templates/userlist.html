@@ -31,7 +31,9 @@
   background-color: #ED5353;
  vertical-align: middle;
 }
-
+.main {
+  max-width: 80%;
+}
 table {
   border-collapse: collapse;
   margin: 0 auto;
@@ -127,7 +129,12 @@ h1 {
       <label class="text-danger" th:text="${error}"></label>
     </div>
     <h1>ユーザー一覧</h1>
-    <br/>
+
+  <div class="main">
+    <form th:action="@{/mailallsend}">
+      <input class="button" type="submit" value="未登録者にメール一斉送信">
+    </form>
+    <p th:text="${regist}" class="message"></p>
 
     <table class="table table-striped">
       <thead>
@@ -184,17 +191,11 @@ h1 {
           </td>
         </tr>
       </tbody> 
-        
-        
     </table>
-  
   </div>
-  <small th:text="${regist}" class="message"></small>
-<div class="tabs">
-  <form th:action="@{/mailallsend}">
-    <input class="button" type="submit" value="未登録者にメール一斉送信">
-  </form>
-  </br>
+</div>
+
+  <div class="tabs">
   <p><a href="/register">新規ユーザー登録はこちら</a></p>
   <p><a href="/superuser">管理画面へ戻る</a></p>
   <p><a href="/">ログアウト</a></p>
