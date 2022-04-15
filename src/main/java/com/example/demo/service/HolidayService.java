@@ -15,11 +15,12 @@ public class HolidayService
     HolidayRepository holidayRepository;
 
    
-    public List <Holiday> findyearmonth(int year, int month)
-    {
+    public List <Holiday> findyearmonth(int year, int month){
     	return holidayRepository.findByYearAndMonth(year,month);
     }
-
+    public List <Holiday> findyearmonthday(int year, int month, int day){
+    	return holidayRepository.findByYearAndMonthAndDay(year,month,day);
+    }
     public List<Holiday> findyear(int year){
         return holidayRepository.findByYear(year);
     }

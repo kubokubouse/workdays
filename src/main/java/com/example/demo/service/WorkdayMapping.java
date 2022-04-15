@@ -19,7 +19,7 @@ public class WorkdayMapping {
     public List<String> outputExcel(String inputFilePath, String outputFilePath,
         Map stHourMap, Map stMinMap, Map endHourMap, Map endMinMap, Map lunchTimeHourMap, 
             Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map other1Map, Map other2Map,
-                Map other3Map, String email, int id, String name) {
+                Map other3Map, String email, int id, String name, int year, int month) {
 
     List<String> errorList = new ArrayList<String>();
     File inputFileObject = new File(inputFilePath);
@@ -291,7 +291,19 @@ public class WorkdayMapping {
                 if (value.contains("[ID]")) {
                     setValue = value.replace("[ID]", String.valueOf(id));
                 }
-
+                //年と月が同じセル内にある場合
+                if (value.contains("[YEAR]") && value.contains("[MONTH]")) {
+                    String yearValue = value.replace("[YEAR]", String.valueOf(year));
+                    setValue = yearValue.replace("[MONTH]", String.valueOf(month));
+                }
+                //年のみ
+                if (!value.contains("[MONTH]") && value.contains("[YEAR]")) {
+                    setValue = value.replace("[YEAR]", String.valueOf(year));
+                }
+                //月のみ
+                if (!value.contains("[YEAR]") && value.contains("[MONTH]")) {
+                    setValue = value.replace("[MONTH]", String.valueOf(month));
+                }
                 //sth:stmなどコロンがある時
                 if (timeValue != null) {
                     cell.setCellValue(timeValue);
