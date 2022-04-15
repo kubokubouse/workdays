@@ -5,8 +5,8 @@ function TMamTimePicker(){
     this.width='180px';//00:00の横幅　枠の横幅ではない
     this.size=20;//00:00の数字のデカさ
     this.family=
-      'Verdana,Roboto,"Droid Sans","游ゴシック",YuGothic,"メイリオ",Meiryo,'+
-      '"ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","ＭＳ Ｐゴシック",sans-serif';
+      'Lato, arial, Helvetica, clean, sans-serif'+
+      '"ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","ＭＳ Ｐゴシック"';
     let per_minutes=1;//分の刻み（5分刻みで表示したいなら5、10分刻みなら10を設定
     this.obj=null;
     this.show=false;
