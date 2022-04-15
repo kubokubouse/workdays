@@ -385,14 +385,11 @@ public class HomeController extends WorkdaysProperties{
 			idUserList.add(idUser);
 		}*/
 
-		//アナザー　禁止された会社の機能を停止するバージョン
+		//禁止された会社の機能を停止するバージョン
 		for(IndividualData iData:iDataList){
 			IdUser idUser=individualService.getIdUser(iData);
 			CompanyInfo ci= ciService.findByCompanyID(iData.getCompanyID());
-			if(ci.getBanned()==1){
-
-			}
-			else{
+			if(ci.getBanned()==0){
 				idUserList.add(idUser);
 			}
 		}
@@ -756,11 +753,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		
 		String clientId = WorkdaysProperties.boxClientId;
 		String clientSecret = WorkdaysProperties.boxClientSecret;
-		
-		// String authorizationUrl = "https://account.box.com/api/oauth2/authorize?client_id="
-		// 	+ clientId + "&response_type=code";
-		
-		// response.sendRedirect(authorizationUrl);
 
 		String code = request.getParameter("code");
 		System.out.println("CODE=" + code);
@@ -778,11 +770,14 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		List <IndividualData>iDataList=individualService.findMail(email);
 		//個別ユーザーから会社IDを取得し会社名のリストを作る
 		List<IdUser>idUserList=new ArrayList<IdUser>();
-				
+
+		//禁止された会社の機能を停止するバージョン
 		for(IndividualData iData:iDataList){
 			IdUser idUser=individualService.getIdUser(iData);
-					
-			idUserList.add(idUser);
+			CompanyInfo ci= ciService.findByCompanyID(iData.getCompanyID());
+			if(ci.getBanned()==0){
+				idUserList.add(idUser);
+			}
 		}
 		
 		model.addAttribute("idUserList", idUserList);

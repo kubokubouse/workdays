@@ -405,7 +405,6 @@ public class AdminController extends WorkdaysProperties{
             model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
             return "templateupload";   
         }
-        System.out.println("はい");
         try {
         // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
@@ -436,15 +435,12 @@ public class AdminController extends WorkdaysProperties{
                 for (File file : fileList){
                     foldermegasize=foldermegasize+file.length();
                 }
-            }else {
-                
             }
             System.out.println("all="+foldermegasize);
             if(foldermegasize+newfilemeagsize>limitmegasize){
                 model.addAttribute("error", "フォルダの容量が制限を超えています");
                 return "templatelist";
             }
-            System.out.println("はいはい");
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
                 new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -453,13 +449,12 @@ public class AdminController extends WorkdaysProperties{
             
             if (!uploadFile.exists()) {
                 model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
-                System.out.println("はいはいはい");       
+                    
             }
             
         } catch (Exception e) {
             if (uploadFile.exists()){
                 uploadFile.delete();
-                System.out.println("はいはいはいはい");   
             }
             model.addAttribute("error", "ファイルのアップロードに失敗しました");
             return "templateupload";
@@ -468,7 +463,6 @@ public class AdminController extends WorkdaysProperties{
                 uploadFile.delete();
             }
             model.addAttribute("error", "ファイルのアップロードに失敗しました");
-            System.out.println("はいはいはいはいはい");
             return "templateupload";
         }
         model.addAttribute("error", "ファイルがアップロードされました");
@@ -1281,6 +1275,37 @@ public class AdminController extends WorkdaysProperties{
 		    );
             session.setAttribute("api", api);
         }
+
+         //会社IDから契約情報のListを作る
+         int companyId = (Integer)session.getAttribute("companyId");
+         List<ContractData> contractDataList= contractService.findCompanyID(companyId);
+         ContractData newContractData=new ContractData();
+         Date today=new Date();
+         //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
+         for(ContractData contractData: contractDataList){
+             if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
+                 newContractData=contractData;
+             }
+             
+         }
+         long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
+         
+         //ファイルサイズの合計が一定値を上回ったらエラー返す
+         String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+     
+         File fileFolder = new File(fileFolderPath);
+         File[] fileList = fileFolder.listFiles();
+         long foldermegasize=0;
+         if (fileList != null) {
+             for (File file : fileList){
+                 foldermegasize=foldermegasize+file.length();
+             }
+         }
+         System.out.println("all="+foldermegasize);
+         if(foldermegasize > limitmegasize){
+             model.addAttribute("error", "フォルダの容量が制限を超えています");
+             return "boxuploadlist";
+         }
 
 		//すべてのフォルダ(id=0)下の情報を取得
 		BoxFolder parentFolder = new BoxFolder(api, "0");
