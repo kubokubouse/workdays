@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
+import com.example.demo.model.User;
 import com.example.demo.repository.IndividualDataRepository;
 
 
@@ -20,6 +21,9 @@ public class IndividualService {
 
     public void delete(IndividualData iData){
         individualRepository.delete(iData);
+    }
+    public void insert(IndividualData iData){
+        individualRepository.save(iData);
     }
     public List <IndividualData> findMail(String mail){
     	return individualRepository.findByMail(mail);
@@ -47,5 +51,18 @@ public class IndividualService {
 		idUser.setCompanyID(iData.getCompanyID());
 		idUser.setCompanyName(companyInfo.getCompanyName());
         return idUser;
+    }
+    public IndividualData toiData(User user){
+        IndividualData iData=new IndividualData();
+        iData.setCompanyID(0);
+        iData.setMail(user.getEmail());
+        iData.setNumber("0");
+        iData.setCompany1(user.getCompany1());
+        iData.setCompany2(user.getCompany2());
+        iData.setCompany3(user.getCompany3());
+        iData.setName(user.getLastname()+user.getFirstname());
+        iData.setRegistered(0);
+        iData.setBanned(0);
+        return iData;
     }
 }
