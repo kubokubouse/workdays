@@ -37,6 +37,7 @@ import javax.servlet.http.*;
 
 import com.example.demo.model.Otherpa;
 import com.example.demo.model.BeanRegularTime;
+import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
@@ -200,6 +201,13 @@ public class HomeController extends WorkdaysProperties{
 			session.setAttribute("superUser", superUser);
 			int companyId=superUser.getCompanyID();
 			session.setAttribute("companyId", companyId);
+
+			//管理者の所属する会社が利用禁止になっていた場合禁止画面に
+			CompanyInfo cInfo= ciService.findByCompanyID(companyId);
+			if(cInfo.getBanned()==1){
+				return "banned";
+			}
+
 			
 			//管理者がindiviudualDataにも登録していた場合勤怠データにアクセスできるように
 			List<IndividualData>iDataList=individualService.findMail(id);
@@ -226,6 +234,7 @@ public class HomeController extends WorkdaysProperties{
 		if(users.getBanned()==1){
 			return "banned";
 		}
+		
 		//ログイン時に入力されたメアドを使っている個別ユーザーを特定しリストを作る
 		List <IndividualData>iDataList=individualService.findMail(login.getEmail());
 		model.addAttribute("iDataList", iDataList);
@@ -432,16 +441,42 @@ public class HomeController extends WorkdaysProperties{
 	@GetMapping("/choosetemplatelocal")
 	public String chooseTemplateLocal(Model model){
 
-		//会社選択
+		//会社選択　メールアドレスから個別ユーザーのリストを作る
 		String email = (String)session.getAttribute("email");
 		List <IndividualData>iDataList=individualService.findMail(email);
-		//個別ユーザーから会社IDを取得し会社名のリストを作る
+		//個別ユーザーに登録されている会社1.2.3が表示される
 		List<IdUser>idUserList=new ArrayList<IdUser>();
-				
+		//individualDataの中身をidUserに移す
+		//利用禁止指定されている企業名が会社名になっている場合は会社名を""で登録する→ファイル名が画面表示されない
+		/*for(IndividualData iData:iDataList){
+			IdUser idUser=individualService.getIdUser(iData);
+			List<CompanyInfo> ciList= ciService.findBanned(1);
+			
+			for(CompanyInfo ci:ciList){
+				String cname=ci.getCompanyName();
+				if(idUser.getCompany1().equals(cname)){
+					idUser.setCompany1("");
+				}
+				if(idUser.getCompany2().equals(cname)){
+					idUser.setCompany2("");
+				}
+				if(idUser.getCompany3().equals(cname)){
+					idUser.setCompany3("");
+				}
+			}
+			idUserList.add(idUser);
+		}*/
+
+		//アナザー　禁止された会社の機能を停止するバージョン
 		for(IndividualData iData:iDataList){
 			IdUser idUser=individualService.getIdUser(iData);
-					
-			idUserList.add(idUser);
+			CompanyInfo ci= ciService.findByCompanyID(iData.getCompanyID());
+			if(ci.getBanned()==1){
+
+			}
+			else{
+				idUserList.add(idUser);
+			}
 		}
 		
 		model.addAttribute("idUserList", idUserList);

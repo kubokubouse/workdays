@@ -30,7 +30,10 @@ public class CompanyInfoService {
 		List<CompanyInfo> ci = companyInfoRepository.findByCompanyName(companyName);
 		return ci;
 	}
-    
+    public List<CompanyInfo> findBanned(int banned) {
+		List<CompanyInfo> ci = companyInfoRepository.findByBanned(banned);
+		return ci;
+	}
 	public List<CompanyInfo> searchAllCompanyInfo() {
 		List<CompanyInfo> companyList = companyInfoRepository.findAll();
 		return companyList;
