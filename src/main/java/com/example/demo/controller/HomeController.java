@@ -43,7 +43,6 @@ import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
 import com.example.demo.model.Mail;
 import com.example.demo.model.Onetime;
-import com.example.demo.model.StringListParam;
 import com.example.demo.model.User;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.RePassword;
@@ -61,10 +60,7 @@ import com.example.demo.service.UserService;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.WorkdayMapping;
 import com.example.demo.service.WorkdaysService;
-import com.example.demo.service.CellvalueGet;
 import com.example.demo.WorkdaysProperties;
-import com.google.gson.Gson;
-import com.example.demo.model.Judgeused;
 
 @Controller
 public class HomeController extends WorkdaysProperties{
@@ -130,60 +126,7 @@ public class HomeController extends WorkdaysProperties{
 		return "done";
 	}
 
-	//react用メール処理
-	@RequestMapping(value = "/reactmail")
-	@ResponseBody
-	@CrossOrigin(origins = "*")
-	public String reactmail(String password, String email)throws MessagingException{
-		User users=userService.findEmailPassword(email,password);
-		String lastname=users.getLastname();
-		String mail=users.getEmail();
-		mailsendService.send(lastname,mail);
-		return "done";
-	}
-
 	
-	//ログイン時の処理 	reactで必要な分　返却値はjsonの文
-	@RequestMapping("/login")
-	@ResponseBody
-	@CrossOrigin(origins = "*")
-	public String sucsess(@Validated  @ModelAttribute Login login,Model model,BindingResult result){
-		User users=userService.findEmailPassword(login.getEmail(),login.getPassword());
-		if (result.hasErrors()||users==null){
-			// エラーがある場合、login.htmlに戻る
-	        return "login";
-		}
-		
-		session.setAttribute("Data",users);
-		YearMonth yearMonth=userService.nowYearMonth();//その時の年月取得
-		int userid=users.getId();
-		int year=yearMonth.getYear();
-		int month=yearMonth.getMonth();
-		int lastmonth=month-1;
-		Workdays workdays =workdaysService.findUseridYearMonthDay(userid,year, month,1);
-		if (workdays==null){
-			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR, year);
-			cal.set(Calendar.MONTH, lastmonth);//カレンダーメソッドなので使うのは実際の月-1の方
-			int lastDayOfMonth = cal.getActualMaximum(Calendar.DATE);
-			for(int i=0;i<lastDayOfMonth;i++){
-				String yobi[] = {"日","月","火","水","木","金","土"};
-				cal.set(year, lastmonth, i+1);
-				String weekday=yobi[cal.get(Calendar.DAY_OF_WEEK)-1];
-				workdaysService.insertdata(userid, year, month, i+1, weekday);//int d=が左辺にあったから動かなくなったら足すこと
-			}
-		}
-		
-		//WorkingListParam workingListParam = userService.searchAll();→本来のやつ
-		//スタートやエンドの値を一括で変形する→workingListParm全体の値を別の箱に入れる→箱をjsonで変換する
-		StringListParam stringListParam = userService.reactsearchAll(users);
-		Gson gson = new Gson();
-		// String jstr = gson.toJson(workingListParam.getWorkingDataList(),  List.class);→本来のやつ
-		String jstr = gson.toJson(stringListParam.getStringList2(),  List.class);
-		WorkingListParam workingListParam = userService.searchAll(users);//リストに出す用の検索は必要
-		model.addAttribute("workingListParam", workingListParam);
-		return jstr;
-	}
 	//ログイン時の処理　spring用
 	@RequestMapping("/login2")
 	@CrossOrigin(origins = "*")
@@ -401,32 +344,7 @@ public class HomeController extends WorkdaysProperties{
 		return "list";
 	}
 
-	@RequestMapping(value = "/listUpdate", method = RequestMethod.POST)
-	  public String listUpdate(@Validated @ModelAttribute WorkingListParam workingListParam, BindingResult result, Model model) {
-		 
-	    if (result.hasErrors()) {
-			List<String> errorList = new ArrayList<String>();
-			for (ObjectError error : result.getAllErrors()) {
-				if (!errorList.contains(error.getDefaultMessage())) {
-					errorList.add(error.getDefaultMessage());
-				}
-			}
-			model.addAttribute("validationError", errorList);
-	      return "list";
-	    }
-	    // ユーザー情報の更新
-	    userService.updateAll(workingListParam);
-		User users=(User)session.getAttribute("Data");
-		model.addAttribute("users", users);
-		
-
-		//会社のテンプレートファイルでoa,ob,coが使われているかジャッジ
-		int companyid = (int)session.getAttribute("companyId");
-		CellvalueGet cellgetvalue=new CellvalueGet();
-		Judgeused judgeused=cellgetvalue.GetCellvalue(companyid, users.getCompany2());
-		model.addAttribute("judgeused", judgeused);
-		return "list";
-	}
+	
 
 	@PostMapping("/revisedone")
 	public String revisedone(@Validated @ModelAttribute User user,BindingResult result){

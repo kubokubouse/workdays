@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/stylesheet.css">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+<title>会員登録画面</title>
+</head>
+
+<body>
+  <header>
+    <h1>会員登録</h1>
+  </header>
+
+  <main id="contents">
+    <form id="entryForm" th:action="@{/confirmfree}" th:object="${user}"method="post" novalidate>
+    <table class="entryTable" border="1">
+      <tr>
+        <th>メールアドレス </th>
+      <td><label for="email"></label>
+    
+      <input type="text" class="login-control"
+    th:errorclass="is-invalid" th:field="*{email}">
+    <div class="invalid-feedback" th:errors="*{email}">
+            </div>
+    
+      </td>
+    </tr>
+    
+    <tr>
+      <th>氏 </th>
+      <td>
+        <label for="lastname"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{lastname}">
+       <div class="invalid-feedback" th:errors="*{lastname}"></div>
+      </td>
+    </tr>
+
+    <tr>
+      <th>名 </th>
+      <td>
+        <label for="firstname"></label>
+        <input type="text" class="register-control"
+        th:errorclass="is-invalid" th:field="*{firstname}">
+        <div class="invalid-feedback" th:errors="*{firstname}"></div>
+      </td>
+    </tr>
+
+    <tr>
+        <th>会社1</th>
+        <td>
+          <label for="password"></label>
+          <input type="text" class="register-control"
+          th:errorclass="is-invalid" th:field="*{company1}">
+         <div class="invalid-feedback" th:errors="*{company1}"></div>
+        </td>
+      </tr>
+      <tr>
+        <th>会社2</th>
+        <td>
+          <label for="password"></label>
+          <input type="text" class="register-control"
+          th:errorclass="is-invalid" th:field="*{company2}">
+         <div class="invalid-feedback" th:errors="*{company2}"></div>
+        </td>
+      </tr>
+      <tr>
+        <th>会社3</th>
+        <td>
+          <label for="password"></label>
+          <input type="text" class="register-control"
+          th:errorclass="is-invalid" th:field="*{company3}">
+         <div class="invalid-feedback" th:errors="*{company3}"></div>
+        </td>
+      </tr>
+
+    
+    <tr>
+      <th>パスワード </th>
+      <td>
+        <label for="password"></label>
+        <input type="password" class="register-control" id="password"
+        th:errorclass="is-invalid" th:field="*{password}">
+       <div class="invalid-feedback" th:errors="*{password}"></div>
+        <small>※半角英数</small>
+      </td>
+    </tr>
+
+    <tr>
+      <th>確認用パスワード </th>
+      <td>
+        <label for="confirm"></label>
+        <input type="password" class="register-control" name="confirm">
+        <p>※半角英数</p>
+      </td>
+    </tr>
+  </table>
+
+  <p th:text="${error}"></p>
+
+  <div class="send">
+    
+    <input type="reset" value="クリア" class="button">
+    <input type="submit" value="登録" class="button">
+  </div>
+</form>
+</main>
+
+  
+
+</body>
+</html>
+<script>
+	function CheckPassword(confirm){
+		// 入力値取得
+		var input1 = document.getElementById("password").value;
+		var input2 = confirm.value;
+		// パスワード比較
+		if(input1 != input2){
+			confirm.setCustomValidity("入力値が一致しません。");
+		}else{
+			confirm.setCustomValidity('');
+		}
+	}
+</script>
+
+<style>
+  .entryTable {
+    margin: auto;
+    border: 0px none;
+    text-align: center;
+  }
+
+  th {
+    background-color: #CCCCFF;
+    color: black;
+  }
+  
+  td {
+  padding-left: 10px;
+  text-align: left;
+  }
+  
+  .send {
+    margin-top: 20px;
+  }
+
+  a {
+    display: block;
+    padding-top: 10px;
+  }
+</style>

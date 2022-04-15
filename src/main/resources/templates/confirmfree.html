@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>登録確認</title>
+<link th:href="@{/css/confirmstyle.css}" rel="stylesheet" />
+<link rel="stylesheet" href="css/stylesheet.css">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+</head>
+<body>
+<h1>会員情報確認</h1>
+<table class="entryTable" border="1">
+
+ 
+  <tr>
+    <th>メールアドレス </th>
+    <td>[[${user.email}]]</td>
+  </tr>
+  <tr>
+    <th>氏 </th>
+    <td>[[${user.lastname}]] </td>
+  </tr>
+
+  <tr>
+    <th>名 </th>
+    <td>[[${user.firstname}]] </td>
+  </tr>
+
+  
+  <tr>
+    <th>会社1</th>
+    <td>[[${user.company1}]]</td>
+ </tr>
+
+ <tr>
+    <th>会社2</th>
+    <td>[[${user.company2}]]</td>
+  </tr>
+
+  <tr>
+    <th>会社3</th>
+    <td>[[${user.company3}]]</td>
+  </tr>
+
+  <tr>
+    <th>パスワード </th>
+    <td>[[${user.password}]] </td>
+  </tr>
+ 
+</table>
+<div class="footer">
+  <a href="#" id="back-link" class="button">戻る</a>
+  <form  th:action="@{/registfree}" th:object="${user}"method="post" >
+    <label for="name"></label>
+    <input type="hidden" th:field="*{lastname}">
+    <input type="hidden" th:field="*{firstname}">
+    <input type="hidden" th:field="*{email}">
+    <input type="hidden" th:field="*{company1}">
+    <input type="hidden" th:field="*{company2}">
+    <input type="hidden" th:field="*{company3}">
+    <input type="hidden" th:field="*{password}">
+    <input type="submit" value="登録" class="button">
+  </form>
+</div>
+</body>
+
+<script>
+  const backLink = document.getElementById('back-link');
+  backLink.addEventListener('click', () => {
+    history.back(-1);
+  });
+</script>
+
+</html>
+
+<style>
+  th {
+    text-align: right;
+  }
+  .entryTable {
+    border: 0px none;
+    margin: auto;
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+
+  .footer {
+    display:flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 15px;
+  }
+</style>
