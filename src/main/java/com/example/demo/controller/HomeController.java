@@ -803,11 +803,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		
 		String clientId = WorkdaysProperties.boxClientId;
 		String clientSecret = WorkdaysProperties.boxClientSecret;
-		
-		// String authorizationUrl = "https://account.box.com/api/oauth2/authorize?client_id="
-		// 	+ clientId + "&response_type=code";
-		
-		// response.sendRedirect(authorizationUrl);
 
 		String code = request.getParameter("code");
 		System.out.println("CODE=" + code);
