@@ -38,6 +38,15 @@ public class WorkdaysProperties {
         File outputFile = new File(basePath + "//" + companyID + "_output");
         return outputFile;
     }
+
+    public File getfreeInputFolder(String mail) {
+        File inputFile = new File(basePath + "//" + mail + "_input");
+        return inputFile;
+    }
+    public File getfreeOutputFolder(String mail) {
+        File outputFile = new File(basePath + "//" + mail + "_output");
+        return outputFile;
+    }
     public String getTimeStamp() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         Date date = new Date(timestamp.getTime());

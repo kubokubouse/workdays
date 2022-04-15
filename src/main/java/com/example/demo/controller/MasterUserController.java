@@ -123,13 +123,6 @@ public class MasterUserController extends WorkdaysProperties{
 		ci.setTopupContract(timestamp);
 		companyRepository.save(ci);
 
-		//契約情報も会社IDと登録日、更新日のみを入力
-		/*cData.setCompanyID(ci.getCompanyID());
-		cData.setRegister(ci.getRegister());
-		cData.setTopupContract(timestamp);
-		cData.setLimitedUser(ci.getLimitedUser());
-
-		contractRepository.save(cData);*/
 
 		//テンプレ格納フォルダを作成
 		File input = getInputFolder(ci.getCompanyID());
