@@ -131,7 +131,7 @@ public class HomeController extends WorkdaysProperties{
 	@RequestMapping("/login2")
 	@CrossOrigin(origins = "*")
 	public String sucsess2(@Validated  @ModelAttribute Login login, BindingResult result,
-	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult, @ModelAttribute YearMonth yaerMonth,BeanRegularTime Brtime){
+	 Model model, @ModelAttribute SuperUserLogin suserlogin, BindingResult sudoresult, @ModelAttribute YearMonth yaerMonth,BeanRegularTime beanRegularTime){
 		
 		String id = login.getEmail();
 		String pass = login.getPassword();
@@ -177,6 +177,15 @@ public class HomeController extends WorkdaysProperties{
 		if(users.getBanned()==1){
 			return "banned";
 		}
+
+		//フリーユーザー（会社IDは0）がログインした場合テンプレートファイルアップロード・一覧削除リンクを表示
+		IndividualData freeData=individualService.findMailCompanyID(login.getEmail(), 0);
+		if(freeData!=null){
+			model.addAttribute("freeuser",1);
+		}
+		else{
+			model.addAttribute("freeuser",0);
+		}
 		
 		//ログイン時に入力されたメアドを使っている個別ユーザーを特定しリストを作る
 		List <IndividualData>iDataList=individualService.findMail(login.getEmail());
@@ -219,7 +228,7 @@ public class HomeController extends WorkdaysProperties{
 		List<Otherpa>opList=workdaysService.oplist(users, companyid);
 		model.addAttribute("opList", opList);
 		model.addAttribute("yearMonth",yearMonth);
-		model.addAttribute("Brtime",Brtime);
+		//model.addAttribute("Brtime",Brtime);
 		System.out.println(opList);
 		return "list";
 	}
