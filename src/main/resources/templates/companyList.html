@@ -172,7 +172,7 @@ table tr {
           
           <div th:if="${user.banned==0}">
             <td>
-              <select name="banned" th:companyid="${user.companyID}">
+              <select th:name="banned" th:companyid="${user.companyID}">
                 <option value="0" selected>許可</option>
                 <option value="1">禁止</option>
                 
@@ -182,7 +182,7 @@ table tr {
 
             <div th:if="${user.banned==1}">
             <td>
-              <select name="banned">
+              <select th:name="banned" th:companyid="${user.companyID}">
                 <option value="0" >許可</option>
                 <option value="1" selected>禁止</option>
                 
