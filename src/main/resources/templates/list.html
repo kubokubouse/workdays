@@ -250,7 +250,7 @@ table tr {
   <small th:if="${error2}">*[[${error2}]]</small>
 </form>
 
-  <form th:action="@{/ontime}" th:object="${Brtime}" th:method="post">
+  <form th:action="@{/ontime}" th:object="${beanRegularTime}" th:method="post">
       開始 <input type="text" th:field="*{start}" class="time">
       終了 <input type="text"  th:field="*{end}" class="time">
       休憩 <input type="text"  th:field="*{halftime}" class="time">
@@ -262,6 +262,8 @@ table tr {
   <a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=https://workdays.jp/boxDownload">
       <img src="img/box_logo.jpg" class="box_icon">
   </a>
+  <div th:if="${freeuser==1}"><a href="/filecheck">ファイルの確認・アップロードはこちら</a></div> 
+  
 </div>
 
 

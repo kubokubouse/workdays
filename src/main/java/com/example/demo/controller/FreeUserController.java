@@ -98,9 +98,13 @@ public class FreeUserController extends WorkdaysProperties {
 	}
 
     @PostMapping("/confirmfree")
-    public String confirmfree(@ModelAttribute User user,Model model){
+    public String confirmfree(@ModelAttribute User user,BindingResult result,Model model){
+        if (result.hasErrors()||user==null){
+			// 
+			return "freeuser";
+		}
         model.addAttribute("user",user);
-        return "/confirmfree";
+        return "confirmfree";
     }
 
     @PostMapping("/registfree")
@@ -116,6 +120,8 @@ public class FreeUserController extends WorkdaysProperties {
 
 		input.mkdir();
 		output.mkdir();
-        return "/registerdone";
+        return "registerdone";
     }
+
+    
 }

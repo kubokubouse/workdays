@@ -29,6 +29,9 @@ public class IndividualService {
     	return individualRepository.findByMail(mail);
     }
 
+    public IndividualData findMailCompanyID(String mail,int cid){
+        return individualRepository.findByMailAndCompanyID(mail,cid);
+    }
     public List <IndividualData> findCompanyId(int cid){
     	return individualRepository.findByCompanyID(cid);
     }
@@ -59,7 +62,7 @@ public class IndividualService {
         iData.setNumber("0");
         iData.setCompany1(user.getCompany1());
         iData.setCompany2(user.getCompany2());
-        iData.setCompany3(user.getCompany3());
+        //iData.setCompany3(user.getCompany3());
         iData.setName(user.getLastname()+user.getFirstname());
         iData.setRegistered(0);
         iData.setBanned(0);
