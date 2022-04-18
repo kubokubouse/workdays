@@ -506,7 +506,7 @@ public class AdminController extends WorkdaysProperties{
             for (File file : fileList){
                 BeanFile beanFile=new BeanFile();
                 beanFile.setFileName(file.getName());
-                beanFile.setFileName("https://workdays.jp/download/"+companyId + "_input/"+file.getName());
+                beanFile.setFilePath("https://workdays.jp/download/"+companyId + "_input/"+file.getName());
                 BeanFileList.add(beanFile); 
                 fileCount++;
             }  
