@@ -18,21 +18,19 @@
         </tr>
         
         <div class="data"> 
-        <tr th:each="fileName, fileNameSt : ${fileName}">            
-        <form th:action="@{/filedelete}">
-            <input type="hidden" name="deleteFileName" th:value="${fileName}" id="fileName">
-            <input type="hidden" name="box" value="local">         
-            <td th:text="${fileName}" ></td>
-            <td><input type="submit" value="削除" class="button"></td>
-        </form> 
-
-        <td>
-            <input type="hidden" th:value="${folder}" id="folder">
-            <a href="https://workdays.jp/download" class="button" id="download" download> ダウンロード</a>
-        </td>
-        
-    </tr>
-    </div>
+            <tr th:each="fileName, fileNameSt : ${fileName}">            
+                <form th:action="@{/filedelete}">
+                    <input type="hidden" name="deleteFileName" th:value="${fileName}" id="fileName">
+                    <input type="hidden" name="box" value="local">         
+                    <td th:text="${fileName}" ></td>
+                    <td><input type="submit" value="削除" class="button"></td>
+                    <td>
+                        <input type="hidden" th:value="${folder}" id="folder">
+                        <a href="https://workdays.jp/download" class="button" id="download" download> ダウンロード</a>
+                    </td>
+                </form> 
+            </tr>
+        </div>
     </table>
 
     <p th:text="${error}"></p>
