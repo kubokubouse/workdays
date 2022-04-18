@@ -122,7 +122,7 @@ public class FreeUserController extends WorkdaysProperties {
 		output.mkdir();
         return "registerdone";
     }
-    @PostMapping("/filecheck")
+    @GetMapping("/filecheck")
     public String filecheck(Model model){
         User user = (User)session.getAttribute("Data");
             if (user == null) {
