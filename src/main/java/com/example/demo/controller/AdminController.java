@@ -316,7 +316,8 @@ public class AdminController extends WorkdaysProperties{
               iData.setName(inputvalue);
 			  break;
 			  case "mail":
-			  iData.setMail(inputvalue);
+              idRepository.UpdateIndividualEmail(inputvalue,iData.getCompanyID(),iData.getMail());
+			  //iData.setMail(inputvalue);
 			  break;
 			case "company1":
 			  iData.setCompany1(inputvalue);

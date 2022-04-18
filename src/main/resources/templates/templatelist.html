@@ -26,7 +26,7 @@
                     <td><input type="submit" value="削除" class="button"></td>
                     <td>
                         <input type="hidden" th:value="${folder}" id="folder">
-                        <a href="https://workdays.jp/download" class="button" id="download" download> ダウンロード</a>
+                        <a href="https://workdays.jp/download/${folder}/${fileName}" class="button" id="download" download> ダウンロード</a>
                     </td>
                 </form> 
             </tr>

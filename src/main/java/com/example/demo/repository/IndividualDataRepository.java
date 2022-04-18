@@ -17,6 +17,12 @@ public interface IndividualDataRepository extends JpaRepository<IndividualData, 
 	//1から順にuserid,year,month,day,id,weekdayが入る感じ　
 	int InsertIndividualData(int companyID,String mail,int individual_id,String name,int banned,int registered, String company1,String company2,String company3);
 	
+	@Query(value ="update individual_data set mail=?1 where companyID=?2 and mail=?3 ",
+			nativeQuery = true)
+	
+	//1から順に変更後のmailの値、どのデータを変更するか特定するための会社IDとメールアドレスが入る感じ　
+	void UpdateIndividualEmail(String mail,int company_id,String beforemail);
+	
 	IndividualData findById(int id);
 	IndividualData findByMailAndCompanyID(String mail,int companyID);
 	List<IndividualData> findByCompanyID(int companyID);
