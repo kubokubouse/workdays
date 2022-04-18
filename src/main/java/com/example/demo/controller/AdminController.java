@@ -44,6 +44,7 @@ import com.example.demo.model.User;
 import com.example.demo.model.WorkingListParam;
 import com.example.demo.model.YearMonth;
 import com.example.demo.model.SuperUserLogin;
+import com.example.demo.model.BeanFile;
 import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.ContractData;
 import com.example.demo.model.IdUser;
@@ -493,7 +494,7 @@ public class AdminController extends WorkdaysProperties{
             return "accessError";
         }
 
-        List<String> fileNameList = new ArrayList<String>();
+        List<BeanFile> BeanFileList = new ArrayList<BeanFile>();
         int companyId = (Integer)session.getAttribute("companyId");
         String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
         
@@ -503,7 +504,10 @@ public class AdminController extends WorkdaysProperties{
         int fileCount = 0;
         if (fileList != null) {
             for (File file : fileList){
-                fileNameList.add(file.getName()); 
+                BeanFile beanFile=new BeanFile();
+                beanFile.setFileName(file.getName());
+                beanFile.setFileName("https://workdays.jp/download/"+companyId + "_input/"+file.getName());
+                BeanFileList.add(beanFile); 
                 fileCount++;
             }  
         } 
@@ -512,7 +516,7 @@ public class AdminController extends WorkdaysProperties{
             return "templatelist";
         }
         model.addAttribute("folder", companyId + "_input");
-        model.addAttribute("fileName", fileNameList);
+        model.addAttribute("fileName", BeanFileList);
         return "templatelist";
     }
 
