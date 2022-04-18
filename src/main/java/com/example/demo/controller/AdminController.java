@@ -307,7 +307,8 @@ public class AdminController extends WorkdaysProperties{
             userid, companyId);
         System.out.println(name);
         System.out.println(inputvalue);
-
+        System.out.println(iData.getCompanyID());
+        System.out.println(iData.getMail());
 		switch (name) {
 			case "number":
 			  iData.setNumber(inputvalue);
@@ -316,7 +317,7 @@ public class AdminController extends WorkdaysProperties{
               iData.setName(inputvalue);
 			  break;
 			  case "mail":
-              idRepository.UpdateIndividualEmail(inputvalue,iData.getCompanyID(),iData.getMail());
+              int i=idRepository.UpdateIndividualEmail(inputvalue,iData.getCompanyID(),iData.getMail());
 			  //iData.setMail(inputvalue);
 			  break;
 			case "company1":

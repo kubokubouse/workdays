@@ -62,7 +62,7 @@ public class IndividualService {
         iData.setNumber("0");
         iData.setCompany1(user.getCompany1());
         iData.setCompany2(user.getCompany2());
-        //iData.setCompany3(user.getCompany3());
+        iData.setCompany3("");
         iData.setName(user.getLastname()+user.getFirstname());
         iData.setRegistered(0);
         iData.setBanned(0);
