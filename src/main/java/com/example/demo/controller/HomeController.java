@@ -278,9 +278,17 @@ public class HomeController extends WorkdaysProperties{
 			yearMonth.setMonth(month);
 			model.addAttribute("error2","1年以上前のデータは閲覧できません");
 		}
+		User user=(User)session.getAttribute("Data");
+		//フリーユーザー（会社IDは0）がログインした場合テンプレートファイルアップロード・一覧削除リンクを表示
+		IndividualData freeData=individualService.findMailCompanyID(user.getEmail(), 0);
+		if(freeData!=null){
+			model.addAttribute("freeuser",1);
+		}
+		else{
+			model.addAttribute("freeuser",0);
+		}
 
 		//メアドから個別ユーザーのリストを作成する
-		User user=(User)session.getAttribute("Data");
 		List <IndividualData>iDataList=individualService.findMail(user.getEmail());
 		model.addAttribute("iDataList", iDataList);
 		
