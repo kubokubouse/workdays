@@ -81,6 +81,29 @@ table tr {
         // 常に実行する処理
       });
     });
+
+    $('select').change(function(){
+      var inputvalue = $(this).val();
+      var userid = $(this).attr('companyid');
+      var name = $(this).attr('name');
+      $.ajax({
+        url: "/updateCompanyInfo",
+        type: "POST",
+        data: {
+          inputvalue : inputvalue,
+          userid : userid,
+          name : name
+        }
+      }).done(function (result) {
+        // 通信成功時のコールバック
+        
+      }).fail(function () {
+        // 通信失敗時のコールバック
+        alert("更新失敗");
+      }).always(function (result) {
+        // 常に実行する処理
+      });
+    });
   })
 </script>
 
@@ -149,7 +172,7 @@ table tr {
           
           <div th:if="${user.banned==0}">
             <td>
-              <select name="banned" th:companyid="${user.companyID}">
+              <select th:name="banned" th:companyid="${user.companyID}">
                 <option value="0" selected>許可</option>
                 <option value="1">禁止</option>
                 
@@ -159,7 +182,7 @@ table tr {
 
             <div th:if="${user.banned==1}">
             <td>
-              <select name="banned">
+              <select th:name="banned" th:companyid="${user.companyID}">
                 <option value="0" >許可</option>
                 <option value="1" selected>禁止</option>
                 
