@@ -122,6 +122,39 @@ public class FreeUserController extends WorkdaysProperties {
 		output.mkdir();
         return "registerdone";
     }
+    @PostMapping("/filecheck")
+    public String filecheck(Model model){
+        User user = (User)session.getAttribute("Data");
+            if (user == null) {
+                return "accessError";
+            }
+    
+            List<String> fileNameList = new ArrayList<String>();
+            String email=user.getEmail();
+            String fileFolderPath = getfreeInputFolder(email).getAbsolutePath();
+            
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+            
+            int fileCount = 0;
+            if (fileList != null) {
+                for (File file : fileList){
+                    fileNameList.add(file.getName()); 
+                    fileCount++;
+                }  
+            } 
+            if(fileCount == 0) {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatelist";
+            }
+            model.addAttribute("folder", email + "_input");
+            model.addAttribute("fileName", fileNameList);
+            return "templatelist";
+        
+       
+
+            
+    }
 
     
 }
