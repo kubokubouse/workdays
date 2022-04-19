@@ -415,7 +415,8 @@ public class HomeController extends WorkdaysProperties{
 		return "choosetemplatelocal";
 	}
 
-	//会社選択後のboxダウンロード処理
+	
+	//会社選択後のboxダウンロード処理→本当にbox？
 	@RequestMapping(value="/companyselect")
 	public String CompanySelect (@RequestParam String company, Model model) {
 			
@@ -472,13 +473,26 @@ public class HomeController extends WorkdaysProperties{
 		
 		String mail = users.getEmail();
 		int individualID = Integer.valueOf(userService.findIndividualID(mail, companyID));
-		
-		//会社ID_input/会社名.xls
-		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "/" + companyName + ".xls";//AWSでない場合は/を\\に修正
-		//会社ID_output/個別ID_出力会社.xls
-		String outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
+		String inputFilePath;
+		String outputFilePath;
+		//会社IDが０のフリーユーザーがファイルの出力する場合はファイルへのパスを変更する
+		if(companyID==0){
+			//会社ID_input/会社名.xls
+			inputFilePath = getfreeInputFolder(mail).getAbsolutePath() + "/" + companyName + ".xls";//AWSでない場合は/を\\に修正
+			//会社ID_output/個別ID_出力会社.xls
+			outputFilePath = getfreeOutputFolder(mail).getAbsolutePath() 
 			+ "/" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
-
+				
+		}
+		//一般ユーザーのファイル出力の場合
+		else{
+			//会社ID_input/会社名.xls
+			inputFilePath = getInputFolder(companyID).getAbsolutePath() + "/" + companyName + ".xls";//AWSでない場合は/を\\に修正
+			//会社ID_output/個別ID_出力会社.xls
+			outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
+			+ "/" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
+		}
+		
 		System.out.println("input: " + inputFilePath);
 		System.out.println("output: " + outputFilePath);
 
@@ -498,11 +512,17 @@ public class HomeController extends WorkdaysProperties{
 
 		File file = new File(outputFilePath);
 		model.addAttribute("outputFileName", "ファイル名：" + file.getName());
+		if(companyID==0){
+			model.addAttribute("filePath", WorkdaysProperties.downloadPath + mail +"_output/"+individualID + "_" + companyName + ".xls");
+		}
 		
-		model.addAttribute("filePath", WorkdaysProperties.downloadPath + companyID +"_output/"+individualID + "_" + companyName + ".xls");
-
+		else{
+			model.addAttribute("filePath", WorkdaysProperties.downloadPath + companyID +"_output/"+individualID + "_" + companyName + ".xls");
+		}
 		return "done";
 	}	
+
+
 	
 	//パスワード忘れた人用の処理 メール送信画面へ飛ぶ
 	@GetMapping("/forgetpassword")
