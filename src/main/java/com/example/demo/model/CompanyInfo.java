@@ -61,7 +61,6 @@ public class CompanyInfo
 
 	
 	@Column
-	@NotEmpty(message = "ホームページを入力してください")
 	private String homepage;
 
 	//@PositiveOrZero
