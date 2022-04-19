@@ -180,7 +180,13 @@ h1 {
           </td>
 
           <td>
-            [[${user.regist}]]
+            <div th:if="${user.registered==0}">[[${user.regist}]]</div>
+            <div th:if="${user.registered==1}">
+              <form th:action="@{/remail}" >
+                <input type="hidden" name="mail" th:value="${user.mail}" />
+                <input type="submit" value="メール再送信" class="button">
+              </form>
+            </div>
           </td>
           <td>
             <select name="banned" th:userid="${user.mail}">
