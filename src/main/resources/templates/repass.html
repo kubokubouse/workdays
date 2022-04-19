@@ -16,12 +16,12 @@
 <main id=contents>
 <form id="entryform" th:action="@{/repassmail}"  th:object="${mail}"method="post" >
 
-  <p>WorkDaysに登録したメールアドレスを入力してください</p>
+  <h6>WorkDaysに登録したメールアドレスを入力してください</h6>
 
 <table class="entryTable" border="1">
 
  <tr>
-        <th> </th>
+      <th></th>
       <td><label for="email"></label>
 
       <input type="text" class="login-control" placeholder="メールアドレス"
@@ -46,10 +46,13 @@
 </html>
 
 <style>
+  h6{
+    margin-top: 20px;
+  }
   .entryTable {
     border: 0px none;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 10px;
     border-collapse: separate;
     border-spacing: 0px 10px;
   }

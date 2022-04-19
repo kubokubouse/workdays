@@ -13,14 +13,14 @@
   </header>
 
   <main id="contents">
-    <form id="entryForm" th:action="@{/confirmfree}" th:object="${user}"method="post" novalidate>
+    <form id="entryForm" th:action="@{/confirmfree}" th:object="${user}"method="post">
     <table class="entryTable" border="1">
       <tr>
         <th>メールアドレス </th>
       <td><label for="email"></label>
     
-      <input type="text" class="login-control"
-    th:errorclass="is-invalid" th:field="*{email}">
+      <input type="text" class="register-control"
+    th:errorclass="is-invalid" th:field="*{email}" required>
     <div class="invalid-feedback" th:errors="*{email}">
             </div>
     
@@ -32,7 +32,7 @@
       <td>
         <label for="lastname"></label>
         <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{lastname}">
+        th:errorclass="is-invalid" th:field="*{lastname}" required>
        <div class="invalid-feedback" th:errors="*{lastname}"></div>
       </td>
     </tr>
@@ -42,7 +42,7 @@
       <td>
         <label for="firstname"></label>
         <input type="text" class="register-control"
-        th:errorclass="is-invalid" th:field="*{firstname}">
+        th:errorclass="is-invalid" th:field="*{firstname}" required>
         <div class="invalid-feedback" th:errors="*{firstname}"></div>
       </td>
     </tr>
@@ -52,7 +52,7 @@
         <td>
           <label for="password"></label>
           <input type="text" class="register-control"
-          th:errorclass="is-invalid" th:field="*{company1}">
+          th:errorclass="is-invalid" th:field="*{company1}" required>
          <div class="invalid-feedback" th:errors="*{company1}"></div>
         </td>
       </tr>
@@ -81,7 +81,7 @@
       <td>
         <label for="password"></label>
         <input type="password" class="register-control" id="password"
-        th:errorclass="is-invalid" th:field="*{password}">
+        th:errorclass="is-invalid" th:field="*{password}" required>
        <div class="invalid-feedback" th:errors="*{password}"></div>
         <small>※半角英数</small>
       </td>
@@ -91,8 +91,8 @@
       <th>確認用パスワード </th>
       <td>
         <label for="confirm"></label>
-        <input type="password" class="register-control" name="confirm">
-        <p>※半角英数</p>
+        <input type="password" class="register-control" name="confirm" oninput="CheckPassword(this)" required>
+        <small>※半角英数</small>
       </td>
     </tr>
   </table>
@@ -128,6 +128,7 @@
 <style>
   .entryTable {
     margin: auto;
+    margin-top: 20px;
     border: 0px none;
     text-align: center;
   }
