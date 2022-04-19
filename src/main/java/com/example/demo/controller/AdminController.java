@@ -403,21 +403,22 @@ public class AdminController extends WorkdaysProperties{
             return "templateupload";   
         }
         try {
-        // アップロードファイルを置く
+            // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
+            //会社IDが0のフリーユーザーの場合
             if(companyId==0){
                 User user = (User)session.getAttribute("Data");
                 uploadFile = new File(getfreeInputFolder(user.getEmail()).getPath() +"//"+ fileName);
-                String[] fileList=uploadFile.list();
+                /*String[] fileList=uploadFile.list();
                 int filecount=fileList.length;
                 if(filecount>2){
                     model.addAttribute("error", "ファイル数が上限を超えています"); 
                     return "templateupload";  
-                }
+                }*/
             }
             else{
                 uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
-            }
+            
 
             //会社IDから契約情報のListを作る
             List<ContractData> contractDataList= contractService.findCompanyID(companyId);
@@ -450,6 +451,8 @@ public class AdminController extends WorkdaysProperties{
                 model.addAttribute("error", "フォルダの容量が制限を超えています");
                 return "templatelist";
             }
+        }
+
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
                 new BufferedOutputStream(new FileOutputStream(uploadFile));
