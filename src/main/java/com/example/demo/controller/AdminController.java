@@ -348,8 +348,22 @@ public class AdminController extends WorkdaysProperties{
         if (superUser == null&&companyId!=0) {
             return "accessError";
         }
-
+        //フリーユーザーの登録ファイルが二つあった場合
         if(companyId==0){
+            User user = (User)session.getAttribute("Data");
+            String freefileFolderPath = getfreeInputFolder(user.getEmail()).getAbsolutePath();
+    
+            File freefileFolder = new File(freefileFolderPath);
+            File[] freefileList = freefileFolder.listFiles();
+            int count=0;
+            if (freefileList != null) {
+                for (File file : freefileList){
+                   count++;
+                }
+                if(count>1){
+                    model.addAttribute("error", "登録できるファイルは2つまでです"); 
+                }
+            }    
             return "templateupload";
         }
         
@@ -409,49 +423,57 @@ public class AdminController extends WorkdaysProperties{
             if(companyId==0){
                 User user = (User)session.getAttribute("Data");
                 uploadFile = new File(getfreeInputFolder(user.getEmail()).getPath() +"//"+ fileName);
-                /*String[] fileList=uploadFile.list();
-                int filecount=fileList.length;
-                if(filecount>2){
-                    model.addAttribute("error", "ファイル数が上限を超えています"); 
-                    return "templateupload";  
-                }*/
+                //ファイルが二つある場合は登録できず
+                String freefileFolderPath = getfreeInputFolder(user.getEmail()).getAbsolutePath();
+                File freefileFolder = new File(freefileFolderPath);
+                File[] freefileList = freefileFolder.listFiles();
+                int count=0;
+                if (freefileList != null) {
+                    for (File file : freefileList){
+                    count++;
+                }
+                if(count>1){
+                    model.addAttribute("error", "登録できるファイルは2つまでです"); 
+                }
+            }    
+            return "templateupload";
             }
             else{
                 uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
             
 
-            //会社IDから契約情報のListを作る
-            List<ContractData> contractDataList= contractService.findCompanyID(companyId);
-            ContractData newContractData=new ContractData();
-            Date today=new Date();
-            //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
-            for(ContractData contractData: contractDataList){
-                if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
-                    newContractData=contractData;
-                }
+                 //会社IDから契約情報のListを作る
+                List<ContractData> contractDataList= contractService.findCompanyID(companyId);
+                ContractData newContractData=new ContractData();
+                Date today=new Date();
+                //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
+                for(ContractData contractData: contractDataList){
+                    if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
+                        newContractData=contractData;
+                    }
                 
-            }
-            long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
+                }
+                long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
             
-            //ファイルサイズの合計が一定値を上回ったらエラー返す
-            long newfilemeagsize=uploadFile.length();
-            System.out.println("new="+newfilemeagsize);
-            String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+                //ファイルサイズの合計が一定値を上回ったらエラー返す
+                long newfilemeagsize=uploadFile.length();
+                System.out.println("new="+newfilemeagsize);
+                String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
         
-            File fileFolder = new File(fileFolderPath);
-            File[] fileList = fileFolder.listFiles();
-            long foldermegasize=0;
-            if (fileList != null) {
-                for (File file : fileList){
-                    foldermegasize=foldermegasize+file.length();
+                File fileFolder = new File(fileFolderPath);
+                File[] fileList = fileFolder.listFiles();
+                long foldermegasize=0;
+                if (fileList != null) {
+                    for (File file : fileList){
+                        foldermegasize=foldermegasize+file.length();
+                    }
+                }
+                System.out.println("all="+foldermegasize);
+                if(foldermegasize+newfilemeagsize>limitmegasize){
+                    model.addAttribute("error", "フォルダの容量が制限を超えています");
+                    return "templatelist";
                 }
             }
-            System.out.println("all="+foldermegasize);
-            if(foldermegasize+newfilemeagsize>limitmegasize){
-                model.addAttribute("error", "フォルダの容量が制限を超えています");
-                return "templatelist";
-            }
-        }
 
             byte[] bytes = multipartFile.getBytes();
             BufferedOutputStream uploadFileStream =
