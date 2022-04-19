@@ -22,16 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.validation.BindingResult;
 import com.box.sdk.*;
 import com.box.sdk.BoxItem.Info;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import java.nio.file.Paths;
-import javax.swing.JFileChooser;
 
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.file.Files;
 
 import com.example.demo.service.ContractService;
 import com.example.demo.service.HolidayService;
