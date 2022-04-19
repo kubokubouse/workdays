@@ -344,46 +344,49 @@ public class AdminController extends WorkdaysProperties{
 	public String getTemplateUpload(Model model){
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        if (superUser == null) {
+        int companyId = (Integer)session.getAttribute("companyId");
+        if (superUser == null&&companyId!=0) {
             return "accessError";
         }
 
-        int companyId = (Integer)session.getAttribute("companyId");
-
-            //会社IDから契約情報のListを作る
-            List<ContractData> contractDataList= contractService.findCompanyID(companyId);
-            ContractData newContractData=new ContractData();
-            Date today=new Date();
-            //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
-            for(ContractData contractData: contractDataList){
-                if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
-                    newContractData=contractData;
-                }
-                
-            }
-            long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
-            
-            //ファイルサイズの合計が一定値を上回ったらエラー返す
-            String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        if(companyId==0){
+            return "templateupload";
+        }
         
-            File fileFolder = new File(fileFolderPath);
-            File[] fileList = fileFolder.listFiles();
-            long foldermegasize=0;
-            if (fileList != null) {
-                for (File file : fileList){
-                    foldermegasize=foldermegasize+file.length();
-                }
-            }else {
-                
+        //会社IDから契約情報のListを作る
+        List<ContractData> contractDataList= contractService.findCompanyID(companyId);
+        ContractData newContractData=new ContractData();
+        Date today=new Date();
+        //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
+        for(ContractData contractData: contractDataList){
+            if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
+                newContractData=contractData;
             }
-            System.out.println("all="+foldermegasize);
-            if(foldermegasize>limitmegasize){
-                model.addAttribute("error", "フォルダの容量が制限を超えています。");
-                return "templatelist";
+            
+        }
+        long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
+        
+        //ファイルサイズの合計が一定値を上回ったらエラー返す
+        String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+    
+        File fileFolder = new File(fileFolderPath);
+        File[] fileList = fileFolder.listFiles();
+        long foldermegasize=0;
+        if (fileList != null) {
+            for (File file : fileList){
+                foldermegasize=foldermegasize+file.length();
             }
+        }else {
+            
+        }
+        System.out.println("all="+foldermegasize);
+        if(foldermegasize>limitmegasize){
+            model.addAttribute("error", "フォルダの容量が制限を超えています。");
+            return "templatelist";
+        }
 
-
-		return "templateupload";
+        return "templateupload";
+            
 	}
     
     //ファイルアップロード処理
@@ -402,7 +405,19 @@ public class AdminController extends WorkdaysProperties{
         try {
         // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
-            uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
+            if(companyId==0){
+                User user = (User)session.getAttribute("Data");
+                uploadFile = new File(getfreeInputFolder(user.getEmail()).getPath() +"//"+ fileName);
+                String[] fileList=uploadFile.list();
+                int filecount=fileList.length;
+                if(filecount>2){
+                    model.addAttribute("error", "ファイル数が上限を超えています"); 
+                    return "templateupload";  
+                }
+            }
+            else{
+                uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
+            }
 
             //会社IDから契約情報のListを作る
             List<ContractData> contractDataList= contractService.findCompanyID(companyId);
@@ -548,6 +563,8 @@ public class AdminController extends WorkdaysProperties{
             }   
             model.addAttribute("folder", email + "_input");
             model.addAttribute("fileName", BeanFileList);
+            model.addAttribute("error", deleteFileName+"が削除されました");
+
             return "templatelist"; 
             
               
