@@ -514,39 +514,83 @@ public class AdminController extends WorkdaysProperties{
     //ファイル一覧からファイル削除
     @RequestMapping("/filedelete")
     public String showTemplateFileList(@RequestParam("deleteFileName") String deleteFileName, @RequestParam("box") String box, Model model) {
-        
+       
         int id = (Integer)session.getAttribute("companyId");
-        File folder = getInputFolder(id);
-        String deleteFilePath = folder.toPath() + "/" + deleteFileName;
-        File deleteFile = new File(deleteFilePath);
-        if(!deleteFile.delete()){
-            model.addAttribute("error", "ファイルが削除できませんでした");
-        }
-        
-        String fileFolderPath = getInputFolder(id).getAbsolutePath();
-        
-        File fileFolder = new File(fileFolderPath);
-        File[] fileList = fileFolder.listFiles();
-        List<String> filePathList = new ArrayList<String>();
-        List<String> fileNameList = new ArrayList<String>();
-
-        if (fileList != null) {
-            for (File file : fileList){
-                fileNameList.add(file.getName());
-                String filePath = getInputFolder(id).getAbsolutePath() + "/" + file.getName();
-                filePathList.add(filePath);
+        //会社ID＝０＝フリーユーザーがファイルを削除した場合
+        if(id==0){
+            User user = (User)session.getAttribute("Data");
+            List<BeanFile> BeanFileList = new ArrayList<BeanFile>();
+            String email=user.getEmail();
+           
+            File folder = getfreeInputFolder(user.getEmail());
+            String deleteFilePath = folder.toPath() + "/" + deleteFileName;
+            File deleteFile = new File(deleteFilePath);
+            if(!deleteFile.delete()){
+                model.addAttribute("error", "ファイルが削除できませんでした");
             }
-        } else {
-            model.addAttribute("error", "ファイルが存在しません");
-            return "templatelist";
+            String fileFolderPath = getfreeInputFolder(email).getAbsolutePath();
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+            
+            int fileCount = 0;
+            if (fileList != null) {
+                for (File file : fileList){
+                    BeanFile beanFile=new BeanFile();
+                    beanFile.setFileName(file.getName());
+                    beanFile.setFilePath("https://workdays.jp/download/"+email + "_input/"+file.getName());
+                    BeanFileList.add(beanFile); 
+                    fileCount++;
+                }  
+            } 
+            if(fileCount == 0) {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatelist";
+            }   
+            model.addAttribute("folder", email + "_input");
+            model.addAttribute("fileName", BeanFileList);
+            return "templatelist"; 
+            
+              
         }
-        model.addAttribute("filePath", filePathList);
-        model.addAttribute("fileName", fileNameList);
+        //一般管理者がファイルを削除した場合
+        else{
+            File folder = getInputFolder(id);
+            String deleteFilePath = folder.toPath() + "/" + deleteFileName;
+            File deleteFile = new File(deleteFilePath);
+            if(!deleteFile.delete()){
+                model.addAttribute("error", "ファイルが削除できませんでした");
+            }
         
-        model.addAttribute("error", deleteFileName+"が削除されました");
+            List<BeanFile> BeanFileList = new ArrayList<BeanFile>();
+            int companyId = (Integer)session.getAttribute("companyId");
+            String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+        
+            int fileCount = 0;
+            if (fileList != null) {
+                for (File file : fileList){
+                    BeanFile beanFile=new BeanFile();
+                    beanFile.setFileName(file.getName());
+                    beanFile.setFilePath("https://workdays.jp/download/"+companyId + "_input/"+file.getName());
+                    BeanFileList.add(beanFile); 
+                    fileCount++;
+                }  
+            } 
+            if(fileCount == 0) {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatelist";
+            }
+            model.addAttribute("folder", companyId + "_input");
+            model.addAttribute("fileName", BeanFileList);
+       
+        
+            model.addAttribute("error", deleteFileName+"が削除されました");
 
-        if (box.equals("box")) {
-            return "templatedownloadBox"; 
+            if (box.equals("box")) {
+                return "templatedownloadBox"; 
+            }
         }
         return "templatelist";
     }
