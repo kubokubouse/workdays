@@ -354,9 +354,19 @@ public class HomeController extends WorkdaysProperties{
 		//備考仕様の有無を確認
 		List<Otherpa>opList=workdaysService.oplist(user, companyid);
 		model.addAttribute("opList", opList);
+		
 		session.setAttribute("yearMonth",yearMonth);
 		model.addAttribute("yearMonth",yearMonth);
 		model.addAttribute("Brtime",Brtime);
+
+		//フリーユーザーが定時を押していた場合ファイル関連のリンクを表示
+		IndividualData freeData=individualService.findMailCompanyID(user.getEmail(), 0);
+		if(freeData!=null){
+			model.addAttribute("freeuser",1);
+		}
+		else{
+			model.addAttribute("freeuser",0);
+		}
 	
 		return "list";
 	}

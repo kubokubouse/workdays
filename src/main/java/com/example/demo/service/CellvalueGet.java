@@ -13,19 +13,31 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import com.example.demo.WorkdaysProperties;
 import com.example.demo.model.Judgeused;
+import com.example.demo.model.User;
 import com.example.demo.WorkdaysProperties;
 
 public class CellvalueGet extends WorkdaysProperties {
     WorkdaysProperties wp;
     
-    public Judgeused GetCellvalue(int companyID, String companyname) {
+    public Judgeused GetCellvalue(int companyID, String companyname,User user) {
         
         Judgeused judgeused=new Judgeused();
         judgeused.setOa(0);
         judgeused.setOb(0);
         judgeused.setOc(0);
-        //使用するテンプレートファイルのパスを定義する
-        String inputFilePath = getInputFolder(companyID) + "/" + companyname + ".xls";
+
+        String inputFilePath;
+        //フリーユーザーの場合
+        if(companyID==0){
+            String email=user.getEmail();
+            inputFilePath=getfreeInputFolder(email) + "/" + companyname + ".xls";
+        }
+        //一般ユーザーの場合
+        else{
+            //使用するテンプレートファイルのパスを定義する
+            inputFilePath = getInputFolder(companyID) + "/" + companyname + ".xls";
+        }    
+        
         //ファイルのコピー
         File inputFileObject = new File(inputFilePath);
 
