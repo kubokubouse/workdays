@@ -90,13 +90,17 @@ public class MasterUserController extends WorkdaysProperties{
     //会社情報登録→確認画面へ
     @PostMapping("/send_company_info")
 	public String confirm(@Validated @ModelAttribute CompanyInfo companyInfo,BindingResult result, Model model){
-		//CompanyIDに重複があった場合重複画面に飛ぶ
-		CompanyInfo companyID = ciService.findByCompanyID(companyInfo.getCompanyID());
-		if(companyID !=null){
-            model.addAttribute("error", "既に使用されています");
-			return "company_info";
+		//CompanyIDに重複がないかチェック
+		int companyId = companyInfo.getCompanyID();
+		CompanyInfo company = ciService.findByCompanyID(companyId);
+		while (company == null) {
+			company = ciService.findByCompanyID(companyId);
+			if(company == null){
+				break;
+			}
+			companyId++;
 		}
-
+		
 		if(companyInfo.getRegister()==null){
 			model.addAttribute("error2", "日付が未入力です");
 			return "company_info";
