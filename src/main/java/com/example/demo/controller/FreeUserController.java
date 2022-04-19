@@ -1,73 +1,32 @@
 package com.example.demo.controller;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.File;
-import javax.servlet.ServletException;
-
-
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.box.sdk.*;
-import com.box.sdk.BoxItem.Info;
 
-import javax.servlet.http.*;
-
-import com.example.demo.model.Otherpa;
-import com.example.demo.model.BeanRegularTime;
-import com.example.demo.model.CompanyInfo;
-import com.example.demo.model.IdUser;
+import com.example.demo.model.BeanFile;
 import com.example.demo.model.IndividualData;
-import com.example.demo.model.Login;
-import com.example.demo.model.Mail;
-import com.example.demo.model.Onetime;
-import com.example.demo.model.StringListParam;
 import com.example.demo.model.User;
-import com.example.demo.model.SuperUser;
-import com.example.demo.model.RePassword;
-import com.example.demo.model.Workdays;
-import com.example.demo.model.WorkingListParam;
-import com.example.demo.model.YearMonth;
-import com.example.demo.model.SuperUserLogin;
+
 import com.example.demo.repository.ContractDataRepository;
 import com.example.demo.repository.SuperUserRepository2;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.service.HolidayService;
 import com.example.demo.service.IndividualService;
-import com.example.demo.service.MailSendService;
-import com.example.demo.service.OnetimeService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.CompanyInfoService;
 import com.example.demo.service.ContractService;
-import com.example.demo.service.WorkdayMapping;
-import com.example.demo.service.WorkdaysService;
-import com.example.demo.service.CellvalueGet;
+
 import com.example.demo.WorkdaysProperties;
-import com.google.gson.Gson;
-import com.example.demo.model.Judgeused;
+
 
 @Controller
 public class FreeUserController extends WorkdaysProperties {
@@ -125,35 +84,33 @@ public class FreeUserController extends WorkdaysProperties {
     @GetMapping("/filecheck")
     public String filecheck(Model model){
         User user = (User)session.getAttribute("Data");
-            if (user == null) {
-                return "accessError";
-            }
-    
-            List<String> fileNameList = new ArrayList<String>();
-            String email=user.getEmail();
-            String fileFolderPath = getfreeInputFolder(email).getAbsolutePath();
+        if (user == null) {
+            return "accessError";
+        }
+        List<BeanFile> BeanFileList = new ArrayList<BeanFile>();
+        String email=user.getEmail();
+        String fileFolderPath = getfreeInputFolder(email).getAbsolutePath();
             
-            File fileFolder = new File(fileFolderPath);
-            File[] fileList = fileFolder.listFiles();
+        File fileFolder = new File(fileFolderPath);
+        File[] fileList = fileFolder.listFiles();
             
-            int fileCount = 0;
-            if (fileList != null) {
-                for (File file : fileList){
-                    fileNameList.add(file.getName()); 
-                    fileCount++;
-                }  
-            } 
-            if(fileCount == 0) {
-                model.addAttribute("error", "ファイルが存在しません");
-                return "templatelist";
-            }
-            model.addAttribute("folder", email + "_input");
-            model.addAttribute("fileName", fileNameList);
+        int fileCount = 0;
+        if (fileList != null) {
+            for (File file : fileList){
+                BeanFile beanFile=new BeanFile();
+                beanFile.setFileName(file.getName());
+                beanFile.setFilePath("https://workdays.jp/download/"+email + "_input/"+file.getName());
+                BeanFileList.add(beanFile); 
+                fileCount++;
+            }  
+        } 
+        if(fileCount == 0) {
+            model.addAttribute("error", "ファイルが存在しません");
             return "templatelist";
-        
-       
-
-            
+        }   
+        model.addAttribute("folder", email + "_input");
+        model.addAttribute("fileName", BeanFileList);
+        return "templatelist";       
     }
 
     
