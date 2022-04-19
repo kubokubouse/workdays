@@ -59,9 +59,16 @@ public class FreeUserController extends WorkdaysProperties {
     @PostMapping("/confirmfree")
     public String confirmfree(@ModelAttribute User user,BindingResult result,Model model){
         if (result.hasErrors()||user==null){
-			// 
+			model.addAttribute("error","入力内容に不備があります");
 			return "freeuser";
 		}
+
+        User existCheck = userService.findEmail(user.getEmail());
+        if (existCheck != null) {
+            model.addAttribute("error","このメールアドレスは既に登録されています");
+			return "freeuser";
+        }
+
         model.addAttribute("user",user);
         return "confirmfree";
     }

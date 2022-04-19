@@ -11,18 +11,20 @@
 </head>
 <body>
 <header>
-<h1>パスワード再登録処理</h1>
+<h1>パスワード再登録</h1>
 </header>
 <main id=contents>
 <form id="entryform" th:action="@{/repassmail}"  th:object="${mail}"method="post" >
 
+  <h6>WorkDaysに登録したメールアドレスを入力してください</h6>
+
 <table class="entryTable" border="1">
 
  <tr>
-        <th>メールアドレス </th>
+      <th></th>
       <td><label for="email"></label>
 
-      <input type="text" class="login-control"
+      <input type="text" class="login-control" placeholder="メールアドレス"
     th:errorclass="is-invalid" th:field="*{email}">
  <div class="invalid-feedback" th:errors="*{email}">
             </div>
@@ -34,7 +36,7 @@
 
 
   </table>
-  <input type="submit" value="メール送信">
+  <input type="submit" value="メール送信" class="button">
 </form>
 <p><a href="/">ログイン画面へ</a></p>
 </main>
@@ -44,10 +46,13 @@
 </html>
 
 <style>
+  h6{
+    margin-top: 20px;
+  }
   .entryTable {
     border: 0px none;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 10px;
     border-collapse: separate;
     border-spacing: 0px 10px;
   }
