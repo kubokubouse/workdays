@@ -24,6 +24,13 @@ public interface SuperUserRepository2 extends JpaRepository<SuperUser, String> {
 	        nativeQuery = true)
     int updateCompanyID(int companyID,int id);
     
+    @Transactional
+	@Modifying
+	@Query(value ="update super_user set pass=?1 where id=?2  " ,
+
+	        nativeQuery = true)
+    int updatePass(String pass,int id);
+    
 
 	SuperUser findByEmailAndCompanyID(String Email,int companyID);
     SuperUser findById(int Id);
