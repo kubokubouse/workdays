@@ -12,14 +12,14 @@ import com.example.demo.model.SuperUser;
 public interface SuperUserRepository2 extends JpaRepository<SuperUser, String> {
 	@Transactional
 	@Modifying
-	@Query(value ="update individual_data set email=?1 where id=?2  " ,
+	@Query(value ="update super_user set email=?1 where id=?2  " ,
 
 	        nativeQuery = true)
     int updateEmail(String email,int id);
     
     @Transactional
 	@Modifying
-	@Query(value ="update individual_data set copmanyID=?1 where id=?2  " ,
+	@Query(value ="update super_user set companyID=?1 where id=?2  " ,
 
 	        nativeQuery = true)
     int updateCompanyID(int companyID,int id);
