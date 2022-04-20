@@ -66,4 +66,16 @@ public class SuperUserService {
 		superUserListParam.setSuperUserDataList(superUserDataList);
 		return superUserListParam;
 	}
+
+    public int updateEmail(String email,int id){
+        return superRepository2.updateEmail(email,id);
+    }
+
+    public int updateCompanyID(int companyID ,int id){
+        return superRepository2.updateCompanyID(companyID,id);
+    }
+
+    public int updatePass(String pass ,int id){
+        return superRepository2.updatePass(pass,id);
+    }
 }
