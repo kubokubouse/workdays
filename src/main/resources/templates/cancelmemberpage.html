@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>退会手続き</title>
+<link rel="stylesheet" href="css/stylesheet.css">
+<link th:href="@{/css/donestyle.css}" rel="stylesheet"/>
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+</head>
+<body>
+<h1>WorkDays退会</h1>
+
+<h4>退会すると全てのデータが削除されますがよろしいですか?</h4>
+
+<form th:action="@{/canceldone}">
+
+  <div class="fileName">
+    <input type="submit" class="button" value="退会する">
+  </div>
+
+
+<p><a href="/logout">ログアウト</a></p>
+</body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+  }
+  h4 {
+    font-weight: normal;
+  }
+  .fileName{
+    margin-top: 50px;
+  }
+  a {
+    display: block;
+    margin-top: 40px;
+  }
+      
+</style>

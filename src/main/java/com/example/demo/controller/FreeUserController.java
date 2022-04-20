@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import javax.swing.*;
+import static javax.swing.JOptionPane.*;
 
 import com.example.demo.model.BeanFile;
 import com.example.demo.model.IndividualData;
@@ -120,5 +122,29 @@ public class FreeUserController extends WorkdaysProperties {
         return "templatelist";       
     }
 
+    //退会ページ遷移
+    @GetMapping("/cancelmember")
+    public String gotoCancelpage() {
+        return "cancelmemberpage";
+    }
+    //退会手続き
+    @GetMapping("/canceldone")
+    public String cancelmembership(){      
+
+        //user・workdaysテーブルから削除
+        String email = (String)session.getAttribute("email");
+        User user = userService.findEmail(email);
+        int id = user.getId();
+        userService.delete(id);
+
+        //テンプレートフォルダ削除
+        File input = getfreeInputFolder(email);
+		File output = getfreeOutputFolder(email);
+
+        input.delete();
+        output.delete();
+
+        return "cancelMembership";
+    }
     
 }
