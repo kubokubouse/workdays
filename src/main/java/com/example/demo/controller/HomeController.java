@@ -385,10 +385,25 @@ public class HomeController extends WorkdaysProperties{
 	//ローカルに勤怠表ダウンロード時の会社選択画面
 	@GetMapping("/choosetemplatelocal")
 	public String chooseTemplateLocal(Model model){
-
+		
 		//会社選択　メールアドレスから個別ユーザーのリストを作る
 		String email = (String)session.getAttribute("email");
 		List <IndividualData>iDataList=individualService.findMail(email);
+		IndividualData idData=individualService.findMailCompanyID(email,0);
+		//会社ID＝０のユーザーの場合はリストの作り方を変える
+		//フォルダの中にあるファイル名を会社名に登録する
+		if(idData!=null){
+			//フリーユーザーのフォルダを特定する
+			String fileFolderPath = getfreeInputFolder(email).getAbsolutePath();
+			File fileFolder = new File(fileFolderPath);
+			String[] fileNameList=fileFolder.list();
+			for(IndividualData iData:iDataList){
+
+				iData.setCompany1(fileNameList[0]);
+				iData.setCompany2(fileNameList[1]);
+				iData.setCompany3("");
+			}
+		}
 		//個別ユーザーに登録されている会社1.2.3が表示される
 		List<IdUser>idUserList=new ArrayList<IdUser>();
 		//individualDataの中身をidUserに移す
@@ -414,6 +429,7 @@ public class HomeController extends WorkdaysProperties{
 
 		//禁止された会社の機能を停止するバージョン
 		for(IndividualData iData:iDataList){
+			
 			IdUser idUser=individualService.getIdUser(iData);
 			CompanyInfo ci= ciService.findByCompanyID(iData.getCompanyID());
 			if(ci.getBanned()==0){
@@ -794,7 +810,15 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 	public String success(Model model){
 		return "success";
 	}
-
+	
+	//認証リンク踏んだ後に出てくるダウウンロードするファイル選択画面　↓がリンク
+	//https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=https://workdays.jp/boxDownload"
+	//client_idの後に長々と書かれてるのがクライアントid,
+	//response_type=codeで多分認証の後に返却される値の型指定、redirect_uriでリダイレクト先を指定
+	//なので認証が終わってリダイレクトで飛んできた先がこの後の処理ということになる
+	//やってることはセッションに登録されたメアドから個別ユーザーのリスト作ってダウンロードするファイルの名前のリスト（会社と紐づけあり）
+	//を作る他でもある処理、違いは認証で拾ってきたapi特定用のクライアントID,secret,codeをひとまとめにしたapiをセッションに登録していること
+	//この時の画面のurl欄にcodeは乗ってる（というか乗ってるから801行目前後でパラメータとしてcodeを受け取れるんだけれども）
 	@GetMapping("/boxDownload")
 	public String downloadBox(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException, ServletException {
 		
@@ -831,6 +855,8 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		return "choosetemplate";
 	}
 
+	//BOXのリンク踏んだあとにダウンロードするファイル選んだ時の処理がこれ
+	//通常版との違いはセッションから拾ってきたapi(idとsecretとcode)を使ってフォルダおよびをBOXの中に入れてること
 	@RequestMapping(value="/boxfiledownload")
 	public String boxfiledownload (@RequestParam String company, Model model) throws FileNotFoundException {
 			
@@ -887,12 +913,25 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		
 		String mail = users.getEmail();
 		int individualID = Integer.valueOf(userService.findIndividualID(mail, companyID));
-		
-		//会社ID_input/会社名.xls
-		String inputFilePath = getInputFolder(companyID).getAbsolutePath() + "/" + companyName + ".xls";
-		//会社ID_output/個別ID_出力会社.xls
-		String outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
+		String inputFilePath;
+		String outputFilePath;
+		if(companyID==0){
+			//会社ID_input/会社名.xls
+			inputFilePath = getfreeInputFolder(mail).getAbsolutePath() + "/" + companyName + ".xls";//AWSでない場合は/を\\に修正
+			//会社ID_output/個別ID_出力会社.xls
+			outputFilePath = getfreeOutputFolder(mail).getAbsolutePath() 
 			+ "/" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
+				
+		}
+		//一般ユーザーのファイル出力の場合
+		else{
+			//会社ID_input/会社名.xls
+			inputFilePath = getInputFolder(companyID).getAbsolutePath() + "/" + companyName + ".xls";//AWSでない場合は/を\\に修正
+			//会社ID_output/個別ID_出力会社.xls
+			outputFilePath = getOutputFolder(companyID).getAbsolutePath() 
+			+ "/" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
+		}
+		
 
 		System.out.println("input: " + inputFilePath);
 		System.out.println("output: " + outputFilePath);
@@ -909,6 +948,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			return "outputerror";
 		}
 
+		//ここから↓全部api関係
 		BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
 		
 		//すべてのフォルダ(id=0)下に出力用ファイルを作成
