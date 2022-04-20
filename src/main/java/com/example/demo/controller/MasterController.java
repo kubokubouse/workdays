@@ -237,19 +237,22 @@ public class MasterController {
 
 		switch (name) {
 			case "pass":
-			 superUser.setPass(inputvalue);
+			 //superUser.setPass(inputvalue);
+			 superUserService.updatePass(inputvalue, superUser.getId()); 
 			break;
 			
 			case "email":
-			 superUser.setEmail(inputvalue);
+			 //superUser.setEmail(inputvalue);
+			 superUserService.updateEmail(inputvalue, superUser.getId());
 			break;
 			
 			case "companyID":
-			  superUser.setCompanyID(Integer.parseInt(inputvalue));
+			  //superUser.setCompanyID(Integer.parseInt(inputvalue));
+			  superUserService.updateCompanyID(Integer.parseInt(inputvalue), superUser.getId());
 			break;
 			
 		} 
-		superUserService.update(superUser);
+		//superUserService.update(superUser);
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
 		return "superuserlist";

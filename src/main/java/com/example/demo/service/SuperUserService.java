@@ -74,4 +74,8 @@ public class SuperUserService {
     public int updateCompanyID(int companyID ,int id){
         return superRepository2.updateCompanyID(companyID,id);
     }
+
+    public int updatePass(String pass ,int id){
+        return superRepository2.updatePass(pass,id);
+    }
 }
