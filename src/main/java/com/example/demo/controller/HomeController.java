@@ -130,17 +130,17 @@ public class HomeController extends WorkdaysProperties{
 
 	// 勤怠入力画面に戻る
 	@GetMapping("/list")
-	public void returnMainPage(@ModelAttribute SuperUserLogin suserlogin, Model model, @ModelAttribute YearMonth yearMonth,BeanRegularTime beanRegularTime) {
+	public void returnMainPage(Model model, @ModelAttribute YearMonth yearMonth,BeanRegularTime beanRegularTime) {
 		Login login = (Login)session.getAttribute("login");
-		SuperUser superuser = (SuperUser)session.getAttribute("superUser");
-		if (superuser != null) {
+		SuperUserLogin superuser = (SuperUserLogin)session.getAttribute("superUser");
+		/*if (superuser != null) {
 			suserlogin.setCompanyID(superuser.getCompanyID());
 			suserlogin.setEmail(superuser.getEmail());
 			suserlogin.setPass(superuser.getPass());
-		}
+		}*/
 		BeanPropertyBindingResult result = new BeanPropertyBindingResult(login, "login");
-		BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(suserlogin, "suserlogin");
-		sucsess2(login, result, model, suserlogin, sResult, yearMonth, beanRegularTime );
+		BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(superuser, "suserlogin");
+		sucsess2(login, result, model, superuser, sResult, yearMonth, beanRegularTime );
 	}
 	
 	//ログイン時の処理　spring用
