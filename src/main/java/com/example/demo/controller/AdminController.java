@@ -1378,6 +1378,8 @@ public class AdminController extends WorkdaysProperties{
 
         //会社IDから契約情報のListを作る
         if(companyId!=0){
+            model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す 
+            
             List<ContractData> contractDataList= contractService.findCompanyID(companyId);
             ContractData newContractData=new ContractData();
             Date today=new Date();
@@ -1434,10 +1436,14 @@ public class AdminController extends WorkdaysProperties{
         for (Info info : targetChildrens) {
             templatelist.add(info.getName());
         }
-
+        model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す 
         session.setAttribute("templatelist", templatelist);
         model.addAttribute("fileName", templatelist);
+        if(companyId==0){
+            model.addAttribute("free", 1); //フリーユーザーが使用していることを示す 
+        }
         return "boxuploadlist";
+        
 	}
 
     @GetMapping("/boxupload")

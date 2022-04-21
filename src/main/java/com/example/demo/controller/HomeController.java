@@ -304,7 +304,7 @@ public class HomeController extends WorkdaysProperties{
 		else{
 			model.addAttribute("freeuser",0);
 		}
-
+		
 		//メアドから個別ユーザーのリストを作成する
 		List <IndividualData>iDataList=individualService.findMail(user.getEmail());
 		model.addAttribute("iDataList", iDataList);
@@ -327,6 +327,7 @@ public class HomeController extends WorkdaysProperties{
 		workingListParam.setMonth(yearMonth.getMonth());
 		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
+		System.out.println(workingListParam);
 		model.addAttribute("users", user);
 		System.out.println(user);
 		//備考仕様の有無を確認

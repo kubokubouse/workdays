@@ -59,7 +59,7 @@
    
 
     <div class="tab">
-        <p><a href="/superuser">管理画面へ戻る</a></p>
+        <p th:unless="${free==1}"><a href="/superuser">管理画面へ戻る</a></p>
         <p><a href="/">ログアウト</a></p>
     </div>
 
