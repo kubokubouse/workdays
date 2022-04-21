@@ -420,6 +420,7 @@ public class AdminController extends WorkdaysProperties{
             model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
             return "templateupload";   
         }
+        
         try {
             // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
@@ -436,19 +437,18 @@ public class AdminController extends WorkdaysProperties{
                 int count=0;
                 if (freefileList != null) {
                     for (File file : freefileList){
-                    count++;
-                }
-                if(count>1){
+                        count++;
+                    }
+                    if(count>1){
                     model.addAttribute("error", "登録できるファイルは2つまでです"); 
                     return "templateupload";
                 }
-            }    
-            
-            } else {
+            }
+            else {
                 uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
                 model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
 
-                 //会社IDから契約情報のListを作る
+                //会社IDから契約情報のListを作る
                 List<ContractData> contractDataList= contractService.findCompanyID(companyId);
                 ContractData newContractData=new ContractData();
                 Date today=new Date();
@@ -457,15 +457,15 @@ public class AdminController extends WorkdaysProperties{
                     if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
                         newContractData=contractData;
                     }
-                
+            
                 }
                 long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
-            
+        
                 //ファイルサイズの合計が一定値を上回ったらエラー返す
                 long newfilemeagsize=uploadFile.length();
                 System.out.println("new="+newfilemeagsize);
                 String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
-        
+    
                 File fileFolder = new File(fileFolderPath);
                 File[] fileList = fileFolder.listFiles();
                 long foldermegasize=0;
@@ -479,11 +479,14 @@ public class AdminController extends WorkdaysProperties{
                     model.addAttribute("error", "フォルダの容量が制限を超えています");
                     return "templatelist";
                 }
-            }
+            }    
+        
+        }
+         
+                
 
             byte[] bytes = multipartFile.getBytes();
-            BufferedOutputStream uploadFileStream =
-                new BufferedOutputStream(new FileOutputStream(uploadFile));
+            BufferedOutputStream uploadFileStream =new BufferedOutputStream(new FileOutputStream(uploadFile));
             uploadFileStream.write(bytes);
             uploadFileStream.close();   
             
@@ -492,13 +495,15 @@ public class AdminController extends WorkdaysProperties{
                     
             }
             
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             if (uploadFile.exists()){
                 uploadFile.delete();
             }
             model.addAttribute("error", "ファイルのアップロードに失敗しました");
             return "templateupload";
-        } catch (Throwable t) {
+        } 
+        catch (Throwable t) {
             if (uploadFile.exists()){
                 uploadFile.delete();
             }
