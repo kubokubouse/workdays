@@ -425,6 +425,7 @@ public class AdminController extends WorkdaysProperties{
             int companyId = (Integer)session.getAttribute("companyId");
             //会社IDが0のフリーユーザーの場合
             if(companyId==0){
+                model.addAttribute("free", 1); //フリーユーザーが使用していることを示す
                 User user = (User)session.getAttribute("Data");
                 uploadFile = new File(getfreeInputFolder(user.getEmail()).getPath() +"//"+ fileName);
                 //ファイルが二つある場合は登録できず
@@ -441,10 +442,9 @@ public class AdminController extends WorkdaysProperties{
                 }
             }    
             return "templateupload";
-            }
-            else{
+            } else {
                 uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
-            
+                model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
 
                  //会社IDから契約情報のListを作る
                 List<ContractData> contractDataList= contractService.findCompanyID(companyId);
@@ -563,6 +563,8 @@ public class AdminController extends WorkdaysProperties{
         int id = (Integer)session.getAttribute("companyId");
         //会社ID＝０＝フリーユーザーがファイルを削除した場合
         if(id==0){
+            model.addAttribute("free", 1); //フリーユーザーが使用していることを示す
+            
             User user = (User)session.getAttribute("Data");
             List<BeanFile> BeanFileList = new ArrayList<BeanFile>();
             String email=user.getEmail();
@@ -602,6 +604,8 @@ public class AdminController extends WorkdaysProperties{
         }
         //一般管理者がファイルを削除した場合
         else{
+            model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
+
             File folder = getInputFolder(id);
             String deleteFilePath = folder.toPath() + "/" + deleteFileName;
             File deleteFile = new File(deleteFilePath);
