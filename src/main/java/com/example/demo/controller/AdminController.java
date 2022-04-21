@@ -423,6 +423,7 @@ public class AdminController extends WorkdaysProperties{
         try {
             // アップロードファイルを置く
             int companyId = (Integer)session.getAttribute("companyId");
+            
             //会社IDが0のフリーユーザーの場合
             if(companyId==0){
                 model.addAttribute("free", 1); //フリーユーザーが使用していることを示す
@@ -439,9 +440,10 @@ public class AdminController extends WorkdaysProperties{
                 }
                 if(count>1){
                     model.addAttribute("error", "登録できるファイルは2つまでです"); 
+                    return "templateupload";
                 }
             }    
-            return "templateupload";
+            
             } else {
                 uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
                 model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
