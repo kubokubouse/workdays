@@ -90,17 +90,6 @@ table tr {
   width: 30px;
   height: auto;
 }
-.freeuser {
-  margin-top: 10px;
-  text-align: left; 
-}
-.freefilecheck {
-  font-size: 13px;
-}
-.freeupload {
-  font-size: 13px;
-  margin-left: 30px;
-}
 p {
   color: #808080;
 }
@@ -118,7 +107,9 @@ table tr {
   background-color: #fff;
   padding: .35em;
 }
-
+.freeuser {
+  margin-left: 15px;
+}
 </style>
 
 <script>
@@ -273,13 +264,14 @@ table tr {
   <a href="https://account.box.com/api/oauth2/authorize?client_id=4u7hb7ffjwrpl9k1ojfsf09g58eyqwt6&response_type=code&redirect_uri=https://workdays.jp/boxDownload">
       <img src="img/box_logo.jpg" class="box_icon">
   </a>
-  <a href="/cancelmember">退会のお手続きはこちら</a>
+
+  <div th:if="${freeuser==1}">
+    <a href="/filecheck">テンプレートファイルの確認</a>
+    <a href="/templateupload" class="freeuser">テンプレートファイルのアップロード</a>
+  </div> 
   </div>
 
-  <div th:if="${freeuser==1}" class="freeuser">
-    <a href="/filecheck" class="freefilecheck">テンプレートファイルの確認</a>
-    <a href="/templateupload" class="freeupload">テンプレートファイルのアップロード</a>
-  </div> 
+
 
     
       <table class="table table-striped">
@@ -345,9 +337,10 @@ table tr {
       </table>
     </form>
   </div>
-</div>
-
+</div>  
     <p><a href="/">ログアウト</a></p>
+    <p><a href="/cancelmember">退会のお手続きはこちら</a></p>
+    
     <!-- <p><a href="/sendmail">メール送信</a></p>
     <p><a href="/beforemonth">先月へ</a></p>
     <p><a href="/nextmonth">来月分へ</a></p>
