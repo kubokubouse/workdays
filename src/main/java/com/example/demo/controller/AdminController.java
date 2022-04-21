@@ -416,7 +416,7 @@ public class AdminController extends WorkdaysProperties{
 
         // ファイルが空の場合は異常終了
         if(multipartFile.isEmpty()){
-        // 異常終了時の処理
+            // 異常終了時の処理
             model.addAttribute("error", "ファイルのアップロードに失敗しました"); 
             return "templateupload";   
         }
@@ -440,18 +440,20 @@ public class AdminController extends WorkdaysProperties{
                         count++;
                     }
                     if(count>1){
-                    model.addAttribute("error", "登録できるファイルは2つまでです"); 
-                    return "templateupload";
+                        model.addAttribute("error", "登録できるファイルは2つまでです"); 
+                        return "templateupload";
+                    }
                 }
             }
+            
             else {
                 uploadFile = new File(getInputFolder(companyId).getPath() +"//"+ fileName);
                 model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
 
                 //会社IDから契約情報のListを作る
                 List<ContractData> contractDataList= contractService.findCompanyID(companyId);
-                ContractData newContractData=new ContractData();
-                Date today=new Date();
+                    ContractData newContractData=new ContractData();
+                    Date today=new Date();
                 //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
                 for(ContractData contractData: contractDataList){
                     if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
@@ -496,7 +498,7 @@ public class AdminController extends WorkdaysProperties{
             }
             
         }
-        } 
+         
         catch (Exception e) {
             if (uploadFile.exists()){
                 uploadFile.delete();
