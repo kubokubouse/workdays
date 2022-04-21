@@ -590,7 +590,7 @@ public class HomeController extends WorkdaysProperties{
 		File file = new File(outputFilePath);
 		model.addAttribute("outputFileName", "ファイル名：" + file.getName());
 		if(companyID==0){
-			model.addAttribute("filePath", WorkdaysProperties.downloadPath + mail +"_output/"+individualID + "_" + companyName + ".xls");
+			model.addAttribute("filePath", WorkdaysProperties.downloadPath + mail +"_output/"+individualID + "_" + companyName );//companyNameがxls付きなので外す
 		}
 		
 		else{

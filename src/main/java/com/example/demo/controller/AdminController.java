@@ -1350,10 +1350,14 @@ public class AdminController extends WorkdaysProperties{
     public String boxTemplateUpload(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        if (superUser == null) {
+        int companyId = (Integer)session.getAttribute("companyId");
+        
+        if (superUser == null&&companyId!=0) {
             return "accessError";
         }
 		
+
+       
         String clientId = WorkdaysProperties.boxClientId;
 		String clientSecret = WorkdaysProperties.boxClientSecret;
         List<String> templatelist = new ArrayList<String>();
@@ -1372,37 +1376,36 @@ public class AdminController extends WorkdaysProperties{
             session.setAttribute("api", api);
         }
 
-         //会社IDから契約情報のListを作る
-         int companyId = (Integer)session.getAttribute("companyId");
-         List<ContractData> contractDataList= contractService.findCompanyID(companyId);
-         ContractData newContractData=new ContractData();
-         Date today=new Date();
-         //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
-         for(ContractData contractData: contractDataList){
-             if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
-                 newContractData=contractData;
-             }
-             
-         }
-         long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
+        //会社IDから契約情報のListを作る
+        if(companyId!=0){
+            List<ContractData> contractDataList= contractService.findCompanyID(companyId);
+            ContractData newContractData=new ContractData();
+            Date today=new Date();
+            //本日の日付が契約開始日より先且つ契約終了日より後の契約を特定する
+            for(ContractData contractData: contractDataList){
+                if(contractData.getStartContract().before(today)&&contractData.getEndContract().after(today)){
+                    newContractData=contractData;
+                }
+            }
+            long limitmegasize=newContractData.getLimitedCapacity()*1000*1000*1000;//DBに登録されているのはギガなので1000の3乗して規格を合わせる
          
-         //ファイルサイズの合計が一定値を上回ったらエラー返す
-         String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+            //ファイルサイズの合計が一定値を上回ったらエラー返す
+            String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
      
-         File fileFolder = new File(fileFolderPath);
-         File[] fileList = fileFolder.listFiles();
-         long foldermegasize=0;
-         if (fileList != null) {
-             for (File file : fileList){
-                 foldermegasize=foldermegasize+file.length();
-             }
-         }
-         System.out.println("all="+foldermegasize);
-         if(foldermegasize > limitmegasize){
-             model.addAttribute("error", "フォルダの容量が制限を超えています");
-             return "boxuploadlist";
-         }
-
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+            long foldermegasize=0;
+            if (fileList != null) {
+                for (File file : fileList){
+                    foldermegasize=foldermegasize+file.length();
+                }
+            }
+            System.out.println("all="+foldermegasize);
+            if(foldermegasize > limitmegasize){
+                model.addAttribute("error", "フォルダの容量が制限を超えています");
+                return "boxuploadlist";
+            }
+        }
 		//すべてのフォルダ(id=0)下の情報を取得
 		BoxFolder parentFolder = new BoxFolder(api, "0");
 		Iterable<Info> childrens = parentFolder.getChildren();
@@ -1444,8 +1447,8 @@ public class AdminController extends WorkdaysProperties{
         BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
         String folderId = (String)session.getAttribute("boxFolderId");
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        int companyid = superUser.getCompanyID();
-
+        //int companyid = superUser.getCompanyID();
+        int companyid=(Integer)session.getAttribute("companyId");
         BoxFolder targetFolder = new BoxFolder(api, folderId);
         Iterable<Info> targetChildrens = targetFolder.getChildren();
 
@@ -1458,8 +1461,15 @@ public class AdminController extends WorkdaysProperties{
         //boxからファイルダウンロード処理
         BoxFile file = new BoxFile(api, fileId);
         BoxFile.Info info = file.getInfo();
-
-        String templateFile = getInputFolder(companyid) + "//" + info.getName();
+        String templateFile;
+        if(companyid==0){
+            User users=(User)session.getAttribute("Data");
+            templateFile = getfreeInputFolder(users.getEmail()) + "//" + info.getName();
+        }    
+        
+        else{
+            templateFile = getInputFolder(companyid) + "//" + info.getName();
+        }    
         File templatefile = new File(templateFile);
         System.out.println("boxファイルアップロード先" + templatefile.getAbsolutePath());
 
