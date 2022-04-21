@@ -322,6 +322,9 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("idUserList", idUserList);
 
 
+		//年月を渡し勤怠データの有無の確認→データなしなら新規追加
+		workdaysService.checkYearMonth(yearMonth.getYear(),yearMonth.getMonth());
+
 		//指定された月のデータをリスト化
 		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
 		workingListParam.setMonth(yearMonth.getMonth());
