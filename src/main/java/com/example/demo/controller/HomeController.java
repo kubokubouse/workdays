@@ -396,9 +396,27 @@ public class HomeController extends WorkdaysProperties{
 			//フリーユーザーのフォルダを特定する
 			String fileFolderPath = getfreeInputFolder(email).getAbsolutePath();
 			File fileFolder = new File(fileFolderPath);
-			String[] fileNameList=fileFolder.list();
+			String[] fileNameList;
+			fileNameList=fileFolder.list();
 			for(IndividualData iData:iDataList){
-				if(fileNameList[1]==null){
+				System.out.println("要素数＝"+fileNameList.length);
+				if(fileNameList.length==0){
+					iData.setCompany1("");
+					iData.setCompany2("");
+					iData.setCompany3("");
+				}
+				if(fileNameList.length==1){
+					iData.setCompany1(fileNameList[0]);
+					iData.setCompany2("");
+					iData.setCompany3("");
+				}
+
+				if(fileNameList.length==2){
+					iData.setCompany1(fileNameList[0]);
+					iData.setCompany2(fileNameList[1]);
+					iData.setCompany3("");
+				}
+				/*if(fileNameList[1]==null){
 					if(fileNameList[0]==null){
 						iData.setCompany1("");
 						iData.setCompany2("");
@@ -412,7 +430,7 @@ public class HomeController extends WorkdaysProperties{
 					iData.setCompany1(fileNameList[0]);
 					iData.setCompany2(fileNameList[1]);
 					iData.setCompany3("");
-				}
+				}*/
 			}
 		}
 		//個別ユーザーに登録されている会社1.2.3が表示される
