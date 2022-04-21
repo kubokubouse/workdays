@@ -19,6 +19,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -126,6 +127,20 @@ public class HomeController extends WorkdaysProperties{
 		return "done";
 	}
 
+	// 勤怠入力画面に戻る
+	@GetMapping("/list")
+	public void returnMainPage(@ModelAttribute SuperUserLogin suserlogin, Model model, @ModelAttribute YearMonth yearMonth,BeanRegularTime beanRegularTime) {
+		Login login = (Login)session.getAttribute("login");
+		SuperUser superuser = (SuperUser)session.getAttribute("superUser");
+		if (superuser != null) {
+			suserlogin.setCompanyID(superuser.getCompanyID());
+			suserlogin.setEmail(superuser.getEmail());
+			suserlogin.setPass(superuser.getPass());
+		}
+		BeanPropertyBindingResult result = new BeanPropertyBindingResult(login, "login");
+		BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(suserlogin, "suserlogin");
+		sucsess2(login, result, model, suserlogin, sResult, yearMonth, beanRegularTime );
+	}
 	
 	//ログイン時の処理　spring用
 	@RequestMapping("/login2")
@@ -136,6 +151,7 @@ public class HomeController extends WorkdaysProperties{
 		String id = login.getEmail();
 		String pass = login.getPassword();
 		session.setAttribute("email", id);
+		session.setAttribute("login", login);
 		
 		//管理者の場合は管理者ページに移行
 		SuperUserLogin superUser = userService.findEmailAndPass(id, pass);
