@@ -53,8 +53,9 @@
     
 
     <div class="tab">
-        <p><a href="/superuser">管理画面へ戻る</a></p>
-        <p><a href="/">ログアウト</a></p>
+        <p th:if="${free==0}"><a href="/superuser">管理画面へ戻る</a></p>
+        <p th:if="${free==1}"><a href="/list">勤怠画面へ戻る</a></p>
+        <p ><a href="/">ログアウト</a></p>
     </div>
 
 </body>
