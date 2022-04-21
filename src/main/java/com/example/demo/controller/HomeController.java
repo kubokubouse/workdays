@@ -401,9 +401,8 @@ public class HomeController extends WorkdaysProperties{
 			for(IndividualData iData:iDataList){
 				System.out.println("要素数＝"+fileNameList.length);
 				if(fileNameList.length==0){
-					iData.setCompany1("");
-					iData.setCompany2("");
-					iData.setCompany3("");
+					model.addAttribute("error", "パスワードが一致しません");
+					return "choosetemplatelocal";
 				}
 				if(fileNameList.length==1){
 					iData.setCompany1(fileNameList[0]);
