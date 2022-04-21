@@ -19,7 +19,8 @@
         <div style="display: inline-block; _display: inline;" th:unless="${idUser.company3==''}"><input type="radio" name="company" th:value="|${idUser.companyID}:${idUser.company3}|"> [[${idUser.company3}]]</div>
       </div>
     </div>
-    <input type="submit" class="button" value="選択">
+    <p class="error">[[${error}]]</p>
+    <div th:unless="${nofile==1}"><input type="submit" class="button" value="選択"></div>
   </div>
 
 <p><a href="/list">勤怠画面へ戻る</a></p>
