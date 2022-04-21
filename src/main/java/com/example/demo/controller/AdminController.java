@@ -345,14 +345,17 @@ public class AdminController extends WorkdaysProperties{
 
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
         int companyId = (Integer)session.getAttribute("companyId");
+        model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
         if (superUser == null&&companyId!=0) {
             return "accessError";
         }
         //フリーユーザーの登録ファイルが二つあった場合
         if(companyId==0){
+            model.addAttribute("free", 1); //フリーユーザーが使用していることを示す
+            
             User user = (User)session.getAttribute("Data");
             String freefileFolderPath = getfreeInputFolder(user.getEmail()).getAbsolutePath();
-    
+
             File freefileFolder = new File(freefileFolderPath);
             File[] freefileList = freefileFolder.listFiles();
             int count=0;
@@ -363,7 +366,8 @@ public class AdminController extends WorkdaysProperties{
                 if(count>1){
                     model.addAttribute("error", "登録できるファイルは2つまでです"); 
                 }
-            }    
+            }
+              
             return "templateupload";
         }
         
@@ -519,12 +523,13 @@ public class AdminController extends WorkdaysProperties{
     //ファイル一覧を表示
     @RequestMapping("/templatelist")
     public String showTemplateFileList(Model model) {
-
+        
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
         if (superUser == null) {
             return "accessError";
         }
-
+        model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
+        
         List<BeanFile> BeanFileList = new ArrayList<BeanFile>();
         int companyId = (Integer)session.getAttribute("companyId");
         String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
@@ -589,7 +594,8 @@ public class AdminController extends WorkdaysProperties{
             model.addAttribute("folder", email + "_input");
             model.addAttribute("fileName", BeanFileList);
             model.addAttribute("error", deleteFileName+"が削除されました");
-
+            model.addAttribute("free", 1); //フリーユーザーが使用していることを示す  
+            
             return "templatelist"; 
             
               
@@ -629,7 +635,8 @@ public class AdminController extends WorkdaysProperties{
        
         
             model.addAttribute("error", deleteFileName+"が削除されました");
-
+            model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
+            
             if (box.equals("box")) {
                 return "templatedownloadBox"; 
             }
@@ -690,7 +697,8 @@ public class AdminController extends WorkdaysProperties{
 
         if (api == null) {
             model.addAttribute("error", "先に右上のボタンを押してboxにログインしてください");
-        return "templatelist";
+            model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
+            return "templatelist";
         }
 
 		//すべてのフォルダ(id=0)下に出力用ファイルを作成
@@ -747,6 +755,7 @@ public class AdminController extends WorkdaysProperties{
             }
         } else {
             model.addAttribute("error", "ファイルが存在しません");
+            model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
             return "templatelist";
         }
         model.addAttribute("fileName", fileNameList);

@@ -93,6 +93,7 @@ public class FreeUserController extends WorkdaysProperties {
     @GetMapping("/filecheck")
     public String filecheck(Model model){
         User user = (User)session.getAttribute("Data");
+        model.addAttribute("free", 1);//フリーユーザーが使っていることを表す
         if (user == null) {
             return "accessError";
         }
@@ -105,6 +106,7 @@ public class FreeUserController extends WorkdaysProperties {
             
         int fileCount = 0;
         if (fileList != null) {
+            
             for (File file : fileList){
                 BeanFile beanFile=new BeanFile();
                 beanFile.setFileName(file.getName());
@@ -119,6 +121,7 @@ public class FreeUserController extends WorkdaysProperties {
         }   
         model.addAttribute("folder", email + "_input");
         model.addAttribute("fileName", BeanFileList);
+        
         return "templatelist";       
     }
 
