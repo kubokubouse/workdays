@@ -398,10 +398,21 @@ public class HomeController extends WorkdaysProperties{
 			File fileFolder = new File(fileFolderPath);
 			String[] fileNameList=fileFolder.list();
 			for(IndividualData iData:iDataList){
-
-				iData.setCompany1(fileNameList[0]);
-				iData.setCompany2(fileNameList[1]);
-				iData.setCompany3("");
+				if(fileNameList[1]==null){
+					if(fileNameList[0]==null){
+						iData.setCompany1("");
+						iData.setCompany2("");
+						iData.setCompany3("");
+					}
+					iData.setCompany1(fileNameList[0]);
+					iData.setCompany2("");
+					iData.setCompany3("");
+				}
+				if(fileNameList[1]!=null){
+					iData.setCompany1(fileNameList[0]);
+					iData.setCompany2(fileNameList[1]);
+					iData.setCompany3("");
+				}
 			}
 		}
 		//個別ユーザーに登録されている会社1.2.3が表示される
@@ -432,9 +443,14 @@ public class HomeController extends WorkdaysProperties{
 			
 			IdUser idUser=individualService.getIdUser(iData);
 			CompanyInfo ci= ciService.findByCompanyID(iData.getCompanyID());
+			//会社IDが0の場合会社名を本人のメアドにする
+			if(idUser.getCompanyID()==0){
+				idUser.setCompanyName(email);	
+			}
 			if(ci.getBanned()==0){
 				idUserList.add(idUser);
 			}
+			
 		}
 		
 		model.addAttribute("idUserList", idUserList);
