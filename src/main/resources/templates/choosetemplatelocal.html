@@ -20,7 +20,7 @@
       </div>
     </div>
     <p class="error">[[${error}]]</p>
-    <input type="submit" class="button" value="選択">
+    <div th:unless="${nofile==1}"><input type="submit" class="button" value="選択"></div>
   </div>
 
 
