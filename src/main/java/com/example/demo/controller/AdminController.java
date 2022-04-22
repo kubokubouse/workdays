@@ -1454,7 +1454,11 @@ public class AdminController extends WorkdaysProperties{
             return "accessError";
         }
 		
-
+        if (superUser == null) {
+            model.addAttribute("free", 1); // free user
+        } else {
+            model.addAttribute("free", 0);
+        }
        
         String clientId = WorkdaysProperties.boxClientId;
 		String clientSecret = WorkdaysProperties.boxClientSecret;
@@ -1547,10 +1551,17 @@ public class AdminController extends WorkdaysProperties{
     @GetMapping("/boxupload")
     public String boxUpload(@RequestParam("uploadfile") String fileName, Model model) throws FileNotFoundException, IOException {
     
+        //フリーユーザーかを判断する
+        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        if (superUser == null) {
+            model.addAttribute("free", 1); //free user
+        } else {
+            model.addAttribute("free", 0); 
+        }
         //セッションからapiとフォルダidと会社idを取り出す
         BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
         String folderId = (String)session.getAttribute("boxFolderId");
-        SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
+        
         //int companyid = superUser.getCompanyID();
         int companyid=(Integer)session.getAttribute("companyId");
         BoxFolder targetFolder = new BoxFolder(api, folderId);
