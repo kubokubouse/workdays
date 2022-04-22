@@ -1479,7 +1479,7 @@ public class AdminController extends WorkdaysProperties{
         }
 		
         //もしフリーユーザーが使用していたら
-        if (superUser == null) {
+        if (companyId  == 0) {
             model.addAttribute("free", 1); // free user
             //もしファイルが二つあった場合ファイルが二つですよエラーメッセージが出る
             User user = (User)session.getAttribute("Data");
