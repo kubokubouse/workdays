@@ -530,38 +530,73 @@ public class AdminController extends WorkdaysProperties{
 	}
 
 
-    //ファイル一覧を表示
+    //ローカルのファイル一覧を表示
     @RequestMapping("/templatelist")
     public String showTemplateFileList(Model model) {
-        
+        int companyId = (Integer)session.getAttribute("companyId");
         SuperUserLogin superUser = (SuperUserLogin)session.getAttribute("superUser");
-        if (superUser == null) {
+        if (superUser == null&&companyId!=0) {
             return "accessError";
         }
-        model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
+
+        String fileFolderPath;
+        //フリーユーザー時
+        if(companyId==0){
+            User user = (User)session.getAttribute("Data");
+            fileFolderPath = getfreeInputFolder(user.getEmail()).getAbsolutePath();
+        }
+        //一般ユーザー時
+        else{
+            fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+            model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
+        }
         
         List<BeanFile> BeanFileList = new ArrayList<BeanFile>();
-        int companyId = (Integer)session.getAttribute("companyId");
-        String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        
         
         File fileFolder = new File(fileFolderPath);
         File[] fileList = fileFolder.listFiles();
         
         int fileCount = 0;
-        if (fileList != null) {
-            for (File file : fileList){
-                BeanFile beanFile=new BeanFile();
-                beanFile.setFileName(file.getName());
-                beanFile.setFilePath("https://workdays.jp/download/"+companyId + "_input/"+file.getName());
-                BeanFileList.add(beanFile); 
-                fileCount++;
-            }  
-        } 
-        if(fileCount == 0) {
-            model.addAttribute("error", "ファイルが存在しません");
-            return "templatelist";
+        
+        //フリーユーザーの場合
+        if(companyId==0){
+            User user = (User)session.getAttribute("Data");
+            String email=user.getEmail();
+            if (fileList != null) {
+            
+                for (File file : fileList){
+                    BeanFile beanFile=new BeanFile();
+                    beanFile.setFileName(file.getName());
+                    beanFile.setFilePath("https://workdays.jp/download/"+email + "_input/"+file.getName());
+                    BeanFileList.add(beanFile); 
+                    fileCount++;
+                }  
+            } 
+            if(fileCount == 0) {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatelist";
+            }   
+            model.addAttribute("folder", email + "_input");
         }
-        model.addAttribute("folder", companyId + "_input");
+        //一般ユーザーの場合
+        else{
+            if (fileList != null) {
+                for (File file : fileList){
+                    BeanFile beanFile=new BeanFile();
+                    beanFile.setFileName(file.getName());
+                    beanFile.setFilePath("https://workdays.jp/download/"+companyId + "_input/"+file.getName());
+                    BeanFileList.add(beanFile); 
+                    fileCount++;
+                }  
+             } 
+            if(fileCount == 0) {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatelist";
+            }
+            model.addAttribute("folder", companyId + "_input");
+        } 
+        
         model.addAttribute("fileName", BeanFileList);
         return "templatelist";
     }
@@ -681,23 +716,57 @@ public class AdminController extends WorkdaysProperties{
         List<String> filePathList = new ArrayList<String>();
         List<String> fileNameList = new ArrayList<String>();
         int companyId = (Integer)session.getAttribute("companyId");
-        String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        String fileFolderPath;
         
-        File fileFolder = new File(fileFolderPath);
-        File[] fileList = fileFolder.listFiles();
-        
-        if (fileList != null) {
-            for (File file : fileList){
-                fileNameList.add(file.getName());
-                String filePath = getInputFolder(companyId).getAbsolutePath() + "/" + file.getName();
-                filePathList.add(filePath);
+        //フリーユーザーの使用
+        if(companyId==0){
+            model.addAttribute("free", 1);//一般ユーザー使用フラグ
+            
+            User user = (User)session.getAttribute("Data");
+            String email=user.getEmail();
+            fileFolderPath = getfreeInputFolder(email).getAbsolutePath();
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+
+            if (fileList != null) {
+                for (File file : fileList){
+                    fileNameList.add(file.getName());
+                    String filePath = getfreeInputFolder(email).getAbsolutePath() + "/" + file.getName();
+                    filePathList.add(filePath);
+                }
+            } 
+            
+            else {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatedownloadBox";
             }
-        } else {
-            model.addAttribute("error", "ファイルが存在しません");
+            model.addAttribute("fileName", fileNameList);
             return "templatedownloadBox";
         }
-        model.addAttribute("fileName", fileNameList);
-        return "templatedownloadBox";
+        
+        //一般ユーザーの使用
+        else{
+            fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+        
+            if (fileList != null) {
+                for (File file : fileList){
+                    fileNameList.add(file.getName());
+                    String filePath = getInputFolder(companyId).getAbsolutePath() + "/" + file.getName();
+                    filePathList.add(filePath);
+                }
+            } 
+            else {
+                model.addAttribute("error", "ファイルが存在しません");
+                return "templatedownloadBox";
+            }
+            model.addAttribute("fileName", fileNameList);
+            return "templatedownloadBox";
+        }
+        
+        
+        
     }
 
     //テンプレファイル一覧からboxへファイルダウンロード
