@@ -59,7 +59,10 @@ table tr {
   align-items: center;
   gap: 20px;
 }
-
+.freeuser{
+  display: flex;
+  gap: 10px;
+}
 .tabs {
   text-align: left;
   margin-left: 20px;
@@ -265,13 +268,17 @@ table tr {
       <img src="img/box_logo.jpg" class="box_icon">
   </a>
 
-  <div th:if="${freeuser==1}">
-    <a href="/filecheck">テンプレートファイルの確認</a>
-    <a href="/templateupload" class="freeuser">テンプレートファイルのアップロード</a>
+  <div th:if="${freeuser==1}" class="freeuser">
+    <form th:action="@{/transition}">
+      <input type="hidden" name="local" value="/templatelist">
+      <input type="hidden" name="box" value="/createApi">
+      <input class="button" type="submit" value="テンプレートファイル一覧">
+    </form>
+
     <form th:action="@{/transition}">
       <input type="hidden" name="local" value="/templateupload">
       <input type="hidden" name="box" value="/boxtemplateupload">
-      <input class="button" type="submit" value="ファイルアップロード">
+      <input class="button" type="submit" value="テンプレートファイルアップロード">
     </form>
   </div> 
   </div>
