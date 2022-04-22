@@ -798,7 +798,14 @@ public class AdminController extends WorkdaysProperties{
     public String downloadTemplateFilefromList(@RequestParam("fileName") String fileName, HttpServletRequest request, HttpServletResponse response, Model model) throws IOException{
 		
         int id = (Integer)session.getAttribute("companyId");
-        String clientFilePath = getInputFolder(id).getAbsolutePath() + "//" + fileName;
+        String clientFilePath;
+        if(id==0){
+            User user = (User)session.getAttribute("Data");
+            clientFilePath = getfreeInputFolder(user.getEmail()).getAbsolutePath() + "//" + fileName;
+        }
+        else{
+            clientFilePath = getInputFolder(id).getAbsolutePath() + "//" + fileName;
+        }
 
 		BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
 
@@ -849,24 +856,56 @@ public class AdminController extends WorkdaysProperties{
         List<String> filePathList = new ArrayList<String>();
         List<String> fileNameList = new ArrayList<String>();
         int companyId = (Integer)session.getAttribute("companyId");
-        String fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        String fileFolderPath;
         
-        File fileFolder = new File(fileFolderPath);
-        File[] fileList = fileFolder.listFiles();
-        
-        if (fileList != null) {
-            for (File file : fileList){
-                fileNameList.add(file.getName());
-                String filePath = getInputFolder(companyId).getAbsolutePath() + "/" + file.getName();
-                filePathList.add(filePath);
+        //フリーユーザー
+        if(companyId==0){
+            User user = (User)session.getAttribute("Data");
+            String email=user.getEmail();
+            fileFolderPath = getfreeInputFolder(email).getAbsolutePath();
+            
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+            
+            if (fileList != null) {
+                for (File file : fileList){
+                    fileNameList.add(file.getName());
+                    String filePath = getfreeInputFolder(email).getAbsolutePath() + "/" + file.getName();
+                    filePathList.add(filePath);
+                }
+            } 
+            
+            else {
+                model.addAttribute("error", "ファイルが存在しません");
+                model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
+                return "templatelist";
             }
-        } else {
-            model.addAttribute("error", "ファイルが存在しません");
-            model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
-            return "templatelist";
+            model.addAttribute("fileName", fileNameList);
+            model.addAttribute("error", "WorkDays_templateフォルダにダウンロードが完了しました");
+            return "templatedownloadBox";
         }
-        model.addAttribute("fileName", fileNameList);
-        model.addAttribute("error", "WorkDays_templateフォルダにダウンロードが完了しました");
+        //一般ユーザー
+        else{
+            fileFolderPath = getInputFolder(companyId).getAbsolutePath();
+        
+            File fileFolder = new File(fileFolderPath);
+            File[] fileList = fileFolder.listFiles();
+        
+            if (fileList != null) {
+                for (File file : fileList){
+                    fileNameList.add(file.getName());
+                    String filePath = getInputFolder(companyId).getAbsolutePath() + "/" + file.getName();
+                    filePathList.add(filePath);
+                }
+            } 
+            else {
+                model.addAttribute("error", "ファイルが存在しません");
+                model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す  
+                return "templatelist";
+            }
+            model.addAttribute("fileName", fileNameList);
+            model.addAttribute("error", "WorkDays_templateフォルダにダウンロードが完了しました");
+        }
         return "templatedownloadBox";
     }
 
