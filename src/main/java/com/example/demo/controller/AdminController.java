@@ -836,7 +836,7 @@ public class AdminController extends WorkdaysProperties{
 
             File freefileFolder = new File(freefileFolderPath);
             File[] freefileList = freefileFolder.listFiles();
-            model.addAttribute("filecount", 2);
+            
             int count=0;
             if (freefileList != null) {
                 for (File file : freefileList){
