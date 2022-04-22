@@ -1454,32 +1454,27 @@ public class AdminController extends WorkdaysProperties{
             return "accessError";
         }
 		
+        //もしフリーユーザーが使用していたら
         if (superUser == null) {
             model.addAttribute("free", 1); // free user
-        } else {
-            model.addAttribute("free", 0);
-        }
-       
-        String clientId = WorkdaysProperties.boxClientId;
-		String clientSecret = WorkdaysProperties.boxClientSecret;
-        List<String> templatelist = new ArrayList<String>();
-		 
-        BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+            //もしファイルが二つあった場合ファイルが二つですよエラーメッセージが出る
+            User user = (User)session.getAttribute("Data");
+            String freefileFolderPath = getfreeInputFolder(user.getEmail()).getAbsolutePath();
 
-        if (api == null) {
-		    String code = request.getParameter("code");
-		    System.out.println("CODE=" + code);
-		
-		    api = new BoxAPIConnection(
-  			    clientId,
-  			    clientSecret,
-			    code
-		    );
-            session.setAttribute("api", api);
-        }
-
-        //会社IDから契約情報のListを作る
-        if(companyId!=0){
+            File freefileFolder = new File(freefileFolderPath);
+            File[] freefileList = freefileFolder.listFiles();
+            int count=0;
+            if (freefileList != null) {
+                for (File file : freefileList){
+                   count++;
+                }
+                if(count>1){
+                    model.addAttribute("error", "登録できるファイルは2つまでです");
+                    return "boxuploadlist"; 
+                }
+            }
+        } 
+        else {
             model.addAttribute("free", 0); //フリーユーザーが使用してないことを示す 
             
             List<ContractData> contractDataList= contractService.findCompanyID(companyId);
@@ -1510,6 +1505,26 @@ public class AdminController extends WorkdaysProperties{
                 return "boxuploadlist";
             }
         }
+       
+        String clientId = WorkdaysProperties.boxClientId;
+		String clientSecret = WorkdaysProperties.boxClientSecret;
+        List<String> templatelist = new ArrayList<String>();
+		 
+        BoxAPIConnection api = (BoxAPIConnection)session.getAttribute("api");
+
+        if (api == null) {
+		    String code = request.getParameter("code");
+		    System.out.println("CODE=" + code);
+		
+		    api = new BoxAPIConnection(
+  			    clientId,
+  			    clientSecret,
+			    code
+		    );
+            session.setAttribute("api", api);
+        }
+
+        
 		//すべてのフォルダ(id=0)下の情報を取得
 		BoxFolder parentFolder = new BoxFolder(api, "0");
 		Iterable<Info> childrens = parentFolder.getChildren();
