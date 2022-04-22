@@ -1005,12 +1005,13 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		int individualID = Integer.valueOf(userService.findIndividualID(mail, companyID));
 		String inputFilePath;
 		String outputFilePath;
+		//フリーユーザーの場合companyNameに.xlsがつくのでinputfilepathの最後に.xlsを付け足さなくてよい
 		if(companyID==0){
 			//会社ID_input/会社名.xls
-			inputFilePath = getfreeInputFolder(mail).getAbsolutePath() + "/" + companyName + ".xls";//AWSでない場合は/を\\に修正
+			inputFilePath = getfreeInputFolder(mail).getAbsolutePath() + "/" + companyName ;//AWSでない場合は/を\\に修正
 			//会社ID_output/個別ID_出力会社.xls
 			outputFilePath = getfreeOutputFolder(mail).getAbsolutePath() 
-			+ "/" + individualID + "_" + companyName + ".xls";//AWSでない場合は/を\\に修正
+			+ "/" + individualID + "_" + companyName ;//AWSでない場合は/を\\に修正 
 				
 		}
 		//一般ユーザーのファイル出力の場合
