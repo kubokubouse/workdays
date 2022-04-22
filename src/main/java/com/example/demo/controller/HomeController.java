@@ -130,17 +130,17 @@ public class HomeController extends WorkdaysProperties{
 
 	// 勤怠入力画面に戻る
 	@GetMapping("/list")
-	public void returnMainPage(@ModelAttribute SuperUserLogin suserlogin, Model model, @ModelAttribute YearMonth yearMonth,BeanRegularTime beanRegularTime) {
+	public void returnMainPage(Model model, @ModelAttribute YearMonth yearMonth,BeanRegularTime beanRegularTime) {
 		Login login = (Login)session.getAttribute("login");
-		SuperUser superuser = (SuperUser)session.getAttribute("superUser");
-		if (superuser != null) {
+		SuperUserLogin superuser = (SuperUserLogin)session.getAttribute("superUser");
+		/*if (superuser != null) {
 			suserlogin.setCompanyID(superuser.getCompanyID());
 			suserlogin.setEmail(superuser.getEmail());
 			suserlogin.setPass(superuser.getPass());
-		}
+		}*/
 		BeanPropertyBindingResult result = new BeanPropertyBindingResult(login, "login");
-		BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(suserlogin, "suserlogin");
-		sucsess2(login, result, model, suserlogin, sResult, yearMonth, beanRegularTime );
+		BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(superuser, "suserlogin");
+		sucsess2(login, result, model, superuser, sResult, yearMonth, beanRegularTime );
 	}
 	
 	//ログイン時の処理　spring用
@@ -304,7 +304,7 @@ public class HomeController extends WorkdaysProperties{
 		else{
 			model.addAttribute("freeuser",0);
 		}
-
+		
 		//メアドから個別ユーザーのリストを作成する
 		List <IndividualData>iDataList=individualService.findMail(user.getEmail());
 		model.addAttribute("iDataList", iDataList);
@@ -322,11 +322,15 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("idUserList", idUserList);
 
 
+		//年月を渡し勤怠データの有無の確認→データなしなら新規追加
+		workdaysService.checkYearMonth(yearMonth.getYear(),yearMonth.getMonth());
+
 		//指定された月のデータをリスト化
 		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
 		workingListParam.setMonth(yearMonth.getMonth());
 		workingListParam.setYear(yearMonth.getYear());
 		model.addAttribute("workingListParam", workingListParam);
+		System.out.println(workingListParam);
 		model.addAttribute("users", user);
 		System.out.println(user);
 		//備考仕様の有無を確認
