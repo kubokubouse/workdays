@@ -66,6 +66,7 @@ import com.example.demo.WorkdaysProperties;
 @Controller
 public class HomeController extends WorkdaysProperties{
 	private final UserRepository repository;
+	
     @Autowired //← コンストラクタが１つの場合、@Autowiredは省略できます
     HttpSession session;
     @Autowired
@@ -89,7 +90,7 @@ public class HomeController extends WorkdaysProperties{
 
     public HomeController(UserRepository repository){
         this.repository = repository;
-    }
+    }        
 
     //トップページがログイン画面になる
 	@GetMapping("/")
@@ -126,21 +127,6 @@ public class HomeController extends WorkdaysProperties{
 		String mail=users.getEmail();
 		mailsendService.send(lastname,mail);
 		return "done";
-	}
-
-	// 勤怠入力画面に戻る
-	@GetMapping("/list")
-	public void returnMainPage(Model model, @ModelAttribute YearMonth yearMonth,BeanRegularTime beanRegularTime) {
-		Login login = (Login)session.getAttribute("login");
-		SuperUserLogin superuser = (SuperUserLogin)session.getAttribute("superUser");
-		/*if (superuser != null) {
-			suserlogin.setCompanyID(superuser.getCompanyID());
-			suserlogin.setEmail(superuser.getEmail());
-			suserlogin.setPass(superuser.getPass());
-		}*/
-		BeanPropertyBindingResult result = new BeanPropertyBindingResult(login, "login");
-		BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(superuser, "suserlogin");
-		sucsess2(login, result, model, superuser, sResult, yearMonth, beanRegularTime );
 	}
 	
 	//ログイン時の処理　spring用
