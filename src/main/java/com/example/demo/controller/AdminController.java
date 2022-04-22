@@ -828,7 +828,26 @@ public class AdminController extends WorkdaysProperties{
         }
 
         model.addAttribute("localPath", localPath);
+        //会社IDが0のフリーユーザー且つ登録されているファイルが2つ以上の場合どちらのアップロードも表示しない
+        int companyid = (int)session.getAttribute("companyId");
+        if(companyid==0){
+            User user = (User)session.getAttribute("Data");
+            String freefileFolderPath = getfreeInputFolder(user.getEmail()).getAbsolutePath();
 
+            File freefileFolder = new File(freefileFolderPath);
+            File[] freefileList = freefileFolder.listFiles();
+            model.addAttribute("filecount", 2);
+            int count=0;
+            if (freefileList != null) {
+                for (File file : freefileList){
+                   count++;
+                }
+                if(count>1){
+                    model.addAttribute("error", "登録できるファイルは2つまでです"); 
+                    model.addAttribute("filecount", 2); //フリーユーザーが使用していることを示す
+                }
+            }
+        }    
 		return "transition";
 	}
 

@@ -10,7 +10,7 @@
 <body>
 <h1>ファイル操作する方法を選択してください</h1>
 
-<div class="main">
+<div class="main" th:unless="${filecount==2}">
   <a th:href="@{${localPath}}" class="button">ローカルのファイル<br>を操作する</a>
   
   <a th:href="@{${boxPath}}" class="button">boxのファイルを<br>操作する</a>
@@ -19,6 +19,9 @@
     <p><a href="/logout">ログアウト</a></p>
   </div>
 </div>
+<p th:text="${error}"></p>
+<p th:if="${filecount==2}"><a href="/filecheck">ファイル一覧へ</a></p>
+<p th:if="${filecount==2}"><a href="/logout">ログアウト</a></p>
 
 </body>
 </html>
