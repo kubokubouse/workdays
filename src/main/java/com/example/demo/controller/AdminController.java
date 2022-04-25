@@ -99,10 +99,11 @@ public class AdminController extends WorkdaysProperties{
 
         if (superuser == null) {
             BeanPropertyBindingResult result = new BeanPropertyBindingResult(login, "login");
+            superuser=new SuperUserLogin();
             BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(superuser, "suserlogin");
             
             HomeController homeController = new HomeController(repository);
-            superuser=new SuperUserLogin();
+            
             homeController.sucsess2(login, result, model, superuser, sResult, yearMonth, beanRegularTime );
         } else {
 			sworkdays(superuser, yearMonth, beanRegularTime, model);
