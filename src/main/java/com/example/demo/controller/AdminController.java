@@ -111,7 +111,7 @@ public class AdminController extends WorkdaysProperties{
 	}
 
     @GetMapping("/list")
-    public String list(Model model){
+    public String list(Model model,@ModelAttribute BeanRegularTime beanRegularTime){
         User user=(User)session.getAttribute("Data");
         YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
         
@@ -156,6 +156,7 @@ public class AdminController extends WorkdaysProperties{
 		List<Otherpa>opList=workdaysService.oplist(user, companyid);
 		model.addAttribute("opList", opList);
 		session.setAttribute("yearMonth",yearMonth);
+        model.addAttribute("yearMonth", yearMonth);
 		//model.addAttribute("Brtime",Brtime);
 	
 		return "list";
