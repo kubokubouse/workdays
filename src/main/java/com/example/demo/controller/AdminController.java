@@ -91,7 +91,7 @@ public class AdminController extends WorkdaysProperties{
 	}
 
     // 勤怠入力画面に戻る
-	@GetMapping("/list")
+	@GetMapping("/takelist")
 	public void returnMainPage(Model model, BeanRegularTime beanRegularTime) {
 		Login login = (Login)session.getAttribute("login");
 		YearMonth yearMonth=userService.nowYearMonth();
@@ -109,6 +109,58 @@ public class AdminController extends WorkdaysProperties{
 			sworkdays(superuser, yearMonth, beanRegularTime, model);
 		} 
 	}
+
+    @GetMapping("/list")
+    public String list(Model model){
+        User user=(User)session.getAttribute("Data");
+        YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
+        
+		//フリーユーザー（会社IDは0）がログインした場合テンプレートファイルアップロード・一覧削除リンクを表示
+		IndividualData freeData=individualService.findMailCompanyID(user.getEmail(), 0);
+		if(freeData!=null){
+			model.addAttribute("freeuser",1);
+		}
+		else{
+			model.addAttribute("freeuser",0);
+		}
+		
+		//メアドから個別ユーザーのリストを作成する
+		List <IndividualData>iDataList=individualService.findMail(user.getEmail());
+		model.addAttribute("iDataList", iDataList);
+		
+		//個別ユーザーから会社IDを取得し会社のリストを作る
+		List<IdUser>idUserList=new ArrayList<IdUser>();
+		
+		int companyid = 0;
+		for(IndividualData iData:iDataList){
+			IdUser idUser=individualService.getIdUser(iData);
+			companyid = idUser.getCompanyID();
+			idUserList.add(idUser);
+		}
+
+		model.addAttribute("idUserList", idUserList);
+
+
+		//年月を渡し勤怠データの有無の確認→データなしなら新規追加
+		workdaysService.checkYearMonth(yearMonth.getYear(),yearMonth.getMonth());
+
+		//指定された月のデータをリスト化
+		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
+		workingListParam.setMonth(yearMonth.getMonth());
+		workingListParam.setYear(yearMonth.getYear());
+		model.addAttribute("workingListParam", workingListParam);
+		System.out.println(workingListParam);
+		model.addAttribute("users", user);
+		System.out.println(user);
+		//備考仕様の有無を確認
+		List<Otherpa>opList=workdaysService.oplist(user, companyid);
+		model.addAttribute("opList", opList);
+		session.setAttribute("yearMonth",yearMonth);
+		//model.addAttribute("Brtime",Brtime);
+	
+		return "list";
+	}
+    
 
     //管理メニュー画面
     //管理者画面から勤怠データ操作画面へ
