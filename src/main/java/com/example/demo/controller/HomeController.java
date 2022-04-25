@@ -494,11 +494,14 @@ public class HomeController extends WorkdaysProperties{
 		String firstname=users.getFirstname();
 		String name = lastname + "　" + firstname;
 
+		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
+		int year=yearMonth.getYear();
+		int month=yearMonth.getMonth();
 		//当日の年月取得
-		Calendar cal = Calendar.getInstance();
+		/*Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
 		int month=cal.get(Calendar.MONTH);
-		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
+		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す*/
 	
 		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
 
