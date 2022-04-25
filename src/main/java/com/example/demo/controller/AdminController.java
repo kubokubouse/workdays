@@ -97,16 +97,15 @@ public class AdminController extends WorkdaysProperties{
 		YearMonth yearMonth=userService.nowYearMonth();
 		SuperUserLogin superuser = (SuperUserLogin)session.getAttribute("superUser");
 
-		if(login.getEmail() != null && superuser.getEmail() != null) {
-			sworkdays(superuser, yearMonth, beanRegularTime, model);
-		} else {
+        if (superuser == null) {
             BeanPropertyBindingResult result = new BeanPropertyBindingResult(login, "login");
             BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(superuser, "suserlogin");
             
             HomeController homeController = new HomeController(repository);
             homeController.sucsess2(login, result, model, superuser, sResult, yearMonth, beanRegularTime );
-    
-        }
+        } else {
+			sworkdays(superuser, yearMonth, beanRegularTime, model);
+		} 
 	}
 
     //管理メニュー画面
@@ -568,6 +567,7 @@ public class AdminController extends WorkdaysProperties{
         if(companyId==0){
             User user = (User)session.getAttribute("Data");
             fileFolderPath = getfreeInputFolder(user.getEmail()).getAbsolutePath();
+            model.addAttribute("free", 1);
         }
         //一般ユーザー時
         else{
