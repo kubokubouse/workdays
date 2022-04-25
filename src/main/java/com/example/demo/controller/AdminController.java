@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import com.box.sdk.*;
 import com.box.sdk.BoxItem.Info;
@@ -40,6 +41,7 @@ import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.ContractData;
 import com.example.demo.model.IdUser;
 import com.example.demo.model.IndividualData;
+import com.example.demo.model.Login;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
 import com.example.demo.model.Otherpa;
@@ -88,11 +90,32 @@ public class AdminController extends WorkdaysProperties{
 		return "logout";
 	}
 
+    // 勤怠入力画面に戻る
+	@GetMapping("/list")
+	public void returnMainPage(Model model, BeanRegularTime beanRegularTime) {
+		Login login = (Login)session.getAttribute("login");
+		YearMonth yearMonth=userService.nowYearMonth();
+		SuperUserLogin superuser = (SuperUserLogin)session.getAttribute("superUser");
+
+        if (superuser == null) {
+            BeanPropertyBindingResult result = new BeanPropertyBindingResult(login, "login");
+            BeanPropertyBindingResult sResult = new BeanPropertyBindingResult(superuser, "suserlogin");
+            
+            HomeController homeController = new HomeController(repository);
+            homeController.sucsess2(login, result, model, superuser, sResult, yearMonth, beanRegularTime );
+        } else {
+			sworkdays(superuser, yearMonth, beanRegularTime, model);
+		} 
+	}
+
     //管理メニュー画面
     //管理者画面から勤怠データ操作画面へ
     @GetMapping("/superworkdays")
-    public String sworkdays(@ModelAttribute YearMonth yaerMonth,BeanRegularTime Brtime,Model model ){
-        SuperUserLogin superUser=(SuperUserLogin)session.getAttribute("superUser");
+    public String sworkdays(@ModelAttribute SuperUserLogin superUser, @ModelAttribute YearMonth yaerMonth,BeanRegularTime Brtime,Model model ){
+        
+        if (superUser.getEmail() == null) {
+           superUser=(SuperUserLogin)session.getAttribute("superUser");
+        }
         User users=userService.findEmail(superUser.getEmail());
 
         if(users.getBanned()==1){
@@ -544,6 +567,7 @@ public class AdminController extends WorkdaysProperties{
         if(companyId==0){
             User user = (User)session.getAttribute("Data");
             fileFolderPath = getfreeInputFolder(user.getEmail()).getAbsolutePath();
+            model.addAttribute("free", 1);
         }
         //一般ユーザー時
         else{
