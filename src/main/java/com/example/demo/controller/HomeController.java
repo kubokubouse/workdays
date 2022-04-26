@@ -413,14 +413,14 @@ public class HomeController extends WorkdaysProperties{
 					return "choosetemplatelocal";
 				}
 				if(fileNameList.length==1){
-					iData.setCompany1(fileNameList[0].substring(fileNameList[0].length() - 4));
+					iData.setCompany1(fileNameList[0].substring(0,fileNameList[0].length() - 4));
 					iData.setCompany2("");
 					iData.setCompany3("");
 				}
 
 				if(fileNameList.length==2){
-					iData.setCompany1(fileNameList[0].substring(fileNameList[0].length() - 4));
-					iData.setCompany2(fileNameList[1].substring(fileNameList[1].length() - 4));
+					iData.setCompany1(fileNameList[0].substring(0,fileNameList[0].length() - 4));
+					iData.setCompany2(fileNameList[1].substring(0,fileNameList[1].length() - 4));
 					iData.setCompany3("");
 				}
 				/*if(fileNameList[1]==null){
