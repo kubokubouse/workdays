@@ -19,7 +19,7 @@ public class WorkdayMapping {
     public List<String> outputExcel(String inputFilePath, String outputFilePath,
         Map stHourMap, Map stMinMap, Map endHourMap, Map endMinMap, Map lunchTimeHourMap, 
             Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map other1Map, Map other2Map,
-                Map other3Map, String email, int id, String name, int year, int month) {
+                Map other3Map, Map weekdayMap,String email, int id, String name, int year, int month) {
 
     List<String> errorList = new ArrayList<String>();
     File inputFileObject = new File(inputFilePath);
@@ -271,6 +271,17 @@ public class WorkdayMapping {
                 //備考3データ
                 if (value.contains("[oc")) {
                     Object data = other3Map.get(value);
+                    if (data == null) {
+                        cell.setCellValue("");
+                        continue;
+                    } else {
+                        setValue = value.replace(value, data.toString());
+                    }
+                }
+
+                //曜日データ
+                if (value.contains("[wd")) {
+                    Object data = weekdayMap.get(value);
                     if (data == null) {
                         cell.setCellValue("");
                         continue;

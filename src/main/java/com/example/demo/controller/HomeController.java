@@ -516,7 +516,7 @@ public class HomeController extends WorkdaysProperties{
 		Map<String, String> other1Map = new HashMap<>();
 		Map<String, String> other2Map = new HashMap<>();
 		Map<String, String> other3Map = new HashMap<>();
-
+		Map<String, String> weekdayMap = new HashMap<>();
 		int index = 1;
 		for(Workdays workday:workdays){
 
@@ -531,7 +531,7 @@ public class HomeController extends WorkdaysProperties{
 			other1Map.put("[oa"+index+"]", workday.getOther1());
 			other2Map.put("[ob"+index+"]", workday.getOther2());
 			other3Map.put("[oc"+index+"]", workday.getOther3());
-
+			weekdayMap.put("[wd"+index+"]", workday.getWeekday());
 			index++;
 
 		}
@@ -571,7 +571,7 @@ public class HomeController extends WorkdaysProperties{
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
-			totalHourMap, totalMinMap, other1Map,other2Map,other3Map, mail, individualID, name,
+			totalHourMap, totalMinMap, other1Map,other2Map,other3Map,weekdayMap, mail, individualID, name,
 			year, month
 		);
 
@@ -947,11 +947,14 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		String name = lastname + "　" + firstname;
 
 		//当日の年月取得
-		Calendar cal = Calendar.getInstance();
+		/*Calendar cal = Calendar.getInstance();
 		int year=cal.get(Calendar.YEAR);
 		int month=cal.get(Calendar.MONTH);
-		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
+		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す*/
 	
+		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
+		int year=yearMonth.getYear();
+		int month=yearMonth.getMonth();
 		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
 
 		Map<String, String> stHourMap = new HashMap<>();
@@ -965,6 +968,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		Map<String, String> other1Map = new HashMap<>();
 		Map<String, String> other2Map = new HashMap<>();
 		Map<String, String> other3Map = new HashMap<>();
+		Map<String, String> weekdayMap = new HashMap<>();
 
 		int index = 1;
 		for(Workdays workday:workdays){
@@ -980,7 +984,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			other1Map.put("[oa"+index+"]", workday.getOther1());
 			other2Map.put("[ob"+index+"]", workday.getOther2());
 			other3Map.put("[oc"+index+"]", workday.getOther3());
-
+			weekdayMap.put("[wd"+index+"]", workday.getWeekday());
 			index++;
 
 		}
@@ -1019,7 +1023,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		WorkdayMapping workdayMapping = new WorkdayMapping();
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
-			totalHourMap, totalMinMap, other1Map,other2Map,other3Map, mail, individualID, name,
+			totalHourMap, totalMinMap, other1Map,other2Map,other3Map,weekdayMap, mail, individualID, name,
 			year, month
 		);
 
