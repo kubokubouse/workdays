@@ -539,7 +539,7 @@ public class HomeController extends WorkdaysProperties{
 		//個別ユーザーTLから個人IDと会社IDを拾ってくる
 		String[] values = company.split(":");
 		int companyID = Integer.parseInt(values[0]);
-		String companyName=values[1];//取得するファイル名は恐らく会社名.xls
+		String companyName=values[1];//取得するファイル名は恐らく会社名.xls→本当に？
 		
 		String mail = users.getEmail();
 		int individualID = Integer.valueOf(userService.findIndividualID(mail, companyID));
@@ -548,10 +548,10 @@ public class HomeController extends WorkdaysProperties{
 		//会社IDが０のフリーユーザーがファイルの出力する場合はファイルへのパスを変更する
 		if(companyID==0){
 			//会社ID_input/会社名.xls
-			inputFilePath = getfreeInputFolder(mail).getAbsolutePath() + "/" + companyName ;//AWSでない場合は/を\\に修正
+			inputFilePath = getfreeInputFolder(mail).getAbsolutePath() + "/" + companyName+"/.xls" ;//AWSでない場合は/を\\に修正
 			//会社ID_output/個別ID_出力会社.xls
 			outputFilePath = getfreeOutputFolder(mail).getAbsolutePath() 
-			+ "/" + individualID + "_" + companyName;//AWSでない場合は/を\\に修正
+			+ "/" + individualID + "_" + companyName+"/.xls";//AWSでない場合は/を\\に修正
 				
 		}
 		//一般ユーザーのファイル出力の場合
