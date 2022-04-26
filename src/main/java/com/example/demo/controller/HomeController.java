@@ -389,7 +389,7 @@ public class HomeController extends WorkdaysProperties{
 		return "sucsess";
 	}
 
-	//ローカルに勤怠表ダウンロード時の会社選択画面
+	//ローカルに勤怠表ダウンロード時の会社選択画面→フォルダアイコン押されたときの処理
 	@GetMapping("/choosetemplatelocal")
 	public String chooseTemplateLocal(Model model){
 		
@@ -413,14 +413,14 @@ public class HomeController extends WorkdaysProperties{
 					return "choosetemplatelocal";
 				}
 				if(fileNameList.length==1){
-					iData.setCompany1(fileNameList[0]);
+					iData.setCompany1(fileNameList[0].substring(fileNameList[0].length() - 4));
 					iData.setCompany2("");
 					iData.setCompany3("");
 				}
 
 				if(fileNameList.length==2){
-					iData.setCompany1(fileNameList[0]);
-					iData.setCompany2(fileNameList[1]);
+					iData.setCompany1(fileNameList[0].substring(fileNameList[0].length() - 4));
+					iData.setCompany2(fileNameList[1].substring(fileNameList[1].length() - 4));
 					iData.setCompany3("");
 				}
 				/*if(fileNameList[1]==null){
@@ -442,26 +442,7 @@ public class HomeController extends WorkdaysProperties{
 		}
 		//個別ユーザーに登録されている会社1.2.3が表示される
 		List<IdUser>idUserList=new ArrayList<IdUser>();
-		//individualDataの中身をidUserに移す
-		//利用禁止指定されている企業名が会社名になっている場合は会社名を""で登録する→ファイル名が画面表示されない
-		/*for(IndividualData iData:iDataList){
-			IdUser idUser=individualService.getIdUser(iData);
-			List<CompanyInfo> ciList= ciService.findBanned(1);
-			
-			for(CompanyInfo ci:ciList){
-				String cname=ci.getCompanyName();
-				if(idUser.getCompany1().equals(cname)){
-					idUser.setCompany1("");
-				}
-				if(idUser.getCompany2().equals(cname)){
-					idUser.setCompany2("");
-				}
-				if(idUser.getCompany3().equals(cname)){
-					idUser.setCompany3("");
-				}
-			}
-			idUserList.add(idUser);
-		}*/
+		
 
 		//禁止された会社の機能を停止するバージョン
 		for(IndividualData iData:iDataList){
@@ -469,6 +450,7 @@ public class HomeController extends WorkdaysProperties{
 			IdUser idUser=individualService.getIdUser(iData);
 			CompanyInfo ci= ciService.findByCompanyID(iData.getCompanyID());
 			//会社IDが0の場合会社名を本人のメアドにする
+			//表示が【メアド】・ファイル名 ・ファイル名 になる
 			if(idUser.getCompanyID()==0){
 				idUser.setCompanyName(email);	
 			}
