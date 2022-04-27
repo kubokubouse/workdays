@@ -465,7 +465,7 @@ public class HomeController extends WorkdaysProperties{
 	}
 
 	
-	//会社選択後のboxダウンロード処理→本当にbox？
+	//一般ユーザーの会社選択ダウンロード処理
 	@RequestMapping(value="/companyselect")
 	public String CompanySelect (@RequestParam String company, Model model) {
 			
@@ -884,14 +884,14 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 					return "choosetemplatelocal";
 				}
 				if(fileNameList.length==1){
-					iData.setCompany1(fileNameList[0]);
+					iData.setCompany1(fileNameList[0].substring(0,fileNameList[0].length() - 4));
 					iData.setCompany2("");
 					iData.setCompany3("");
 				}
 
 				if(fileNameList.length==2){
-					iData.setCompany1(fileNameList[0]);
-					iData.setCompany2(fileNameList[1]);
+					iData.setCompany1(fileNameList[0].substring(0,fileNameList[0].length() - 4));
+					iData.setCompany2(fileNameList[1].substring(0,fileNameList[1].length() - 4));
 					iData.setCompany3("");
 				}
 				//個別ユーザーから会社IDを取得し会社名のリストを作る
@@ -983,10 +983,10 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		//フリーユーザーの場合companyNameに.xlsがつくのでinputfilepathの最後に.xlsを付け足さなくてよい
 		if(companyID==0){
 			//会社ID_input/会社名.xls
-			inputFilePath = getfreeInputFolder(mail).getAbsolutePath() + "/" + companyName ;//AWSでない場合は/を\\に修正
+			inputFilePath = getfreeInputFolder(mail).getAbsolutePath() + "/" + companyName +".xls" ;//AWSでない場合は/を\\に修正
 			//会社ID_output/個別ID_出力会社.xls
 			outputFilePath = getfreeOutputFolder(mail).getAbsolutePath() 
-			+ "/" + individualID + "_" + companyName ;//AWSでない場合は/を\\に修正 
+			+ "/" + individualID + "_" + companyName +".xls";//AWSでない場合は/を\\に修正 
 				
 		}
 		//一般ユーザーのファイル出力の場合
