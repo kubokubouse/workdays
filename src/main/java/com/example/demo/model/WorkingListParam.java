@@ -13,6 +13,7 @@ import lombok.Data;
 public class WorkingListParam implements Serializable {
   private int month;
   private int year;
+  private String alltime;
   @Valid
   private List<WorkingData> workingDataList;
 }
