@@ -508,6 +508,7 @@ public class HomeController extends WorkdaysProperties{
 		
 		String alltime=userService.wminutes(allminutes);
 		System.out.println(allminutes);
+		System.out.println(alltime);
 		//個別ユーザーTLから個人IDと会社IDを拾ってくる
 		String[] values = company.split(":");
 		int companyID = Integer.parseInt(values[0]);
@@ -544,7 +545,7 @@ public class HomeController extends WorkdaysProperties{
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map,weekdayMap, mail, individualID, name,
-			year, month
+			year, month,alltime
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {
@@ -996,7 +997,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map,weekdayMap, mail, individualID, name,
-			year, month
+			year, month,alltime
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {

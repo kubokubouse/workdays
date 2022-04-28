@@ -19,7 +19,7 @@ public class WorkdayMapping {
     public List<String> outputExcel(String inputFilePath, String outputFilePath,
         Map stHourMap, Map stMinMap, Map endHourMap, Map endMinMap, Map lunchTimeHourMap, 
             Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map other1Map, Map other2Map,
-                Map other3Map, Map weekdayMap,String email, int id, String name, int year, int month) {
+                Map other3Map, Map weekdayMap,String email, int id, String name, int year, int month,String alltime) {
 
     List<String> errorList = new ArrayList<String>();
     File inputFileObject = new File(inputFilePath);
@@ -295,9 +295,9 @@ public class WorkdayMapping {
                     setValue = value.replace("[TOTAL]", email);
                 }
 
-                //メールアドレス
+                //合計時間
                 if (value.contains("[MAIL]")) {
-                    setValue = value.replace("[MAIL]", email);
+                    setValue = value.replace("[MAIL]", alltime);
                 }
                 //名前
                 if (value.contains("[NAME]")) {
