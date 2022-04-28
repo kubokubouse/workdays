@@ -507,7 +507,7 @@ public class HomeController extends WorkdaysProperties{
 		}
 		
 		String alltime=userService.wminutes(allminutes);
-
+		System.out.println(allminutes);
 		//個別ユーザーTLから個人IDと会社IDを拾ってくる
 		String[] values = company.split(":");
 		int companyID = Integer.parseInt(values[0]);
