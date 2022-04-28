@@ -291,6 +291,11 @@ public class WorkdayMapping {
                 }
 
                 //メールアドレス
+                if (value.contains("[TOTAL]")) {
+                    setValue = value.replace("[TOTAL]", email);
+                }
+
+                //メールアドレス
                 if (value.contains("[MAIL]")) {
                     setValue = value.replace("[MAIL]", email);
                 }
