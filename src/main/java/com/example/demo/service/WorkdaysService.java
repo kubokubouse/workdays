@@ -116,7 +116,7 @@ public class WorkdaysService {
 		List<Workdays> workdayslist =findYearMonth(user.getId(),year,month);
 		WorkingListParam workingListParam = new WorkingListParam();
         List<WorkingData> list = new ArrayList<WorkingData>();
-
+		int allminutes=0;
         for(Workdays workday : workdayslist) {
           WorkingData data = new WorkingData();
           data.setDay(workday.getDay());
@@ -129,11 +129,14 @@ public class WorkdaysService {
 		  data.setOther2(workday.getOther2());
 		  data.setOther3(workday.getOther3());
 		  data.setHoliday(workday.getHoliday());
+		  allminutes=allminutes+userService.allminutes(workday.getWorktime().toString());
           list.add(data);
         }
+		String alltime=userService.wminutes(allminutes);
         workingListParam.setWorkingDataList(list);
 		workingListParam.setMonth(month);
 		workingListParam.setYear(year);
+		workingListParam.setAlltime(alltime);
         return workingListParam;
 
 	}

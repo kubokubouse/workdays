@@ -155,7 +155,7 @@ public class HomeController extends WorkdaysProperties{
 			}
 
 			
-			//管理者がindiviudualDataにも登録していた場合勤怠データにアクセスできるように
+			//管理者が個別ユーザー・ユニバーサルユーザーに登録していた場合勤怠データにアクセスできるように
 			List<IndividualData>iDataList=individualService.findMail(id);
 			User user=userService.findEmail(id);
 			if(CollectionUtils.isEmpty(iDataList)){
@@ -198,7 +198,7 @@ public class HomeController extends WorkdaysProperties{
 		//個別ユーザーから会社IDを取得し会社名のリストを作る
 		List<IdUser>idUserList=new ArrayList<IdUser>();
 		
-		int companyid = 0;
+		int companyid =0;
 		for(IndividualData iData:iDataList){
 			IdUser idUser=individualService.getIdUser(iData);
 			companyid = idUser.getCompanyID();
@@ -389,7 +389,8 @@ public class HomeController extends WorkdaysProperties{
 		return "sucsess";
 	}
 
-	//ローカルに勤怠表ダウンロード時の会社選択画面→フォルダアイコン押されたときの処理
+	//フォルダアイコン押されたときの処理
+	//ローカルに勤怠表ダウンロード時の会社選択画面
 	@GetMapping("/choosetemplatelocal")
 	public String chooseTemplateLocal(Model model){
 		
@@ -423,21 +424,7 @@ public class HomeController extends WorkdaysProperties{
 					iData.setCompany2(fileNameList[1].substring(0,fileNameList[1].length() - 4));
 					iData.setCompany3("");
 				}
-				/*if(fileNameList[1]==null){
-					if(fileNameList[0]==null){
-						iData.setCompany1("");
-						iData.setCompany2("");
-						iData.setCompany3("");
-					}
-					iData.setCompany1(fileNameList[0]);
-					iData.setCompany2("");
-					iData.setCompany3("");
-				}
-				if(fileNameList[1]!=null){
-					iData.setCompany1(fileNameList[0]);
-					iData.setCompany2(fileNameList[1]);
-					iData.setCompany3("");
-				}*/
+				
 			}
 		}
 		//個別ユーザーに登録されている会社1.2.3が表示される
@@ -446,9 +433,10 @@ public class HomeController extends WorkdaysProperties{
 
 		//禁止された会社の機能を停止するバージョン
 		for(IndividualData iData:iDataList){
-			
-			IdUser idUser=individualService.getIdUser(iData);
+			IdUser idUser=new IdUser();
+			idUser=individualService.getIdUser(iData);
 			CompanyInfo ci= ciService.findByCompanyID(iData.getCompanyID());
+			//会社情報で禁止されているユーザーは【会社名】が表示されない
 			//会社IDが0の場合会社名を本人のメアドにする
 			//表示が【メアド】・ファイル名 ・ファイル名 になる
 			if(idUser.getCompanyID()==0){
@@ -456,10 +444,11 @@ public class HomeController extends WorkdaysProperties{
 			}
 			if(ci.getBanned()==0){
 				idUserList.add(idUser);
+				System.out.println(idUser);
 			}
 			
 		}
-		
+		System.out.println(idUserList);
 		model.addAttribute("idUserList", idUserList);
 		return "choosetemplatelocal";
 	}
@@ -479,11 +468,7 @@ public class HomeController extends WorkdaysProperties{
 		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
 		int year=yearMonth.getYear();
 		int month=yearMonth.getMonth();
-		//当日の年月取得
-		/*Calendar cal = Calendar.getInstance();
-		int year=cal.get(Calendar.YEAR);
-		int month=cal.get(Calendar.MONTH);
-		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す*/
+		
 	
 		List<Workdays> workdays =workdaysService.findYearMonth(users.getId(),year,month);
 
@@ -500,6 +485,8 @@ public class HomeController extends WorkdaysProperties{
 		Map<String, String> other3Map = new HashMap<>();
 		Map<String, String> weekdayMap = new HashMap<>();
 		int index = 1;
+		
+		int allminutes=0;
 		for(Workdays workday:workdays){
 
 			stHourMap.put("[sth"+index+"]", workday.getStart().toString().substring(0,2));
@@ -514,10 +501,13 @@ public class HomeController extends WorkdaysProperties{
 			other2Map.put("[ob"+index+"]", workday.getOther2());
 			other3Map.put("[oc"+index+"]", workday.getOther3());
 			weekdayMap.put("[wd"+index+"]", workday.getWeekday());
+			allminutes=allminutes+userService.allminutes(workday.getWorktime().toString());
 			index++;
 
 		}
-				
+		
+		String alltime=userService.wminutes(allminutes);
+
 		//個別ユーザーTLから個人IDと会社IDを拾ってくる
 		String[] values = company.split(":");
 		int companyID = Integer.parseInt(values[0]);
@@ -554,7 +544,7 @@ public class HomeController extends WorkdaysProperties{
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map,weekdayMap, mail, individualID, name,
-			year, month
+			year, month,alltime
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {
@@ -928,11 +918,6 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		String firstname = users.getFirstname();
 		String name = lastname + "　" + firstname;
 
-		//当日の年月取得
-		/*Calendar cal = Calendar.getInstance();
-		int year=cal.get(Calendar.YEAR);
-		int month=cal.get(Calendar.MONTH);
-		month=month+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す*/
 	
 		YearMonth yearMonth=(YearMonth)session.getAttribute("yearMonth");
 		int year=yearMonth.getYear();
@@ -952,6 +937,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		Map<String, String> other3Map = new HashMap<>();
 		Map<String, String> weekdayMap = new HashMap<>();
 
+		int allminutes=0;
 		int index = 1;
 		for(Workdays workday:workdays){
 
@@ -967,9 +953,13 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			other2Map.put("[ob"+index+"]", workday.getOther2());
 			other3Map.put("[oc"+index+"]", workday.getOther3());
 			weekdayMap.put("[wd"+index+"]", workday.getWeekday());
+			allminutes=allminutes+userService.allminutes(workday.getWorktime().toString());
+			
 			index++;
 
 		}
+		String alltime=userService.wminutes(allminutes);
+
 				
 		//個別ユーザーTLから個人IDと会社IDを拾ってくる
 		String[] values = company.split(":");
@@ -1006,7 +996,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map,weekdayMap, mail, individualID, name,
-			year, month
+			year, month,alltime
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {
