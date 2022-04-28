@@ -292,12 +292,12 @@ public class WorkdayMapping {
 
                 //メールアドレス
                 if (value.contains("[TOTAL]")) {
-                    setValue = value.replace("[TOTAL]", email);
+                    setValue = value.replace("[TOTAL]", alltime);
                 }
 
                 //合計時間
                 if (value.contains("[MAIL]")) {
-                    setValue = value.replace("[MAIL]", alltime);
+                    setValue = value.replace("[MAIL]", email);
                 }
                 //名前
                 if (value.contains("[NAME]")) {
