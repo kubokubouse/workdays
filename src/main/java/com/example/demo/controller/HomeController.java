@@ -544,7 +544,7 @@ public class HomeController extends WorkdaysProperties{
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map,weekdayMap, mail, individualID, name,
-			year, month,alltime
+			year, month
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {
@@ -996,7 +996,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		List<String> errors = workdayMapping.outputExcel(inputFilePath, outputFilePath, 
 			stHourMap, stMinMap, endHourMap, endMinMap, lunchTimeHourMap, lunchTimeMinMap,
 			totalHourMap, totalMinMap, other1Map,other2Map,other3Map,weekdayMap, mail, individualID, name,
-			year, month,alltime
+			year, month
 		);
 
 		if (errors.size() != 0 || !errors.isEmpty()) {

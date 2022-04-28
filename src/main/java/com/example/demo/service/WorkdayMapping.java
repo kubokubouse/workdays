@@ -19,7 +19,7 @@ public class WorkdayMapping {
     public List<String> outputExcel(String inputFilePath, String outputFilePath,
         Map stHourMap, Map stMinMap, Map endHourMap, Map endMinMap, Map lunchTimeHourMap, 
             Map lunchTimeMinMap, Map totalHourMap, Map totalMinMap, Map other1Map, Map other2Map,
-                Map other3Map, Map weekdayMap,String email, int id, String name, int year, int month,String alltime) {
+                Map other3Map, Map weekdayMap,String email, int id, String name, int year, int month) {
 
     List<String> errorList = new ArrayList<String>();
     File inputFileObject = new File(inputFilePath);
@@ -314,9 +314,6 @@ public class WorkdayMapping {
                 //月のみ
                 if (!value.contains("[YEAR]") && value.contains("[MONTH]")) {
                     setValue = value.replace("[MONTH]", String.valueOf(month));
-                }
-                if (!value.contains("[TOTAL]") ) {
-                    setValue = value.replace("[TOTAL]", alltime);
                 }
                 //sth:stmなどコロンがある時
                 if (timeValue != null) {
