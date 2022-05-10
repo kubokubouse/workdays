@@ -101,7 +101,7 @@ public class HomeController extends WorkdaysProperties{
 	
 	@GetMapping("/tester")
 	public String tester(){
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "C:/久保さん/cloneproject/workdays/chromedriver.exe");
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/chromedriver.exe" /*"C:/久保さん/cloneproject/workdays/chromedriver.exe"*/);
 
         //Chromeドライバーのインスタンス
         WebDriver driver = new ChromeDriver();
@@ -114,7 +114,7 @@ public class HomeController extends WorkdaysProperties{
             driver.get("https://workdays.jp");
 
             //テキストボックス（出発）に「東京」と入力
-            driver.findElement(By.id("emil")).sendKeys("ryowhite@icloud.com");
+            driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
 
             //テキストボックス（出発）に「東京」と入力
             driver.findElement(By.id("pass")).sendKeys("0000") ;
