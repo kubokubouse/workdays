@@ -101,7 +101,7 @@ public class HomeController extends WorkdaysProperties{
 	
 	@GetMapping("/tester")
 	public String tester(){
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/chromedriver.exe" /*"C:/久保さん/cloneproject/workdays/chromedriver.exe"*/);
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/home/ec2-user/workdays/chromedriver.exe" /*"C:/久保さん/cloneproject/workdays/chromedriver.exe"*/);
 
         //Chromeドライバーのインスタンス
         WebDriver driver = new ChromeDriver();
