@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.springframework.stereotype.Controller;
+
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -90,7 +97,53 @@ public class HomeController extends WorkdaysProperties{
 
     public HomeController(UserRepository repository){
         this.repository = repository;
-    }        
+    }
+	
+	@GetMapping("/tester")
+	public String tester(){
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "C:/久保さん/cloneproject/workdays/chromedriver.exe");
+
+        //Chromeドライバーのインスタンス
+        WebDriver driver = new ChromeDriver();
+
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //乗換案内にアクセス
+            driver.get("https://workdays.jp");
+
+            //テキストボックス（出発）に「東京」と入力
+            driver.findElement(By.id("emil")).sendKeys("ryowhite@icloud.com");
+
+            //テキストボックス（出発）に「東京」と入力
+            driver.findElement(By.id("pass")).sendKeys("0000") ;
+
+            //検索ボタンを押下
+            driver.findElement(By.id("login")).click();
+
+            //検索結果から優先順位順の乗換案内情報を取得
+            //WebElement element = driver.findElement(By.className("navPriority"));
+
+            //発着時刻など、時間に関する情報を取得（複数存在する為、List型にする）
+            //List<WebElement> el = element.findElements(By.className("time"));
+
+            //時間に関する情報をループ
+            /*el.forEach(e -> {
+                //時間に関する情報をテキストで取得し、コンソールに出力
+                System.out.println(e.getText());
+            });*/
+
+          
+
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+            
+        }
+		return "redirect:https://workdays.jp";
+	}
 
     //トップページがログイン画面になる
 	@GetMapping("/")
