@@ -21,7 +21,7 @@
       <th> </th>
       <td><img src="img/mail.jpeg" class="icon_mail"></td>
       <td><label for="email"></label>
-        <input type="text" class="login-control" placeholder="メールアドレス"
+        <input type="text" id="email" class="login-control" placeholder="メールアドレス"
           th:errorclass="is-invalid" th:field="*{email}">
         <div class="invalid-feedback" th:errors="*{email}"></div>
       </td>
@@ -31,14 +31,14 @@
       <th></th>
       <td><img src="img/pass.png" class="icon_pass"></td>
       <td><label for="password"></label>
-        <input type="password" class="login-control" placeholder="パスワード"
+        <input type="password" id="pass" class="login-control" placeholder="パスワード"
           th:errorclass="is-invalid" th:field="*{password}">
        <div class="invalid-feedback" th:errors="*{password}"></div>
       </td>
     </tr>
 
   </table>
-  <input class="button" type="submit" value="ログイン">
+  <input class="button" id="login" type="submit" value="ログイン">
 </form>
 <p><a href="/forgetpassword">パスワードを忘れた方はこちら</a></p>
 <p><a href="/freeuser">新規登録者はこちら</a></p>
