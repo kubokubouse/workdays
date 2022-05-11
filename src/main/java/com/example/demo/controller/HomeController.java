@@ -107,9 +107,10 @@ public class HomeController extends WorkdaysProperties{
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless");
+		//options.addArguments("--headless");
 		options.addArguments("--no-sandbox");
-        //Chromeドライバーのインスタンス
+        
+		//Chromeドライバーのインスタンス
         WebDriver driver = new ChromeDriver();
 
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
