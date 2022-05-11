@@ -102,6 +102,10 @@ public class HomeController extends WorkdaysProperties{
 	
 	@GetMapping("/tester")
 	public String tester(){
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/var/www/html/download/chromedriver" /*"C:/久保さん/cloneproject/workdays/chromedriver.exe"*/);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--headless");
 		options.addArguments("--no-sandbox");
@@ -112,17 +116,12 @@ public class HomeController extends WorkdaysProperties{
 		options.addArguments("--disable-application-cache");
 		options.addArguments("--ignore-certificate-errors");
 		options.addArguments("--start-maximized");
-		
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/var/www/html/download/chromedriver" /*"C:/久保さん/cloneproject/workdays/chromedriver.exe"*/);
-
-		System.setProperty("webdriver.chrome.whitelistedIps", "");
-
-		
 
         
 		//Chromeドライバーのインスタンス
-        WebDriver driver = new ChromeDriver();
-
+        WebDriver driver = new ChromeDriver(options);
+		//WebDriver driverwebdriver.Chrome(CHROME_DRIVER, options=options);
+		
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
         //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
