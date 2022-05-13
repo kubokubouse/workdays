@@ -132,7 +132,7 @@ public class HomeController extends WorkdaysProperties{
 
             //検索ボタンを押下
             driver.findElement(By.id("login")).click();
-			String year=driver.findElement(By.id("id属性")).getText();
+			String year=driver.findElement(By.id("year")).getText();
 			
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
 			System.out.println(year);
