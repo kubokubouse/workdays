@@ -102,7 +102,7 @@ public class HomeController extends WorkdaysProperties{
 	
 	@GetMapping("/tester")
 	public String tester(){
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/var/www/html/download/chromedriver" /*"C:/久保さん/cloneproject/workdays/chromedriver.exe"*/);
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, /*"/var/www/html/download/chromedriver"*/ "C:/久保さん/cloneproject/workdays/chromedriver.exe");
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
@@ -119,15 +119,16 @@ public class HomeController extends WorkdaysProperties{
 
         
 		//Chromeドライバーのインスタンス
-        WebDriver driver = new ChromeDriver(options);
-		//WebDriver driverwebdriver.Chrome(CHROME_DRIVER, options=options);
+        //WebDriver driver = new ChromeDriver(options); //本番環境
+		WebDriver driver = new ChromeDriver();//local
+		//WebDriver driverwebdriver.Chrome(CHROME_DRIVER, options=options);//本番環境
 		
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
         //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         try {
-            //乗換案内にアクセス
-            driver.get("localhost:8080/");
+            //ログイン画面にアクセス
+            driver.get("http://localhost:8080/");
 
             //テキストボックス（出発）に「東京」と入力
             driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
