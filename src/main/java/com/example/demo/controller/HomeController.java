@@ -160,7 +160,7 @@ public class HomeController extends WorkdaysProperties{
         } finally {
             
         }
-		return "redirect:https://workdays.jp";
+		return "Salesforce";
 	}
 
     //トップページがログイン画面になる
