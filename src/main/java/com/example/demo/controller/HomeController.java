@@ -121,7 +121,7 @@ public class HomeController extends WorkdaysProperties{
 		//Chromeドライバーのインスタンス
         WebDriver driver = new ChromeDriver(options); //本番環境
 		//WebDriver driver = new ChromeDriver();//local
-		//WebDriver driverwebdriver.Chrome(CHROME_DRIVER, options=options);//本番環境
+		//WebDriver driverwebdriver.Chrome(CHROME_DRIVER, options=options);//関係ない
 		
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
         //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -159,7 +159,7 @@ public class HomeController extends WorkdaysProperties{
         } finally {
             
         }
-		return "redirect:https://workdays.jp/superuser";
+		return "redirect:https://workdays.jp";
 	}
 
     //トップページがログイン画面になる
