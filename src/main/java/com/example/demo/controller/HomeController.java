@@ -128,7 +128,7 @@ public class HomeController extends WorkdaysProperties{
 
         try {
             //ログイン画面にアクセス
-            driver.get("http://localhost:8080/");
+            driver.get("https://workdays.jp");
 
             //テキストボックス（出発）に「東京」と入力
             driver.findElement(By.id("email")).sendKeys("musu62@f5.si");
@@ -159,7 +159,7 @@ public class HomeController extends WorkdaysProperties{
         } finally {
             
         }
-		return "redirect:http://localhost:8080/superuser";
+		return "redirect:https://workdays.jp/superuser";
 	}
 
     //トップページがログイン画面になる
