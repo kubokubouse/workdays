@@ -125,14 +125,14 @@ public class HomeController extends WorkdaysProperties{
             driver.get("https://workdays.jp");
 
             //テキストボックス（出発）に「東京」と入力
-            driver.findElement(By.id("email")).sendKeys("musu62@f5.si");
+            driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
 
             //テキストボックス（出発）に「東京」と入力
-            driver.findElement(By.id("pass")).sendKeys("pass") ;
+            driver.findElement(By.id("pass")).sendKeys("0000") ;
 
             //検索ボタンを押下
             driver.findElement(By.id("login")).click();
-			String year=driver.findElement(By.id("1:start")).getText();
+			String year=driver.findElement(By.id("workingDataList0.day")).getText();
 			
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
 			System.out.println("time="+year);
