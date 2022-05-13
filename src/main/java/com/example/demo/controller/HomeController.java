@@ -138,7 +138,10 @@ public class HomeController extends WorkdaysProperties{
 
             //検索ボタンを押下
             driver.findElement(By.id("login")).click();
-
+			String year=driver.findElement(By.id("id属性")).getText();
+			
+			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
+			System.out.println(year);
             //検索結果から優先順位順の乗換案内情報を取得
             //WebElement element = driver.findElement(By.className("navPriority"));
 
