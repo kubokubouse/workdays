@@ -109,13 +109,7 @@ public class HomeController extends WorkdaysProperties{
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--headless");
 		options.addArguments("--no-sandbox");
-		options.addArguments("--disable-dev-shm-usage");
-		options.addArguments("--user-data-dir=user");
-		options.addArguments("--profile-directory=profile");
-		options.addArguments("--single-process");
-		options.addArguments("--disable-application-cache");
-		options.addArguments("--ignore-certificate-errors");
-		options.addArguments("--start-maximized");
+		
 
         
 		//Chromeドライバーのインスタンス
