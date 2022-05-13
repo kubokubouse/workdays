@@ -122,8 +122,8 @@ public class HomeController extends WorkdaysProperties{
 
         try {
             //ログイン画面にアクセス
-            driver.get("https://workdays.jp");
-
+            //driver.get("https://workdays.jp");
+			driver.get("https://localhost:8080");
             //テキストボックス（出発）に「東京」と入力
             driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
 
