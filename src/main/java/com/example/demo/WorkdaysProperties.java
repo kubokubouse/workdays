@@ -10,6 +10,8 @@ public class WorkdaysProperties {
     // public static String basePath = "C:/pleiades/workdays/workdays/src/main/resources";
     //public static String basePath = "C:/久保さん/cloneproject/workdays/src/main/resources/static";
     // public static String host = "http://localhost:8080";
+    public static String localdriver="C:/久保さん/cloneproject/workdays/chromedriver.exe";
+    public static String awsdriver="/var/www/html/download/chromedriver";
    
     public static String basePath = "/var/www/html/download";//aws用のpath
     public static String downloadPath = "https://workdays.jp/download/"; //templatelist.htmlでも使用中

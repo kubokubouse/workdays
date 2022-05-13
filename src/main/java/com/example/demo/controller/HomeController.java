@@ -102,7 +102,7 @@ public class HomeController extends WorkdaysProperties{
 	
 	@GetMapping("/tester")
 	public String tester(){
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, /*"/var/www/html/download/chromedriver"*/ "C:/久保さん/cloneproject/workdays/chromedriver.exe");
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
