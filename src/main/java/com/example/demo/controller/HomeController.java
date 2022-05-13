@@ -138,6 +138,9 @@ public class HomeController extends WorkdaysProperties{
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
 			System.out.println("time="+year);
 
+			driver.findElement(By.id("s")).sendKeys("00:00") ;
+			driver.findElement(By.id("e")).sendKeys("17:00") ;
+			driver.findElement(By.id("h")).sendKeys("01:00") ;
 			driver.findElement(By.id("ontime")).click();
 
             //検索結果から優先順位順の乗換案内情報を取得
