@@ -160,7 +160,7 @@ public class HomeController extends WorkdaysProperties{
         } finally {
             
         }
-		return "redirect:http://localhost:8080";
+		return "redirect:https://workdays.jp";
 	}
 
     //トップページがログイン画面になる
