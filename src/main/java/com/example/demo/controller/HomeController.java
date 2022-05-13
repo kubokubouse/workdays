@@ -113,8 +113,8 @@ public class HomeController extends WorkdaysProperties{
 
         
 		//Chromeドライバーのインスタンス
-        WebDriver driver = new ChromeDriver(options); //本番環境
-		//WebDriver driver = new ChromeDriver();//local
+        //WebDriver driver = new ChromeDriver(options); //本番環境
+		WebDriver driver = new ChromeDriver();//local
 		//WebDriver driverwebdriver.Chrome(CHROME_DRIVER, options=options);//関係ない
 		
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
@@ -122,8 +122,8 @@ public class HomeController extends WorkdaysProperties{
 
         try {
             //ログイン画面にアクセス
-            //driver.get("https://workdays.jp");
-			driver.get("http://localhost:8080");
+            driver.get("https://workdays.jp");
+			//driver.get("http://localhost:8080");
             //テキストボックス（出発）に「東京」と入力
             driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
 
@@ -132,10 +132,14 @@ public class HomeController extends WorkdaysProperties{
 
             //検索ボタンを押下
             driver.findElement(By.id("login")).click();
+
+
 			String year=driver.findElement(By.id("workingDataList0.day")).getText();
-			
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
 			System.out.println("time="+year);
+
+			driver.findElement(By.id("ontime")).click();
+
             //検索結果から優先順位順の乗換案内情報を取得
             //WebElement element = driver.findElement(By.className("navPriority"));
 

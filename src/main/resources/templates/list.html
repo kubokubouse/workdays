@@ -255,11 +255,11 @@ table tr {
   <small th:if="${error2}">*[[${error2}]]</small>
 </form>
 
-  <form th:action="@{/ontime}" th:object="${beanRegularTime}" th:method="post">
+  <form th:action="@{/ontime}"  th:object="${beanRegularTime}" th:method="post">
       開始 <input type="text" th:field="*{start}" class="time">
       終了 <input type="text"  th:field="*{end}" class="time">
       休憩 <input type="text"  th:field="*{halftime}" class="time">
-      <input type="submit" class="button" value="定時">
+      <input type="submit" id="ontime" class="button" value="定時">
   </form>
 
   <a href="/choosetemplatelocal"><img src="img/folder.jpg" class="folder_icon"></a>
