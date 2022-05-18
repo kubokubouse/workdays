@@ -134,7 +134,7 @@ public class HomeController extends WorkdaysProperties{
             driver.findElement(By.id("login")).click();
 
 
-			String year=driver.findElement(By.id("workingDataList0.day")).getText();
+			String year=driver.findElement(By.id("workingDataList0.day")).getAttribute("value");
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
 			System.out.println("time="+year);
 
@@ -203,6 +203,23 @@ public class HomeController extends WorkdaysProperties{
 			String year=driver.findElement(By.id("s_mod_subject")).getAttribute("value");
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
 			System.out.println("time="+year);
+
+			//新規作成ボタンを押下
+            driver.findElement(By.id("rcmbtn107")).click();
+
+			year=driver.findElement(By.id("viewport")).getAttribute("name");
+			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
+			System.out.println("name="+year);
+
+			//テキストボックス（宛先）に宛先を入力
+            driver.findElement(By.id("_to")).sendKeys("r-kubo@connectcrew.co.jp");
+			
+			//テキストボックス（本文）にメールの内容を入力
+			driver.findElement(By.id("composebody")).sendKeys("送信成功");
+
+			//メール送信ボタンを押下
+			driver.findElement(By.id("rcmbtn108")).click();
+			
 
 			/*driver.findElement(By.id("s")).sendKeys("00:00") ;
 			driver.findElement(By.id("e")).sendKeys("17:00") ;
