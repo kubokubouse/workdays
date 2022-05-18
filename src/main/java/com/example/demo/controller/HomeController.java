@@ -188,9 +188,9 @@ public class HomeController extends WorkdaysProperties{
 
         try {
             //ログイン画面にアクセス
-            driver.get("https://workdays.jp");
+            driver.get("https://sd-webmail.rentalserver.jp");
 			//driver.get("http://localhost:8080");
-            //テキストボックス（出発）に「東京」と入力
+            //テキストボックス（ユーザー名）にメアドを入力
             driver.findElement(By.id("rcmloginuser")).sendKeys("r-kubo@connectcrew.co.jp");
 
             //テキストボックス（パスワード）に「パスワード」と入力
