@@ -166,6 +166,73 @@ public class HomeController extends WorkdaysProperties{
 		return "Salesforce";
 	}
 
+	@GetMapping("/test2")
+	public String test2(){
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+
+        
+		//Chromeドライバーのインスタンス
+        WebDriver driver = new ChromeDriver(options); //本番環境
+		//WebDriver driver = new ChromeDriver();//local
+		//WebDriver driverwebdriver.Chrome(CHROME_DRIVER, options=options);//関係ない
+		
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://workdays.jp");
+			//driver.get("http://localhost:8080");
+            //テキストボックス（出発）に「東京」と入力
+            driver.findElement(By.id("rcmloginuser")).sendKeys("r-kubo@connectcrew.co.jp");
+
+            //テキストボックス（パスワード）に「パスワード」と入力
+            driver.findElement(By.id("rcmloginpwd")).sendKeys("p6lXf6x$") ;
+
+            //ログインボタンを押下
+            driver.findElement(By.id("rcmloginsubmit")).click();
+
+
+			String year=driver.findElement(By.id("s_mod_subject")).getText();
+			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
+			System.out.println("time="+year);
+
+			/*driver.findElement(By.id("s")).sendKeys("00:00") ;
+			driver.findElement(By.id("e")).sendKeys("17:00") ;
+			driver.findElement(By.id("h")).sendKeys("01:00") ;
+			driver.findElement(By.id("ontime")).click();*/
+
+            //検索結果から優先順位順の乗換案内情報を取得
+            //WebElement element = driver.findElement(By.className("navPriority"));
+
+            //発着時刻など、時間に関する情報を取得（複数存在する為、List型にする）
+            //List<WebElement> el = element.findElements(By.className("time"));
+
+            //時間に関する情報をループ
+            /*el.forEach(e -> {
+                //時間に関する情報をテキストで取得し、コンソールに出力
+                System.out.println(e.getText());
+            });*/
+
+          
+
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+            
+        }
+		return "Salesforce";
+	}
+
+
     //トップページがログイン画面になる
 	@GetMapping("/")
 	public String login(@ModelAttribute Login login){
