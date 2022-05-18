@@ -166,8 +166,8 @@ public class HomeController extends WorkdaysProperties{
 		return "Salesforce";
 	}
 
-	@GetMapping("/test2")
-	public String test2(){
+	@GetMapping("/hibana")
+	public String hibana(){
 		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
@@ -200,7 +200,7 @@ public class HomeController extends WorkdaysProperties{
             driver.findElement(By.id("rcmloginsubmit")).click();
 
 
-			String year=driver.findElement(By.id("s_mod_subject")).getText();
+			String year=driver.findElement(By.id("s_mod_subject")).getAttribute("value");
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
 			System.out.println("time="+year);
 
