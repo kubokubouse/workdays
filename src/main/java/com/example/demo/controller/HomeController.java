@@ -212,9 +212,9 @@ public class HomeController extends WorkdaysProperties{
 			System.out.println("name="+year);
 
 			//テキストボックス（宛先）に宛先を入力
-            driver.findElement(By.id("_to")).sendKeys("r-kubo@connectcrew.co.jp");
+            //driver.findElement(By.id("_to")).sendKeys("r-kubo@connectcrew.co.jp");
 
-			//テキストボックス（宛先）に宛先を入力
+			//テキストボックス（件名）に件名を入力
             driver.findElement(By.id("compose-subject")).sendKeys("オッハー！");
 			
 			//テキストボックス（本文）にメールの内容を入力
