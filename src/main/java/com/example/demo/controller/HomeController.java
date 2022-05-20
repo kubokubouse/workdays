@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,6 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.FindBy;
 import org.springframework.stereotype.Controller;
 
 import javax.mail.MessagingException;
@@ -107,10 +109,10 @@ public class HomeController extends WorkdaysProperties{
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless");
+		//options.addArguments("--headless");
 		options.addArguments("--no-sandbox");
 		
-
+		
         
 		//Chromeドライバーのインスタンス
         WebDriver driver = new ChromeDriver(options); //本番環境
@@ -161,14 +163,14 @@ public class HomeController extends WorkdaysProperties{
             System.out.println(e.getMessage());
 
         } finally {
-            
+            driver.quit();
         }
 		return "Salesforce";
 	}
 
 	@GetMapping("/hibana")
 	public String hibana(){
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
@@ -179,8 +181,8 @@ public class HomeController extends WorkdaysProperties{
 
         
 		//Chromeドライバーのインスタンス
-        WebDriver driver = new ChromeDriver(options); //本番環境
-		//WebDriver driver = new ChromeDriver();//local
+        //WebDriver driver = new ChromeDriver(options); //本番環境
+		WebDriver driver = new ChromeDriver();//local
 		//WebDriver driverwebdriver.Chrome(CHROME_DRIVER, options=options);//関係ない
 		
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
@@ -247,7 +249,71 @@ public class HomeController extends WorkdaysProperties{
             System.out.println(e.getMessage());
 
         } finally {
-            
+            driver.quit();
+        }
+		return "Salesforce";
+	}
+
+	
+	//セールスフォースログイン用
+	@GetMapping("/seal")
+	public String seal(){
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		//Chromeドライバーのインスタンス
+        //WebDriver driver = new ChromeDriver(options); //本番環境
+		WebDriver driver = new ChromeDriver();//local
+		
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://login.salesforce.com");
+			//driver.get("http://localhost:8080");
+            //テキストボックス（出発）に「東京」と入力
+            driver.findElement(By.id("username")).sendKeys("ryowhite-yn9b@force.com");
+
+            //テキストボックス（出発）に「東京」と入力
+            driver.findElement(By.id("password")).sendKeys("ryo13160") ;
+
+            //検索ボタンを押下
+            driver.findElement(By.id("Login")).click();
+
+			String year=driver.findElement(By.id("vp")).getAttribute("name");
+			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
+			System.out.println("vp="+year);
+
+			/*driver.findElement(By.id("s")).sendKeys("00:00") ;
+			driver.findElement(By.id("e")).sendKeys("17:00") ;
+			driver.findElement(By.id("h")).sendKeys("01:00") ;
+			driver.findElement(By.id("ontime")).click();*/
+
+            //検索結果から優先順位順の乗換案内情報を取得
+            //WebElement element = driver.findElement(By.className("navPriority"));
+
+            //発着時刻など、時間に関する情報を取得（複数存在する為、List型にする）
+            //List<WebElement> el = element.findElements(By.className("time"));
+
+            //時間に関する情報をループ
+            /*el.forEach(e -> {
+                //時間に関する情報をテキストで取得し、コンソールに出力
+                System.out.println(e.getText());
+            });*/
+
+          
+
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
         }
 		return "Salesforce";
 	}
