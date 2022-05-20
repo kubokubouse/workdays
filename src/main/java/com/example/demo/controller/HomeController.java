@@ -110,6 +110,7 @@ public class HomeController extends WorkdaysProperties{
 
 		ChromeOptions options = new ChromeOptions();
 		//options.addArguments("--headless");
+		options.addArguments("disable-infobars"); // disabling infobars
 		options.addArguments("--no-sandbox");
 		
 		
