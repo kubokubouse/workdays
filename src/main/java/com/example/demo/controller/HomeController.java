@@ -256,7 +256,7 @@ public class HomeController extends WorkdaysProperties{
 	//セールスフォースログイン用
 	@PostMapping("/sale")
 	public String sale(@ModelAttribute Login login){
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
