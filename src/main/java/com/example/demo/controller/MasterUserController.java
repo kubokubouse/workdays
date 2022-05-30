@@ -498,6 +498,7 @@ public class MasterUserController extends WorkdaysProperties{
 		rtService.update(rtime);
 
 		//Beanに情報を移す
+		/*
 		List<RegularTime> rtbList = new ArrayList<RegularTime>();
 		rtbList = rtService.findAll();
 		List<BeanRegularTime> rtList=new ArrayList<BeanRegularTime>();
@@ -513,7 +514,7 @@ public class MasterUserController extends WorkdaysProperties{
 			rtList.add(Brtime);
 		}
 		
-		model.addAttribute("rtList", rtList);
+		model.addAttribute("rtList", rtList);*/
 		return "regulartimelist";
 		
 	}

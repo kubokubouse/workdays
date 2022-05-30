@@ -14,7 +14,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import com.example.demo.WorkdaysProperties;
 import com.example.demo.model.Judgeused;
 import com.example.demo.model.User;
-import com.example.demo.WorkdaysProperties;
+
 
 public class CellvalueGet extends WorkdaysProperties {
     WorkdaysProperties wp;

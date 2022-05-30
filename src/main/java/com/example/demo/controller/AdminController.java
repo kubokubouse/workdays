@@ -27,8 +27,10 @@ import com.box.sdk.BoxItem.Info;
 
 import com.example.demo.service.ContractService;
 import com.example.demo.service.HolidayService;
+import com.example.demo.service.IdRegularTimeService;
 import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
+import com.example.demo.service.RegularTimeService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.WorkdaysService;
@@ -40,11 +42,13 @@ import com.example.demo.model.BeanFile;
 import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.ContractData;
 import com.example.demo.model.IdUser;
+import com.example.demo.model.Idregulartime;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.MasterUser;
 import com.example.demo.model.Otherpa;
+import com.example.demo.model.RegularTime;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.IndividualDataRepository;
 import com.example.demo.WorkdaysProperties;
@@ -83,6 +87,11 @@ public class AdminController extends WorkdaysProperties{
     @Autowired
     WorkdaysService workdaysService;
     
+    @Autowired
+    RegularTimeService rtService;
+
+    @Autowired
+    IdRegularTimeService irService;
 
 	@GetMapping("/logout")
 	public String logout(){
@@ -158,8 +167,24 @@ public class AdminController extends WorkdaysProperties{
 		session.setAttribute("yearMonth",yearMonth);
         model.addAttribute("yearMonth", yearMonth);
 		//model.addAttribute("Brtime",Brtime);
-	
-		return "list";
+
+        //個別定時テーブルにデータがあるか確認
+		Idregulartime idtime=irService.findId(user.getId());
+		
+		//個別定時テーブルが空だった場合　全体定時テーブルから定時情報を取得
+		if(idtime==null){
+			RegularTime rt=rtService.findId(1);
+			//定時情報をbeanRegularTimeに移植
+			BeanRegularTime br=rtService.brtime(rt);
+			model.addAttribute("br", br);
+		
+			return "list";
+		}
+		else{
+			BeanRegularTime br=irService.brtime(idtime);
+			model.addAttribute("br", br);
+			return "list";
+		}
 	}
     
 
@@ -215,7 +240,23 @@ public class AdminController extends WorkdaysProperties{
 		model.addAttribute("yearMonth",yearMonth);
 		model.addAttribute("Brtime",Brtime);
 		
-        return "list";
+        //個別定時テーブルにデータがあるか確認
+		Idregulartime idtime=irService.findId(users.getId());
+		
+		//個別定時テーブルが空だった場合　全体定時テーブルから定時情報を取得
+		if(idtime==null){
+			RegularTime rt=rtService.findId(1);
+			//定時情報をbeanRegularTimeに移植
+			BeanRegularTime br=rtService.brtime(rt);
+			model.addAttribute("br", br);
+		
+			return "list";
+		}
+		else{
+			BeanRegularTime br=irService.brtime(idtime);
+			model.addAttribute("br", br);
+			return "list";
+		}
     }
 
     //会員登録ページに移行

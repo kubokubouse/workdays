@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<script th:src="@{https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js}"></script>
+<link rel="stylesheet" href="css/stylesheet.css">
+<link rel="icon" type="image/png" href="img/workdays_fc.png" id="favicon">
+<title>出退勤記録</title>
+
+<script>
+  function jpn(tbox){
+  tbox.style.imeMode="active";
+  }
+  $(function(){
+    
+    // 値が更新されたときの処理
+    $('input').change(function(){
+      var inputvalue = $(this).val();
+      var day = $(this).attr('day');
+      var name = $(this).attr('name');
+      var id=$(this).attr('id');
+      var wt=':worktime';
+      var st=':start';
+      var ed=':end';
+      var ht=':halftime';
+
+      //0900表記だったら09:00に修正する
+      if(inputvalue.length==4&&inputvalue.indexOf(':')==-1){
+        var a = inputvalue.slice(0, 2)
+        var b = ':'
+        var c = inputvalue.slice(2)
+        a=a+b+c
+        var inputForm = document.getElementById(id);
+        inputForm.value=a
+        inputvalue=a
+      }
+      //9:00表記だった場合09:00に修正する
+      if(inputvalue.length==4&&inputvalue.indexOf(':')==1){
+        var a = '0'
+        inputvalue=a+inputvalue
+       
+        var inputForm = document.getElementById(id);
+        inputForm.value=inputvalue
+        
+      }
+      //900表記だった場合09:00に修正する
+      if(inputvalue.length==3){
+        var a = '0'
+        inputvalue=a+inputvalue
+        var b = inputvalue.slice(0, 2)
+        var c = ':'
+        var d = inputvalue.slice(2)
+        inputvalue=b+c+d
+        var inputForm = document.getElementById(id);
+        inputForm.value=inputvalue
+        
+      }
+      
+      $.ajax({
+        url: "/SaleceServlet",
+        type: "POST",
+        data: {
+          inputvalue : inputvalue,
+          name : name
+        }
+      }).done(function (result) {
+        
+      }).fail(function () {
+        // 通信失敗時のコールバック
+        //alert("更新に失敗しました");
+      }).always(function (result) {
+        // 常に実行する処理
+      });
+    });
+    
+  });
+  
+  </script> 
+</head>
+
+<body>
+  <header>
+    <h1></h1>
+  </header>
+
+  <main id="contents">
+    
+</main>
+
+  <p><a href="/go_work">出勤</a></p>
+  <p><a href="/leave_work">退勤</a></p>
+  <div th:if="${gw==1}"><p><a href="/de_go_work">定時出勤</a></p></div>
+  <div th:if="${lw==1}"><p><a href="/de_leave_work">定時退勤</a></p></div>
+  
+  <br>
+  <form th:method="post" th:object="${beanRegularTime}" >
+  定時出勤<input type="text"  th:id="start"   th:name="start" th:value="${br.start}"> 
+  定時退勤<input type="text" th:id="end"  th:name="end" th:value="${br.end}"> 
+  </form>
+  <input type="button" value="更新" onclick="window.location.reload();" />
+</body>
+</html>
+
+<style>
+  h1 {
+    font-size: 20px;
+  }
+
+  .entryTable {
+    margin: auto;
+    border: 0px none;
+    margin-top: 20px;
+  }
+
+  th {
+    text-align: right;
+  }
+  
+  td {
+  text-align: left;
+  }
+  
+  .send {
+    margin-top: 20px;
+  }
+
+  a {
+    display: block;
+    padding-top: 10px;
+  }
+</style>
