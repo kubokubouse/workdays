@@ -264,16 +264,18 @@ public class HomeController extends WorkdaysProperties{
 		options.addArguments("--headless");
 		options.addArguments("--no-sandbox");
 		
-		//Chromeドライバーのインスタンス
-        //WebDriver driver = new ChromeDriver(options); //本番環境
-		WebDriver driver = new ChromeDriver();//local
 		
+		//Chromeドライバーのインスタンス
+        WebDriver driver = new ChromeDriver(options); //本番環境
+		//WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         try {
             //ログイン画面にアクセス
-            driver.get("https://login.salesforce.com");
+            driver.get("https://mki.my.salesforce.com/");
+			System.out.println("②＝"+driver.getCurrentUrl());
 			//driver.get("http://localhost:8080");
             //テキストボックス（出発）に「東京」と入力
             //driver.findElement(By.id("username")).sendKeys(login.getEmail());//ryowhite-yn9b@force.com
@@ -294,13 +296,15 @@ public class HomeController extends WorkdaysProperties{
 			driver.findElement(By.id("ontime")).click();*/
 
 			driver.findElement(By.className("button mb24 secondary wide")).click();
+			System.out.println("③＝"+driver.getCurrentUrl());
 
 			//定時出勤ボタンを押下
-			driver.findElement(By.id("btnTstInput")).click();
+			//driver.findElement(By.id("btnTstInput")).click();
 			
 
 			//定時退勤ボタンを押下
-			//driver.findElement(By.id("btnTetInput")).click();
+			driver.findElement(By.id("btnTetInput")).click();
+			System.out.println("④＝"+driver.getCurrentUrl());
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
@@ -308,7 +312,10 @@ public class HomeController extends WorkdaysProperties{
         } finally {
 			driver.quit();
         }
-		return "Salesforce";
+
+
+
+		return "done2";
 	}
 
     //トップページがログイン画面になる
