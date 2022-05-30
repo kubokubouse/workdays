@@ -66,7 +66,7 @@ public class SalesController extends WorkdaysProperties{
     @GetMapping("/salesforce")
 	public String Salesforce (@ModelAttribute Login login) {
         System.out.println("ai");
-        return "salesforce";
+        return "done";
     }
 
     @GetMapping("/go_work")
