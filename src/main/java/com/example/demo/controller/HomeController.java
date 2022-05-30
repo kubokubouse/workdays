@@ -9,11 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.FindBy;
 import org.springframework.stereotype.Controller;
 
 import javax.mail.MessagingException;
@@ -27,20 +25,15 @@ import javax.servlet.ServletException;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import com.box.sdk.*;
 import com.box.sdk.BoxItem.Info;
 
@@ -50,6 +43,7 @@ import com.example.demo.model.Otherpa;
 import com.example.demo.model.BeanRegularTime;
 import com.example.demo.model.CompanyInfo;
 import com.example.demo.model.IdUser;
+import com.example.demo.model.Idregulartime;
 import com.example.demo.model.IndividualData;
 import com.example.demo.model.Login;
 import com.example.demo.model.Mail;
@@ -57,15 +51,18 @@ import com.example.demo.model.Onetime;
 import com.example.demo.model.User;
 import com.example.demo.model.SuperUser;
 import com.example.demo.model.RePassword;
+import com.example.demo.model.RegularTime;
 import com.example.demo.model.Workdays;
 import com.example.demo.model.WorkingListParam;
 import com.example.demo.model.YearMonth;
 import com.example.demo.model.SuperUserLogin;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.HolidayService;
+import com.example.demo.service.IdRegularTimeService;
 import com.example.demo.service.IndividualService;
 import com.example.demo.service.MailSendService;
 import com.example.demo.service.OnetimeService;
+import com.example.demo.service.RegularTimeService;
 import com.example.demo.service.SuperUserService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.CompanyInfoService;
@@ -97,6 +94,11 @@ public class HomeController extends WorkdaysProperties{
 	SuperUserService superUserService;
 	@Autowired
     OnetimeService onetimeService;
+	@Autowired
+    RegularTimeService rtService;
+
+	@Autowired
+    IdRegularTimeService irService;
 
     public HomeController(UserRepository repository){
         this.repository = repository;
@@ -109,16 +111,10 @@ public class HomeController extends WorkdaysProperties{
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
 		ChromeOptions options = new ChromeOptions();
-		//options.addArguments("--headless");
-		options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
-		options.addArguments("start-maximized"); // open Browser in maximized mode
-		options.addArguments("disable-infobars"); // disabling infobars
-		options.addArguments("--disable-extensions"); // disabling extensions
-		options.addArguments("--disable-gpu"); // applicable to windows os only
+		options.addArguments("--headless");
 		options.addArguments("--no-sandbox");
 		
-		
-        
+	
 		//Chromeドライバーのインスタンス
         WebDriver driver = new ChromeDriver(options); //本番環境
 		//WebDriver driver = new ChromeDriver();//local
@@ -183,7 +179,7 @@ public class HomeController extends WorkdaysProperties{
 		options.addArguments("--headless");
 		options.addArguments("--no-sandbox");
 		
-
+		
         
 		//Chromeドライバーのインスタンス
         //WebDriver driver = new ChromeDriver(options); //本番環境
@@ -205,7 +201,6 @@ public class HomeController extends WorkdaysProperties{
 
             //ログインボタンを押下
             driver.findElement(By.id("rcmloginsubmit")).click();
-
 
 			String year=driver.findElement(By.id("s_mod_subject")).getAttribute("value");
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
@@ -230,7 +225,6 @@ public class HomeController extends WorkdaysProperties{
 			//メール送信ボタンを押下
 			driver.findElement(By.id("rcmbtn108")).click();
 			
-
 			/*driver.findElement(By.id("s")).sendKeys("00:00") ;
 			driver.findElement(By.id("e")).sendKeys("17:00") ;
 			driver.findElement(By.id("h")).sendKeys("01:00") ;
@@ -248,7 +242,6 @@ public class HomeController extends WorkdaysProperties{
                 System.out.println(e.getText());
             });*/
 
-          
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
@@ -261,8 +254,8 @@ public class HomeController extends WorkdaysProperties{
 
 	
 	//セールスフォースログイン用
-	@GetMapping("/seal")
-	public String seal(){
+	@PostMapping("/sale")
+	public String sale(@ModelAttribute Login login){
 		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
@@ -283,36 +276,31 @@ public class HomeController extends WorkdaysProperties{
             driver.get("https://login.salesforce.com");
 			//driver.get("http://localhost:8080");
             //テキストボックス（出発）に「東京」と入力
-            driver.findElement(By.id("username")).sendKeys("ryowhite-yn9b@force.com");
+            //driver.findElement(By.id("username")).sendKeys(login.getEmail());//ryowhite-yn9b@force.com
 
             //テキストボックス（出発）に「東京」と入力
-            driver.findElement(By.id("password")).sendKeys("ryo13160") ;
+            //driver.findElement(By.id("password")).sendKeys(login.getPassword()) ;//ryo13160
 
             //検索ボタンを押下
-            driver.findElement(By.id("Login")).click();
+            //driver.findElement(By.id("Login")).click();
 
-			String year=driver.findElement(By.id("vp")).getAttribute("name");
+			//String year=driver.findElement(By.id("vp")).getAttribute("name");
 			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
-			System.out.println("vp="+year);
+			//System.out.println("vp="+year);
 
 			/*driver.findElement(By.id("s")).sendKeys("00:00") ;
 			driver.findElement(By.id("e")).sendKeys("17:00") ;
 			driver.findElement(By.id("h")).sendKeys("01:00") ;
 			driver.findElement(By.id("ontime")).click();*/
 
-            //検索結果から優先順位順の乗換案内情報を取得
-            //WebElement element = driver.findElement(By.className("navPriority"));
+			driver.findElement(By.className("button mb24 secondary wide")).click();
 
-            //発着時刻など、時間に関する情報を取得（複数存在する為、List型にする）
-            //List<WebElement> el = element.findElements(By.className("time"));
+			//定時出勤ボタンを押下
+			driver.findElement(By.id("btnTstInput")).click();
+			
 
-            //時間に関する情報をループ
-            /*el.forEach(e -> {
-                //時間に関する情報をテキストで取得し、コンソールに出力
-                System.out.println(e.getText());
-            });*/
-
-          
+			//定時退勤ボタンを押下
+			//driver.findElement(By.id("btnTetInput")).click();
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
@@ -322,7 +310,6 @@ public class HomeController extends WorkdaysProperties{
         }
 		return "Salesforce";
 	}
-
 
     //トップページがログイン画面になる
 	@GetMapping("/")
@@ -339,9 +326,7 @@ public class HomeController extends WorkdaysProperties{
 		int count = 0;
 
 		while (after.before(before)) {
-	
 			after.add(Calendar.MONTH, 1);
-	
 			count++;
 	
 		}
@@ -386,7 +371,6 @@ public class HomeController extends WorkdaysProperties{
 				return "banned";
 			}
 
-			
 			//管理者が個別ユーザー・ユニバーサルユーザーに登録していた場合勤怠データにアクセスできるように
 			List<IndividualData>iDataList=individualService.findMail(id);
 			User user=userService.findEmail(id);
@@ -439,7 +423,6 @@ public class HomeController extends WorkdaysProperties{
 		}
 
 		model.addAttribute("idUserList", idUserList);
-		
 		session.setAttribute("Data",users);
 		
 		YearMonth yearMonth=userService.nowYearMonth();
@@ -465,7 +448,24 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("yearMonth",yearMonth);
 		//model.addAttribute("Brtime",Brtime);
 		System.out.println(opList);
-		return "list";
+
+		//個別定時テーブルにデータがあるか確認
+		Idregulartime idtime=irService.findId(users.getId());
+		
+		//個別定時テーブルが空だった場合　全体定時テーブルから定時情報を取得
+		if(idtime==null){
+			RegularTime rt=rtService.findId(1);
+			//定時情報をbeanRegularTimeに移植
+			BeanRegularTime br=rtService.brtime(rt);
+			model.addAttribute("br", br);
+		
+			return "list";
+		}
+		else{
+			BeanRegularTime br=irService.brtime(idtime);
+			model.addAttribute("br", br);
+			return "list";
+		}
 	}
 
 	//年月が指定された場合のログイン
@@ -556,8 +556,24 @@ public class HomeController extends WorkdaysProperties{
 		model.addAttribute("opList", opList);
 		session.setAttribute("yearMonth",yearMonth);
 		model.addAttribute("Brtime",Brtime);
-	
-		return "list";
+
+		//個別定時テーブルにデータがあるか確認
+		Idregulartime idtime=irService.findId(user.getId());
+		
+		//個別定時テーブルが空だった場合　全体定時テーブルから定時情報を取得
+		if(idtime==null){
+			RegularTime rt=rtService.findId(1);
+			//定時情報をbeanRegularTimeに移植
+			BeanRegularTime br=rtService.brtime(rt);
+			model.addAttribute("br", br);
+		
+			return "list";
+		}
+		else{
+			BeanRegularTime br=irService.brtime(idtime);
+			model.addAttribute("br", br);
+			return "list";
+		}
 	}
 
 	//定時ボタンを押されたときの処理
@@ -581,7 +597,54 @@ public class HomeController extends WorkdaysProperties{
 		}
 
 		model.addAttribute("idUserList", idUserList);
-		System.out.println(Brtime);
+
+
+		//個別定時の有無を確認
+		Idregulartime idtime=irService.findId(user.getId());
+
+		//個別定時テーブルが空だった場合　全体定時テーブルから定時情報を取得
+		if(idtime==null){
+			RegularTime rt=rtService.findId(1);
+			//定時情報をbeanRegularTimeに移植
+			BeanRegularTime br=rtService.brtime(rt);
+
+			//個別が空かつ入力された定時が全体定時と同じ場合→何もなし
+			if(br.getStart().equals(Brtime.getStart())&&br.getEnd().equals(Brtime.getEnd())&&br.getHalftime().equals(Brtime.getHalftime())){
+
+			}
+			//個別が空かつ入力された定時が全体定時と違う場合→入力値を個別定時テーブルに新規作成する
+			else{
+				Idregulartime idtime2=new Idregulartime();
+				idtime2.setStart(Brtime.getStart());
+				idtime2.setEnd(Brtime.getEnd());
+				idtime2.setHalftime(Brtime.getHalftime());
+				idtime2.setUserid(user.getId());
+				irService.insert(idtime2);
+			}
+			
+		}
+		//個別定時テーブルにデータがあった場合 個別定時テーブルから定時情報を取得
+		else{
+			//idregulrをbeanRegularに変換
+			BeanRegularTime br=irService.brtime(idtime);
+
+			//個別が空でないかつ入力された定時が個別定時と同じ場合→何もなし
+			if(br.getStart().equals(Brtime.getStart())&&br.getEnd().equals(Brtime.getEnd())&&br.getHalftime().equals(Brtime.getHalftime())){
+
+			}
+			//個別が空でないかつ入力された定時が個別定時と違う場合→入力値を個別定時テーブルで更新する
+			else{
+				idtime.setStart(Brtime.getStart());
+				idtime.setEnd(Brtime.getEnd());
+				idtime.setHalftime(Brtime.getHalftime());
+				idtime.setUserid(user.getId());
+				irService.update(idtime);
+			}
+
+			model.addAttribute("br", br);
+
+		}
+
 		//セッションに登録されている年月の平日に指定された定時データを埋め込む
 		workdaysService.insertOntime(Brtime);
 		
@@ -606,7 +669,8 @@ public class HomeController extends WorkdaysProperties{
 		else{
 			model.addAttribute("freeuser",0);
 		}
-	
+		
+		model.addAttribute("br", Brtime);
 		return "list";
 	}
 
@@ -1035,6 +1099,8 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			} 
 		workdaysService.update(workdays);
 
+		return "list";
+/*
 		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
 		workingListParam.setMonth(yearMonth.getMonth());
 		workingListParam.setYear(yearMonth.getYear());
@@ -1047,7 +1113,24 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		model.addAttribute("opList", opList);
 		model.addAttribute("yearMonth", yearMonth);
 		model.addAttribute("Brtime",Brtime);
-		return "list";
+
+		//個別定時テーブルにデータがあるか確認
+		Idregulartime idtime=irService.findId(users.getId());
+		
+		//個別定時テーブルが空だった場合　全体定時テーブルから定時情報を取得
+		if(idtime==null){
+			RegularTime rt=rtService.findId(1);
+			//定時情報をbeanRegularTimeに移植
+			BeanRegularTime br=rtService.brtime(rt);
+			model.addAttribute("br", br);
+		
+			return "list";
+		}
+		else{
+			BeanRegularTime br=irService.brtime(idtime);
+			model.addAttribute("br", br);
+			return "list";
+		}*/
 	}
 
 	@GetMapping("/boxDEV")

@@ -253,8 +253,10 @@ public class MasterController {
 			
 		} 
 		//superUserService.update(superUser);
+		/*
 		SuperUserListParam superUserListParam = superUserService.searchAllSuperUser();
 		model.addAttribute("superUserListParam", superUserListParam);
+		*/
 		return "superuserlist";
 	}
 
@@ -287,10 +289,12 @@ public class MasterController {
 			
 		} 
 		userService.update(user);
+		/*
 		UserListParam userListParam = userService.searchAllUser();
 		model.addAttribute("userListParam", userListParam);
 		List<UserData> userDataList=userListParam.getUserDataList();
 		model.addAttribute("userDataList",userDataList);
+		*/
 		return "universaluserlist";
 	}
 

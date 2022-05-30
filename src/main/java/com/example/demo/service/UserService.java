@@ -29,6 +29,7 @@ import com.example.demo.model.Workdays;
 import com.example.demo.model.WorkingData;
 import com.example.demo.model.WorkingListParam;
 import com.example.demo.model.YearMonth;
+import com.example.demo.model.YearMonthDay;
 import com.example.demo.repository.SuperUserRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.WorkdaysRepository;
@@ -245,6 +246,20 @@ public class UserService{
 		return yearMonth;
 	}
 
+	public YearMonthDay nowYearMonthDay(){
+		Calendar cal = Calendar.getInstance();
+		int year=cal.get(Calendar.YEAR);
+		int lastmonth=cal.get(Calendar.MONTH);
+		int month=lastmonth+1; //カレンダーメソッドで取得した月は実際の月-1される（12月だったら11になる的な）ので+1して戻す
+		int day=cal.get(Calendar.DAY_OF_MONTH);
+		YearMonthDay  yearMonthDay=new YearMonthDay();
+		yearMonthDay.setMonth(month);
+		yearMonthDay.setYear(year);
+		yearMonthDay.setDay(day);
+		//yearMonth.setLastmonth(lastmonth);
+		return yearMonthDay;
+	}
+
 	//00：00形式のStringを合計oo分のintに変換する
 	public int allminutes(String time){
 		int tenhour=Integer.parseInt(time.substring(0, 1));
@@ -267,6 +282,7 @@ public class UserService{
 	}
 
 	public Time toTime(String inputvalue){
+		inputvalue=inputvalue+":00";
 		LocalTime lt=LocalTime.parse(inputvalue);
 		Time time=new Time( lt.getHour(),lt.getMinute(),lt.getSecond());
 		return time;

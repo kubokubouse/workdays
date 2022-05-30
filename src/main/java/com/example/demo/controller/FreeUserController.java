@@ -11,8 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import javax.swing.*;
-import static javax.swing.JOptionPane.*;
+
 
 import com.example.demo.model.BeanFile;
 import com.example.demo.model.IndividualData;
