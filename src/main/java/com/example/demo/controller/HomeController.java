@@ -299,11 +299,11 @@ public class HomeController extends WorkdaysProperties{
 			System.out.println("③＝"+driver.getCurrentUrl());
 
 			//定時出勤ボタンを押下
-			//driver.findElement(By.id("btnTstInput")).click();
+			driver.findElement(By.id("btnTstInput")).click();
 			
 
 			//定時退勤ボタンを押下
-			driver.findElement(By.id("btnTetInput")).click();
+			//driver.findElement(By.id("btnTetInput")).click();
 			System.out.println("④＝"+driver.getCurrentUrl());
 
         } catch(Exception e) {
