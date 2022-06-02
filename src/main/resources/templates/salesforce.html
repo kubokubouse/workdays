@@ -13,33 +13,14 @@
 <h1>salesforceのログイン</h1>
 </header>
 <main id=contents>
-<form id="entryform" th:action="@{/sale}"  th:object="${login}"method="post" >
 
-<table class="entryTable" border="1">
 
-    <tr>
-      <th> </th>
-      <td><img src="img/mail.jpeg" class="icon_mail"></td>
-      <td><label for="email"></label>
-        <input type="text" id="email" class="login-control" placeholder="メールアドレス"
-          th:errorclass="is-invalid" th:field="*{email}">
-        <div class="invalid-feedback" th:errors="*{email}"></div>
-      </td>
-    </tr>
+  <p><a href="/sale2">定時出勤</a></p>
+  <br>
+  <br>
+  <p><a href="/sale">定時退勤</a></p>
 
-    <tr>
-      <th></th>
-      <td><img src="img/pass.png" class="icon_pass"></td>
-      <td><label for="password"></label>
-        <input type="password" id="pass" class="login-control" placeholder="パスワード"
-          th:errorclass="is-invalid" th:field="*{password}">
-       <div class="invalid-feedback" th:errors="*{password}"></div>
-      </td>
-    </tr>
-
-  </table>
-  <input class="button" id="login" type="submit" value="ログイン">
-</form>
+    
 
 </main>
 <img src="https://www.connectcrew.co.jp/assets/images/connectcrew_logo.jpg" alt="CCC" width="160px" class="logo">
