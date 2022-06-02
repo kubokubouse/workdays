@@ -266,8 +266,8 @@ public class HomeController extends WorkdaysProperties{
 		
 		
 		//Chromeドライバーのインスタンス
-        //WebDriver driver = new ChromeDriver(options); //本番環境
-		WebDriver driver = new ChromeDriver();//local
+        WebDriver driver = new ChromeDriver(options); //本番環境
+		//WebDriver driver = new ChromeDriver();//local
 		System.out.println("①");
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
