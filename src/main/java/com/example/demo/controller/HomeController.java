@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -266,8 +267,8 @@ public class HomeController extends WorkdaysProperties{
 		
 		
 		//Chromeドライバーのインスタンス
-        //WebDriver driver = new ChromeDriver(options); //本番環境
-		WebDriver driver = new ChromeDriver();//local
+        WebDriver driver = new ChromeDriver(options); //本番環境
+		//WebDriver driver = new ChromeDriver();//local
 		System.out.println("①");
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -285,18 +286,12 @@ public class HomeController extends WorkdaysProperties{
 
             //検索ボタンを押下
             driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
-			//*[@id='idp_section_buttons']/button
-			//String year=driver.findElement(By.id("vp")).getAttribute("name");
-			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
-			//System.out.println("vp="+year);
-
-			/*driver.findElement(By.id("s")).sendKeys("00:00") ;
-			driver.findElement(By.id("e")).sendKeys("17:00") ;
-			driver.findElement(By.id("h")).sendKeys("01:00") ;
-			driver.findElement(By.id("ontime")).click();*/
+			
 
 			//driver.findElement(By.className("button mb24 secondary wide")).click();
 			System.out.println("③＝"+driver.getCurrentUrl());
+
+			System.out.println("④＝"+driver.getPageSource());
 
 			//定時出勤ボタンを押下
 			//driver.findElement(By.id("btnTstInput")).click();
@@ -304,7 +299,7 @@ public class HomeController extends WorkdaysProperties{
 
 			//定時退勤ボタンを押下
 			driver.findElement(By.id("btnTetInput")).click();
-			System.out.println("④＝"+driver.getCurrentUrl());
+			System.out.println("⑤＝"+driver.getCurrentUrl());
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
@@ -1086,9 +1081,13 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 		int intday=Integer.parseInt(day);
 		Workdays workdays= workdaysService.findUseridYearMonthDay(id,yearMonth.getYear(),yearMonth.getMonth(),intday);
 		System.out.println("before="+inputvalue);
+
+		//0900のような表記になっているかどうかの正規表現
+		Pattern p = Pattern.compile("^([0-1][0-9]|[2][0-3]):[0-5][0-9]$");
 		
 		//0900のような:なしの入力がされた場合に間に:を挿入する
-		if(inputvalue.length()==4){
+		//inputvalue.matches("^([0-1][0-9]|[2][0-3]):[0-5][0-9]$")
+		if(inputvalue.length()==4&&p.matcher(inputvalue).find()){
 			StringBuilder sb = new StringBuilder();
             sb.append(inputvalue);
 			sb.insert(2, ":");
@@ -1153,8 +1152,8 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			} 
 		workdaysService.update(workdays);
 
-		return "list";
-/*
+		
+
 		WorkingListParam workingListParam=workdaysService.date(yearMonth.getYear(),yearMonth.getMonth());
 		workingListParam.setMonth(yearMonth.getMonth());
 		workingListParam.setYear(yearMonth.getYear());
@@ -1184,7 +1183,7 @@ public String univeresalregist(@Validated @ModelAttribute User user, BindingResu
 			BeanRegularTime br=irService.brtime(idtime);
 			model.addAttribute("br", br);
 			return "list";
-		}*/
+		}
 	}
 
 	@GetMapping("/boxDEV")
