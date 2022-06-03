@@ -2,8 +2,15 @@ package com.example.demo.controller;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -494,6 +501,117 @@ public class SalesController extends WorkdaysProperties{
 		return "record_work";
 		
 	}
+
+    //セールスフォースログイン用 定時退勤 ローカル
+	@GetMapping("/localin")
+	public String sale(){
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		
+		//Chromeドライバーのインスタンス
+       
+		WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://mki.my.salesforce.com/");
+			System.out.println("②＝"+driver.getCurrentUrl());
+			//driver.get("http://localhost:8080");
+            //テキストボックス（出発）に「東京」と入力
+            //driver.findElement(By.id("username")).sendKeys(login.getEmail());//ryowhite-yn9b@force.com
+
+            //テキストボックス（出発）に「東京」と入力
+            //driver.findElement(By.id("password")).sendKeys(login.getPassword()) ;//ryo13160
+
+            //検索ボタンを押下
+            driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
+			//*[@id='idp_section_buttons']/button
+			//String year=driver.findElement(By.id("vp")).getAttribute("name");
+			//ログインが成功して勤怠データに遷移しているのならここでyearがログに出るはず
+			//System.out.println("vp="+year);
+
+			/*driver.findElement(By.id("s")).sendKeys("00:00") ;
+			driver.findElement(By.id("e")).sendKeys("17:00") ;
+			driver.findElement(By.id("h")).sendKeys("01:00") ;
+			driver.findElement(By.id("ontime")).click();*/
+
+			//driver.findElement(By.className("button mb24 secondary wide")).click();
+			System.out.println("③＝"+driver.getCurrentUrl());
+
+			//定時出勤ボタンを押下
+			//driver.findElement(By.id("btnTstInput")).click();
+			
+
+			//定時退勤ボタンを押下
+			driver.findElement(By.id("btnTetInput")).click();
+			System.out.println("④＝"+driver.getCurrentUrl());
+
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+
+
+
+		return "done2";
+	}
+
+    //セールスフォースログイン用 定時出勤 ローカル
+    @GetMapping("/localout")
+	public String sale2(){
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		
+		//Chromeドライバーのインスタンス
+		WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://mki.my.salesforce.com/");
+			System.out.println("②＝"+driver.getCurrentUrl());
+			
+            //検索ボタンを押下
+            driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
+			
+			//driver.findElement(By.className("button mb24 secondary wide")).click();
+			System.out.println("③＝"+driver.getCurrentUrl());
+
+			//定時出勤ボタンを押下
+			driver.findElement(By.id("btnTstInput")).click();
+			
+
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+
+
+
+		return "done2";
+	}
+
 
 
     

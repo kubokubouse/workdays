@@ -132,8 +132,12 @@ table tr {
       var ed=':end';
       var ht=':halftime';
 
-      //0900表記だったら09:00に修正する
-      if(inputvalue.length==4&&inputvalue.indexOf(':')==-1){
+      
+      //正規表現で0900の時に09:00に変更
+      const regex1=/^([0-1][0-9]|[2][0-3])[0-5][0-9]$/;
+      const regex2=/^[0-9]:[0-5][0-9]$/;
+      const regex3=/^[0-9][0-5][0-9]$/;
+      if(regex1.test(inputvalue)){
         var a = inputvalue.slice(0, 2)
         var b = ':'
         var c = inputvalue.slice(2)
@@ -143,7 +147,7 @@ table tr {
         inputvalue=a
       }
       //9:00表記だった場合09:00に修正する
-      if(inputvalue.length==4&&inputvalue.indexOf(':')==1){
+      else if(regex2.test(inputvalue)){
         var a = '0'
         inputvalue=a+inputvalue
        
@@ -152,7 +156,7 @@ table tr {
         
       }
       //900表記だった場合09:00に修正する
-      if(inputvalue.length==3){
+      else if(inputvalue.length==3){
         var a = '0'
         inputvalue=a+inputvalue
         var b = inputvalue.slice(0, 2)
