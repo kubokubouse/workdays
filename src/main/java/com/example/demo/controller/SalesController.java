@@ -570,7 +570,7 @@ public class SalesController extends WorkdaysProperties{
     //セールスフォースログイン用 定時出勤 ローカル
     @GetMapping("/localout")
 	public String sale2(){
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 

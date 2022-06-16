@@ -112,7 +112,7 @@ public class HomeController extends WorkdaysProperties{
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless");
+		//options.addArguments("--headless");
 		options.addArguments("--no-sandbox");
 		
 	
@@ -257,7 +257,7 @@ public class HomeController extends WorkdaysProperties{
 	//セールスフォースログイン用 定時退勤
 	@GetMapping("/sale")
 	public String sale(){
-		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
 
@@ -267,8 +267,8 @@ public class HomeController extends WorkdaysProperties{
 		
 		
 		//Chromeドライバーのインスタンス
-        WebDriver driver = new ChromeDriver(options); //本番環境
-		//WebDriver driver = new ChromeDriver();//local
+        //WebDriver driver = new ChromeDriver(options); //本番環境
+		WebDriver driver = new ChromeDriver();//local
 		System.out.println("①");
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -291,15 +291,11 @@ public class HomeController extends WorkdaysProperties{
 			//driver.findElement(By.className("button mb24 secondary wide")).click();
 			System.out.println("③＝"+driver.getCurrentUrl());
 
-			System.out.println("④＝"+driver.getPageSource());
 
-			//定時出勤ボタンを押下
-			//driver.findElement(By.id("btnTstInput")).click();
+			driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
 			
 
-			//定時退勤ボタンを押下
-			driver.findElement(By.id("btnTetInput")).click();
-			System.out.println("⑤＝"+driver.getCurrentUrl());
+			
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
@@ -345,6 +341,50 @@ public class HomeController extends WorkdaysProperties{
 
 			//定時出勤ボタンを押下
 			driver.findElement(By.id("btnTstInput")).click();
+			
+
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+
+
+
+		return "done2";
+	}
+
+	//ログインするまで
+	@GetMapping("/loginsale")
+	public String loginsale(){
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		
+		//Chromeドライバーのインスタンス
+        WebDriver driver = new ChromeDriver(options); //本番環境
+		//WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://mki.my.salesforce.com/");
+			System.out.println("②＝"+driver.getCurrentUrl());
+			
+            //シングルサインオンボタンを押下
+            driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
+			
+			//driver.findElement(By.className("button mb24 secondary wide")).click();
+			System.out.println("③＝"+driver.getCurrentUrl());
+
 			
 
         } catch(Exception e) {
