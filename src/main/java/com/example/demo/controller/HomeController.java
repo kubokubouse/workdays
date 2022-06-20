@@ -277,12 +277,8 @@ public class HomeController extends WorkdaysProperties{
             //ログイン画面にアクセス
             driver.get("https://mki.my.salesforce.com/");
 			System.out.println("②＝"+driver.getCurrentUrl());
-			//driver.get("http://localhost:8080");
-            //テキストボックス（出発）に「東京」と入力
-            //driver.findElement(By.id("username")).sendKeys(login.getEmail());//ryowhite-yn9b@force.com
+			
 
-            //テキストボックス（出発）に「東京」と入力
-            //driver.findElement(By.id("password")).sendKeys(login.getPassword()) ;//ryo13160
 
             //検索ボタンを押下
             driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
@@ -291,6 +287,7 @@ public class HomeController extends WorkdaysProperties{
 			//driver.findElement(By.className("button mb24 secondary wide")).click();
 			System.out.println("③＝"+driver.getCurrentUrl());
 
+			System.out.println("トークン＝"+driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")));
 
 			driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
 			
@@ -378,6 +375,8 @@ public class HomeController extends WorkdaysProperties{
             //ログイン画面にアクセス
             driver.get("https://mki.my.salesforce.com/");
 			System.out.println("②＝"+driver.getCurrentUrl());
+
+
 			
             //シングルサインオンボタンを押下
             driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
@@ -423,6 +422,12 @@ public class HomeController extends WorkdaysProperties{
 		//return "login";
 		
 		return "login2";
+	}
+	@GetMapping("/test4")
+	public String test4(){
+		
+		
+		return "test2";
 	}
 
     //メール送信処理
