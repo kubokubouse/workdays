@@ -117,6 +117,7 @@ public class SalesController extends WorkdaysProperties{
 
 			model.addAttribute("onclik",s);
 
+            System.out.println(s);
         } catch(Exception e) {
             System.out.println(e.getMessage());
 
