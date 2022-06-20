@@ -278,7 +278,7 @@ public class HomeController extends WorkdaysProperties{
             driver.get("https://mki.my.salesforce.com/");
 			System.out.println("②＝"+driver.getCurrentUrl());
 			
-
+			System.out.println("トークン＝"+driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")));
 
             //検索ボタンを押下
             driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
@@ -287,7 +287,7 @@ public class HomeController extends WorkdaysProperties{
 			//driver.findElement(By.className("button mb24 secondary wide")).click();
 			System.out.println("③＝"+driver.getCurrentUrl());
 
-			System.out.println("トークン＝"+driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")));
+			
 
 			driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
 			
