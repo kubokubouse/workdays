@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -75,6 +76,56 @@ public class SalesController extends WorkdaysProperties{
         System.out.println("ai");
         return "salesforce";
     }
+
+
+    @GetMapping("/test4")
+	public String test4(Model model){
+		
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		
+		//Chromeドライバーのインスタンス
+        WebDriver driver = new ChromeDriver(options); //本番環境
+		//WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://mki.my.salesforce.com/");
+			System.out.println("②＝"+driver.getCurrentUrl());
+
+			WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
+
+
+			
+			String s=element.getAttribute("onclick");
+
+			
+            //シングルサインオンボタンを押下
+            driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
+			
+			//driver.findElement(By.className("button mb24 secondary wide")).click();
+			System.out.println("③＝"+driver.getCurrentUrl());
+
+			model.addAttribute("onclik",s);
+
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+		
+		return "test2";
+	}
 
     @GetMapping("/go_work")
 	public String go () {

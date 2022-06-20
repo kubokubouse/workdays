@@ -428,12 +428,7 @@ public class HomeController extends WorkdaysProperties{
 		
 		return "login2";
 	}
-	@GetMapping("/test4")
-	public String test4(){
-		
-		
-		return "test2";
-	}
+	
 
     //メール送信処理
 	@GetMapping(value = "/sendmail")
