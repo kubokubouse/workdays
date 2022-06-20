@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -278,7 +279,11 @@ public class HomeController extends WorkdaysProperties{
             driver.get("https://mki.my.salesforce.com/");
 			System.out.println("②＝"+driver.getCurrentUrl());
 			
-			System.out.println("トークン＝"+driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")));
+			WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
+
+
+			
+			System.out.println("トークン＝"+element.getAttribute("buttone"));
 
             //検索ボタンを押下
             driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
@@ -289,7 +294,7 @@ public class HomeController extends WorkdaysProperties{
 
 			
 
-			driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
+			//driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
 			
 
 			
