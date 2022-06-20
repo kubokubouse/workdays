@@ -14,7 +14,7 @@
     
     <script  src="js/jquery.xdomainajax.js"> </script>
     <script>
-    var r="${onclick}";
+    var r="GACシングルサインオン";
     $(function() {
         $('input').change(function(){
             var request = new XMLHttpRequest();
@@ -36,11 +36,11 @@
     <body >
        
                      <div id="idp_section_buttons" class="mb24">
-                        <button class="button mb24 secondary wide" onclick=r>
+                        <button class="button mb24 secondary wide" onclick="IdpOptions.useIdp(r, 'https://mki.my.salesforce.com/saml/authn-request.jsp?saml_request_id=_2CAAAAYH7w8I_MDAwMDAwMDAwMDAwMDAwAAAA7nzKT_UfaRU6b2lrHAJqK_cpOrPTOLZCE9ovOQi_yXXafE0z7E7VAONmDcg4pfBZrMUVzsMkRLYJE_ddGD07ss_IFmzyj7bPC4kJD5bydjWtyfkqeYGdRG7eVzDZ1bn3GcLPCBqA9Ozrmj2YW4a336xwKdyLGuMJw9ecAMU3YnBxvcp5OYR-2S0bjGd4bTq9vt2u73CAH1TMns_EXb7SzqodZHhwzRS1pzJxCIGWfzMpPE1cD9788uJjJvZORoUC5g&amp;saml_acs=https%3A%2F%2Fmki.my.salesforce.com%3Fso%3D00D10000000YMtb&amp;saml_binding_type=HttpRedirect&amp;Issuer=https%3A%2F%2Fmki.my.salesforce.com&amp;samlSsoConfig=0LE5F000000Camf&amp;RelayState=%2F');">
                             <span>GACシングルサインオン</span>
                         </button>
                         <input type="text" id="s" class="time"value="aa">
-            
+            [[${onclick}]]
                                                    
     
    

@@ -115,7 +115,7 @@ public class SalesController extends WorkdaysProperties{
 			//driver.findElement(By.className("button mb24 secondary wide")).click();
 			System.out.println("③＝"+driver.getCurrentUrl());
 
-			model.addAttribute("onclik",s);
+			model.addAttribute("onclick",s);
 
             System.out.println(s);
         } catch(Exception e) {
