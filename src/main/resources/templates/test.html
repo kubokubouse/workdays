@@ -1,0 +1,171 @@
+<html>
+    <head>
+        <script>
+ $(function(){
+var IdpOptions = function () {
+    function e(a) {
+      if (a = document.getElementById(a)) a.style.display = "block"
+    }
+  
+    function d(a) {
+      if (a = document.getElementById(a)) a.style.display = "none"
+    }
+  
+    function p(a) {
+      var b = document.getElementById("header");
+      b && (b.innerHTML = a)
+    }
+  
+    function q() {
+      if (!(0 < k.length)) {
+        var a = document.getElementById("idplist");
+        if (a)
+          for (var a = a.childNodes, b = 0; b < a.length; b++) k.push({
+            name: a[b].getElementsByTagName("span")[0].innerHTML,
+            elem: a[b]
+          })
+      }
+    }
+  
+    function r(a, b, f) {
+      for (var c = a.elem.firstChild; c.lastChild && "span" === c.lastChild.nodeName.toLowerCase();) c.removeChild(c.lastChild);
+      if (null !== b && null !== f) {
+        var g = "",
+          d = null,
+          e = null,
+          h = null;
+        f = f.length;
+        0 === b ? (d = a.name.substring(0, f), e = a.name.substring(f), g = "a") : (g = "b", d = a.name.substring(0, b), b + f >= a.name.length ? e = a.name.substring(b) : (e = a.name.substring(b, b + f), h = a.name.substring(b + f)));
+        b = document.createElement("span");
+        b.appendChild(document.createTextNode(d));
+        "a" === g && (b.style.fontWeight = "bolder");
+        c.appendChild(b);
+        null !== e && (d = document.createElement("span"), d.appendChild(document.createTextNode(e)), "b" === g && (d.style.fontWeight = "bolder"), c.appendChild(d));
+        null !== h && (g = document.createElement("span"), g.appendChild(document.createTextNode(h)), c.appendChild(g))
+      } else h = document.createElement("span"), h.appendChild(document.createTextNode(a.name)), c.appendChild(h);
+      return a.elem
+    }
+  
+    function m(a) {
+      s();
+      var b = document.getElementById("idplist").childNodes;
+      "down" === a && h < b.length - 1 ? h++ : "up" === a && -1 < h && h--;
+      if (-1 < h && h < b.length && (a = b[h].firstChild, document.getElementById("idp_search").setAttribute("aria-activedescendant", a.id), a.setAttribute("style", "background-color: #eef1f6;"), 1 < b.length && (document.getElementById("idp_search").value = a.getAttribute("title")), 4 < b.length)) {
+        a = document.getElementById("idpscrollable");
+        var f = a.scrollTop,
+          c = b[h].offsetHeight * h;
+        c < f ? a.scrollTop = c : c > f + a.clientHeight && (a.scrollTop = c - 3 * b[h].offsetHeight)
+      }
+    }
+  
+    function s() {
+      for (var a = document.getElementById("idplist").childNodes, b = 0; b < a.length; b++) a[b].firstChild.setAttribute("style", "background-color:white;")
+    }
+  
+    function n() {
+      return "idphint_" + window.location.pathname
+    }
+  
+    function t(a) {
+      if ("button" === a.nodeName.toLowerCase()) return a.cloneNode(!0);
+      var b = a.firstChild;
+      a = document.createElement("button");
+      a.setAttribute("class", "button mb8 secondary wide");
+      a.setAttribute("onclick", b.getAttribute("onclick"));
+      var f = b.firstChild,
+        b = b.lastChild; - 1 === f.src.indexOf("/img/s.gif") && a.appendChild(f.cloneNode(!0));
+      a.appendChild(b.cloneNode(!0));
+      return a
+    }
+    var k = [],
+      h = -1,
+      l = null;
+    try {
+      l = window.localStorage ? window.localStorage : null
+    } catch (u) {}
+    return {
+      enterIdp: function (a, b) {
+        e("idp_section_chooser");
+        e("cancel_idp_div");
+        e("header");
+        document.title = a + b;
+        p(a);
+        d("content");
+        d("choose_idp");
+        d("employee_login");
+        document.getElementById("idp_search").focus()
+      },
+      dismissIdp: function (a, b) {
+        d("idp_section_chooser");
+        d("cancel_idp_div");
+        d("header");
+        d("error");
+        e("content");
+        e("choose_idp");
+        e("employee_login");
+        document.title = a + b
+      },
+      searchIdps: function (a) {
+        q();
+        if (38 === a.keyCode) m("up");
+        else if (40 === a.keyCode) m("down");
+        else if (13 === a.keyCode) a = document.getElementById("idplist").childNodes, -1 < h && h < a.length && a[h].firstChild.click();
+        else {
+          h = -1;
+          s();
+          document.getElementById("idp_search").setAttribute("aria-activedescendant", "");
+          document.getElementById("idpscrollable").scrollTop = 0;
+          a = document.getElementById("idp_search").value;
+          for (var b = [], f = [], c = document.getElementById("idplist"); c.firstChild;) c.removeChild(c.firstChild);
+          var c = document.getElementById("idplist"),
+            g;
+          for (g = 0; g < k.length; g++) {
+            var d = k[g],
+              e = RegExp(a.toLowerCase().replace(/[\-\/\\\^$*+?.()|\[\]{}]/g, "\\$&"));
+            d.name.toLowerCase().match(e) && (e = d.name.toLowerCase().search(e), 0 === e ? b.push(r(d, e, a)) : f.push(r(d, e, a)))
+          }
+          for (g = 0; g < b.length; g++) c.appendChild(b[g]);
+          for (g = 0; g < f.length; g++) c.appendChild(f[g]);
+          1 === c.childNodes.length && m("down")
+        }
+      },
+      useIdp: function (a, b) {
+        if (null !== l) 
+        try {
+          l.setItem(n(), a)
+        } catch (d) {}
+        window.location.href = b
+      },
+      checkIdpHint: function (a, b) {
+        if (null === l) return !1;
+        var f = l.getItem(n());
+        if (f) {
+          q();
+          if (!(0 < k.length)) {
+            var c = document.getElementById("idp_section_buttons");
+            if (c)
+              for (var c = c.childNodes, g = 0; g < c.length; g++) k.push({
+                name: c[g].getElementsByTagName("span")[0].innerHTML,
+                elem: c[g]
+              })
+          }
+          for (c = 0; c < k.length; c++)
+            if (k[c].name === f) return document.getElementById("idp_hint").appendChild(t(k[c].elem)), e("idp_hint_section"), e("header"), document.title = a + b, p(a), d("content"), d("choose_idp"), d("or_use_idp"), d("idp_section_buttons"), d("idp_section_chooser"), !0
+        } else if ((f = document.getElementById("idp_section_chooser")) && "none" !== f.style.display)(f = document.getElementById("idp_search")) && f.focus();
+        return !1
+      },
+      clearIdpHint: function (a) {
+        null !== l && l.removeItem(n());
+        d("idp_hint_section");
+        a && (document.getElementById("login_form") ? (d("header"), d("error"), e("content"), e("choose_idp"), e("or_use_idp"), e("idp_section_buttons")) : (e("idp_section_buttons"), e("idp_section_chooser"), (a = document.getElementById("idp_search")) && a.focus()))
+      }
+    }
+  }();
+});
+  
+</script> 
+</head>
+<body>
+    <button  onclick="IdpOptions.useIdp('GACシングルサインオン', 'https://mki.my.salesforce.com/saml/authn-request.jsp?saml_request_id=_2CAAAAYH7qPSNMDAwMDAwMDAwMDAwMDAwAAAA7lXG-DGu93JR_bg7kZnUZKqLdU60fnrznk2LVT4_h0-q9Yu3eqa3LtrMcR1Lz5CWnwgsAfyZoiFQrJESauDV7XwVhdhE-wsa_KgZ_c0g12VP-37Y0HfXclYx99x9HrjW4Hi5d6_rfmv0DIFDPgXCbE9c5gZ9qasHSdRZiascbgnlsqlBIKg_GC_c09fJtI2EPdH0i4hJx_XWV86jvO3iVZcif26cCgi6GQITS6YPVJAFOv79HhYlfJ1_UP_TK7ZkMQ&amp;saml_acs=https%3A%2F%2Fmki.my.salesforce.com%3Fso%3D00D10000000YMtb&amp;saml_binding_type=HttpRedirect&amp;Issuer=https%3A%2F%2Fmki.my.salesforce.com&amp;samlSsoConfig=0LE5F000000Camf&amp;RelayState=%2F');"><span>GACシングルサインオン</span></button>
+    </body>
+    </html>
