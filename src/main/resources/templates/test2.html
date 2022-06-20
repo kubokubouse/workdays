@@ -14,7 +14,7 @@
     
     <script  src="js/jquery.xdomainajax.js"> </script>
     <script>
-    var r="${onclick}";
+    var r=/*[["${onclick}"]]*/
     $(function() {
         $('input').change(function(){
             var request = new XMLHttpRequest();
