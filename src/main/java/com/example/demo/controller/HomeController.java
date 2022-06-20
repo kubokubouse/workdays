@@ -283,7 +283,7 @@ public class HomeController extends WorkdaysProperties{
 
 
 			
-			System.out.println("トークン＝"+element.getAttribute("buttone"));
+			System.out.println("トークン＝"+element.getAttribute("onclick"));
 
             //検索ボタンを押下
             driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
