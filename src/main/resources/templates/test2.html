@@ -4,18 +4,12 @@
     <meta name="viewport" content="initial-scale=1.0"/>
     <meta name="description" content="セールスフォース・ドットコム (Salesforce) のカスタマー向けログインページです。" />
     <title>ログイン | Salesforce</title>
-    <meta name="format-detection" content="telephone=no" />
     <meta charset="utf-8" />
-    <script type="text/javascript" charset="UTF-8">if (self == top) {document.documentElement.style.visibility = 'visible';} else {document.write = ''; top.location = self.location; setTimeout(function(){document.body.innerHTML='';}, 1);window.self.onload=function(evt){document.body.innerHTML='';};}</script>
-    <script charset="UTF-8">var SFDCSessionVars={"server":"https:\/\/login.salesforce.com\/login\/sessionserver212.html","im":true,"ah":"有効","save":"保存","saveOne":"1 件の変更を保存","sum":"#p# 件の保存されたユーザ名","iaac":false,"hac":"ユーザ名を選択","suo":"1 件の保存されたユーザ名","title":" | Salesforce","saveMany":"#p# 件の変更を保存","lpt":"ログイン","lllbl":"Lightning Login","host":"login.salesforce.com","le":false,"heu":"ユーザ名リストを編集","ic":false,"lh":false,"ur":"https:\/\/mki.my.salesforce.com","hidp":"次を使用してログイン","ih":"無効","dc":"ユーザ名が削除されました。変更を適用するには、[保存] をクリックします。"};</script>
-    <script src="https://mki.my.salesforce.com/jslibrary/SfdcSessionBase208.js" charset="UTF-8"></script>
     <script src="https://mki.my.salesforce.com/jslibrary/LoginHint208.js" charset="UTF-8"></script>
     <script charset="UTF-8">LoginHint.hideLoginForm();</script>
-    <link rel="canonical" href="https://mki.my.salesforce.com?locale=jp"/></head>
-    
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     
-    <script  charset="UTF-8" src="js/jquery.xdomainajax.js"> </script>
+    
     
     <script th:inline="javascript" charset="UTF-8">
    
@@ -41,7 +35,7 @@
     <body >
        
                      <div id="idp_section_buttons" class="mb24">
-                        <button class="button mb24 secondary wide" charset="UTF-8" th:onclick="IdpOptions.useIdp(/*[[${test}]]*/, /*[[${test1}]]*/);">
+                        <button class="button mb24 secondary wide" charset="UTF-8" th:onclick="|IdpOptions.useIdp('__${test}__', '__${test1}__');|">
                             <span>テスト</span>
                         </button>
                         <input type="text" id="s" class="time"value="aa">
