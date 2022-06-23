@@ -165,6 +165,9 @@ public class SalesController extends WorkdaysProperties{
             System.out.println(splitStr[3]);
 			
             System.out.println("石井さんのクリックボタンの要素="+s);
+
+            System.out.println("③＝"+driver.getCurrentUrl());
+ 
         } catch(Exception e) {
             System.out.println(e.getMessage());
 
