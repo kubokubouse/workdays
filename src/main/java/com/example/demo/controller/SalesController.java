@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpSession;
 
@@ -95,7 +96,7 @@ public class SalesController extends WorkdaysProperties{
 		WebDriver driver = new ChromeDriver();//local
 		System.out.println("①");
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         try {
             //ログイン画面にアクセス
@@ -103,23 +104,18 @@ public class SalesController extends WorkdaysProperties{
 			System.out.println("②＝"+driver.getCurrentUrl());
 
 			WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
-
-
-			
+	
 			String s=element.getAttribute("onclick");
 
-			
-            //シングルサインオンボタンを押下
-            driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
-			
-			//driver.findElement(By.className("button mb24 secondary wide")).click();
-			System.out.println("③＝"+driver.getCurrentUrl());
-
-            String t="GACシングルサインオン";
+            Pattern pattern2 = Pattern.compile("'");
+            String[] splitStr = pattern2.split(s);
+            
+            String t=splitStr[1];
 			model.addAttribute("test",t);
-            String t1="https://mki.my.salesforce.com/saml/authn-request.jsp?saml_request_id=_2CAAAAYH7w8I_MDAwMDAwMDAwMDAwMDAwAAAA7nzKT_UfaRU6b2lrHAJqK_cpOrPTOLZCE9ovOQi_yXXafE0z7E7VAONmDcg4pfBZrMUVzsMkRLYJE_ddGD07ss_IFmzyj7bPC4kJD5bydjWtyfkqeYGdRG7eVzDZ1bn3GcLPCBqA9Ozrmj2YW4a336xwKdyLGuMJw9ecAMU3YnBxvcp5OYR-2S0bjGd4bTq9vt2u73CAH1TMns_EXb7SzqodZHhwzRS1pzJxCIGWfzMpPE1cD9788uJjJvZORoUC5g&amp;saml_acs=https%3A%2F%2Fmki.my.salesforce.com%3Fso%3D00D10000000YMtb&amp;saml_binding_type=HttpRedirect&amp;Issuer=https%3A%2F%2Fmki.my.salesforce.com&amp;samlSsoConfig=0LE5F000000Camf&amp;RelayState=%2F";
+            String t1=splitStr[3];
             model.addAttribute("test1",t1);
-            System.out.println(s);
+            System.out.println(splitStr[1]);
+            System.out.println(splitStr[3]);
         } catch(Exception e) {
             System.out.println(e.getMessage());
 
@@ -150,15 +146,23 @@ public class SalesController extends WorkdaysProperties{
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         try {
+            //ログイン画面にアクセス
             driver.get("https://mki.my.salesforce.com/");
-			WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
-            //mkiのログインページのサインオンボタンの要素を取得
-			
-			String s=element.getAttribute("onclick");
-
-			
-            //シングルサインオンボタンを押下
-            driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
+            System.out.println("②＝"+driver.getCurrentUrl());
+ 
+            WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
+     
+            String s=element.getAttribute("onclick");
+ 
+            Pattern pattern2 = Pattern.compile("'");
+            String[] splitStr = pattern2.split(s);
+             
+            String t=splitStr[1];
+            model.addAttribute("test",t);
+            String t1=splitStr[3];
+            model.addAttribute("test1",t1);
+            System.out.println(splitStr[1]);
+            System.out.println(splitStr[3]);
 			
             System.out.println("石井さんのクリックボタンの要素="+s);
         } catch(Exception e) {
