@@ -78,6 +78,47 @@ public class SalesController extends WorkdaysProperties{
         return "salesforce";
     }
 
+    @GetMapping("/ajaxtest")
+	public String ajaxtest () {
+       
+        return "ajaxtest";
+    }
+
+    @GetMapping("/testawsajax")
+	public String testA(Model model){
+		
+		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		
+		//Chromeドライバーのインスタンス
+        WebDriver driver = new ChromeDriver(options); //本番環境
+		//WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://mki.lightning.force.com/lightning/page/home");
+			System.out.println("②＝"+driver.getCurrentUrl());
+
+			
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+		
+		return "ajaxtest";
+	}
+
 
     @GetMapping("/testlocal")
 	public String test4(Model model){
