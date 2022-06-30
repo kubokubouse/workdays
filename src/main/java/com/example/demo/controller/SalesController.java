@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpSession;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -82,6 +83,46 @@ public class SalesController extends WorkdaysProperties{
 	public String ajaxtest () {
        
         return "ajaxtest";
+    }
+    
+    @GetMapping("/testiframe")
+	public String testiframe () {
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+	
+		WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("http://workdays.jp/iframe");
+			System.out.println("②＝"+driver.getCurrentUrl());
+
+            WebElement iframe = driver.findElement(By.id("iframe"));
+			driver.switchTo().frame(iframe) ;
+	
+            driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
+
+            
+            driver.findElement(By.id("pass")).sendKeys("0000") ;
+            
+
+           
+
+            driver.findElement(By.id("login")).click();
+            
+
+            System.out.println("③＝"+driver.getCurrentUrl());
+			
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+		
+        return "testiframe";
     }
 
     @GetMapping("/testawsajax")
