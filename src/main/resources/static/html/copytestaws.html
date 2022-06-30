@@ -1,0 +1,44 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" style="visibility: visible;"  xmlns:th="http://www.thymeleaf.org" lang=ja-jp xml:lang=ja-jp><head>
+    <meta name="viewport" content="initial-scale=1.0"/>
+    <meta name="description" content="セールスフォース・ドットコム (Salesforce) のカスタマー向けログインページです。" />
+    <title>ログイン | Salesforce</title>
+    <meta name="format-detection" content="telephone=no" />
+    <meta charset="utf-8" />
+    <script type="text/javascript" charset="UTF-8">if (self == top) {document.documentElement.style.visibility = 'visible';} else {document.write = ''; top.location = self.location; setTimeout(function(){document.body.innerHTML='';}, 1);window.self.onload=function(evt){document.body.innerHTML='';};}</script>
+    <script charset="UTF-8">var SFDCSessionVars={"server":"https:\/\/login.salesforce.com\/login\/sessionserver212.html","im":true,"ah":"有効","save":"保存","saveOne":"1 件の変更を保存","sum":"#p# 件の保存されたユーザ名","iaac":false,"hac":"ユーザ名を選択","suo":"1 件の保存されたユーザ名","title":" | Salesforce","saveMany":"#p# 件の変更を保存","lpt":"ログイン","lllbl":"Lightning Login","host":"login.salesforce.com","le":false,"heu":"ユーザ名リストを編集","ic":false,"lh":false,"ur":"https:\/\/mki.my.salesforce.com","hidp":"次を使用してログイン","ih":"無効","dc":"ユーザ名が削除されました。変更を適用するには、[保存] をクリックします。"};</script>
+    <script src="https://mki.my.salesforce.com/jslibrary/SfdcSessionBase208.js" charset="UTF-8"></script>
+    <script src="https://mki.my.salesforce.com/jslibrary/LoginHint208.js" charset="UTF-8"></script>
+    <script charset="UTF-8">LoginHint.hideLoginForm();</script>
+    <link rel="canonical" href="https://mki.my.salesforce.com?locale=jp"/></head>
+    
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    
+   
+    <script th:inline="javascript" charset="UTF-8">
+        var GAC
+        var inid
+        function inputChange1(){
+            GAC=document.getElementById("first").value;
+            console.log(GAC);
+        }
+        function inputChange2(){
+            inid=document.getElementById("second").value;
+            console.log(inid);
+        }
+
+        function login(){
+            IdpOptions.useIdp(GAC,inid);
+        }
+
+    </script>
+
+    <body>
+        <label>CGC<input id="first" type="text" onchange="inputChange1()"></label>
+        <label>id<input id="second"  type="text" onchange="inputChange2()"></label>
+
+        <button  id="sign" onclick="login()"><span>GACシングルサインオン</span></button>
+        </body></html>
+    
+    

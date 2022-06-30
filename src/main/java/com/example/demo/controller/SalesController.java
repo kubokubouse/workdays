@@ -125,6 +125,45 @@ public class SalesController extends WorkdaysProperties{
         return "testiframe";
     }
 
+    @GetMapping("/testawsiframe")
+	public String testawsiframe () {
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+	
+		WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("http://workdays.jp/iframe");
+			System.out.println("②＝"+driver.getCurrentUrl());
+
+            WebElement iframe = driver.findElement(By.id("iframe"));
+			driver.switchTo().frame(iframe) ;
+	
+            driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
+
+            
+            driver.findElement(By.id("pass")).sendKeys("0000") ;
+            
+
+           
+
+            driver.findElement(By.id("login")).click();
+
+            System.out.println("③＝"+driver.getCurrentUrl());
+			
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+		
+        return "testiframe";
+    }
+
     @GetMapping("/testawsajax")
 	public String testA(Model model){
 		
@@ -192,12 +231,22 @@ public class SalesController extends WorkdaysProperties{
             Pattern pattern2 = Pattern.compile("'");
             String[] splitStr = pattern2.split(s);
             
-            String t=splitStr[1];
-			model.addAttribute("test",t);
-            String t1=splitStr[3];
-            model.addAttribute("test1",t1);
+            String cgc=splitStr[1];
+            String id=splitStr[3];
+            
             System.out.println(splitStr[1]);
             System.out.println(splitStr[3]);
+
+            //idは拾ってこれたのでidを埋め込む作業が始まる
+
+            driver.get("http://localhost:8080/html/copytestaws.html");
+
+            driver.findElement(By.id("first")).sendKeys(cgc);
+            driver.findElement(By.id("second")).sendKeys(id);
+            
+            driver.findElement(By.id("sign")).click();
+           
+            System.out.println("❹＝"+driver.getCurrentUrl());
         } catch(Exception e) {
             System.out.println(e.getMessage());
 
@@ -230,25 +279,30 @@ public class SalesController extends WorkdaysProperties{
         try {
             //ログイン画面にアクセス
             driver.get("https://mki.my.salesforce.com/");
-            System.out.println("②＝"+driver.getCurrentUrl());
- 
-            WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
-     
-            String s=element.getAttribute("onclick");
- 
+			System.out.println("②＝"+driver.getCurrentUrl());
+
+			WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
+	
+			String s=element.getAttribute("onclick");
+
             Pattern pattern2 = Pattern.compile("'");
             String[] splitStr = pattern2.split(s);
-             
-            String t=splitStr[1];
-            model.addAttribute("test",t);
-            String t1=splitStr[3];
-            model.addAttribute("test1",t1);
+            
+            String cgc=splitStr[1];
+            String id=splitStr[3];
+            
             System.out.println(splitStr[1]);
             System.out.println(splitStr[3]);
-			
-            System.out.println("石井さんのクリックボタンの要素="+s);
 
-            System.out.println("③＝"+driver.getCurrentUrl());
+            //idは拾ってこれたのでidを埋め込む作業が始まる
+
+            driver.get("https://workdays.jp/html/copytestaws.html");
+
+            driver.findElement(By.id("first")).sendKeys(cgc);
+            driver.findElement(By.id("second")).sendKeys(id);
+            
+            driver.findElement(By.id("sign")).click();
+
  
         } catch(Exception e) {
             System.out.println(e.getMessage());
