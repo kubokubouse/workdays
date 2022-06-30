@@ -295,13 +295,20 @@ public class SalesController extends WorkdaysProperties{
             System.out.println(splitStr[3]);
 
             //idは拾ってこれたのでidを埋め込む作業が始まる
-
+            
             driver.get("https://workdays.jp/html/copytestaws.html");
 
             driver.findElement(By.id("first")).sendKeys(cgc);
             driver.findElement(By.id("second")).sendKeys(id);
             
             driver.findElement(By.id("sign")).click();
+
+            //サインオン成功
+            System.out.println("サインオン後のURL＝"+driver.getCurrentUrl());
+
+            //定時退勤ボタンを押下
+			//driver.findElement(By.id("btnTetInput")).click();
+			//System.out.println("定時退勤押下後＝"+driver.getCurrentUrl());
 
  
         } catch(Exception e) {
