@@ -84,6 +84,12 @@ public class SalesController extends WorkdaysProperties{
        
         return "ajaxtest";
     }
+
+    @GetMapping("/iframe")
+	public String iframe() {
+       
+        return "iframe";
+    }
     
     @GetMapping("/testiframe")
 	public String testiframe () {
@@ -96,21 +102,19 @@ public class SalesController extends WorkdaysProperties{
 
         try {
             //ログイン画面にアクセス
-            driver.get("http://workdays.jp/iframe");
+            driver.get("localhost:8080/iframe");
 			System.out.println("②＝"+driver.getCurrentUrl());
 
+            //iframeにブラウザを切り替え
             WebElement iframe = driver.findElement(By.id("iframe"));
 			driver.switchTo().frame(iframe) ;
 	
-            driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
-
-            
-            driver.findElement(By.id("pass")).sendKeys("0000") ;
+            driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
             
 
            
 
-            driver.findElement(By.id("login")).click();
+            
             
 
             System.out.println("③＝"+driver.getCurrentUrl());
@@ -130,8 +134,13 @@ public class SalesController extends WorkdaysProperties{
         System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
 
 		System.setProperty("webdriver.chrome.whitelistedIps", "");
-	
-		WebDriver driver = new ChromeDriver();//local
+        ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		
+		//Chromeドライバーのインスタンス
+        WebDriver driver = new ChromeDriver(options); //本番環境
 		System.out.println("①");
 
         try {
@@ -142,15 +151,12 @@ public class SalesController extends WorkdaysProperties{
             WebElement iframe = driver.findElement(By.id("iframe"));
 			driver.switchTo().frame(iframe) ;
 	
-            driver.findElement(By.id("email")).sendKeys("ryowhite@icloud.com");
-
-            
-            driver.findElement(By.id("pass")).sendKeys("0000") ;
+            driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button")).click();
             
 
            
 
-            driver.findElement(By.id("login")).click();
+            
 
             System.out.println("③＝"+driver.getCurrentUrl());
 			
@@ -271,7 +277,6 @@ public class SalesController extends WorkdaysProperties{
 		
 		//Chromeドライバーのインスタンス
         WebDriver driver = new ChromeDriver(options); //本番環境
-		//WebDriver driver = new ChromeDriver();//local
 		System.out.println("①");
         //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
