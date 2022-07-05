@@ -79,10 +79,115 @@ public class SalesController extends WorkdaysProperties{
         return "salesforce";
     }
 
+    @GetMapping("/localloginsf")
+	public String localloginsf (Model model) {
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, localdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		
+		//Chromeドライバーのインスタンス
+        //WebDriver driver = new ChromeDriver(options); //本番環境
+		WebDriver driver = new ChromeDriver();//local
+		System.out.println("①");
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://mki.my.salesforce.com/");
+			System.out.println("②＝"+driver.getCurrentUrl());
+
+			WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
+	
+			String s=element.getAttribute("onclick");
+
+            Pattern pattern2 = Pattern.compile("'");
+            String[] splitStr = pattern2.split(s);
+            
+            String cgc=splitStr[1];
+            String id=splitStr[3];
+            
+            System.out.println(splitStr[1]);
+            System.out.println(splitStr[3]);
+
+            model.addAttribute("test",cgc);
+            model.addAttribute("test1",id);
+           
+            
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+		
+		return "test2";
+    }
+
+    @GetMapping("/loginsf")
+	public String loginsf (Model model) {
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, awsdriver);
+
+		System.setProperty("webdriver.chrome.whitelistedIps", "");
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--headless");
+		options.addArguments("--no-sandbox");
+		
+		
+		//Chromeドライバーのインスタンス
+        WebDriver driver = new ChromeDriver(options); //本番環境
+		System.out.println("①");
+        //暗黙的な待機の設定（ブラウザ操作時の要素を見つけるまで最大5秒待つ）
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        try {
+            //ログイン画面にアクセス
+            driver.get("https://mki.my.salesforce.com/");
+			System.out.println("②＝"+driver.getCurrentUrl());
+
+			WebElement element=driver.findElement(By.xpath("//*[@id='idp_section_buttons']/button"));
+	
+			String s=element.getAttribute("onclick");
+
+            Pattern pattern2 = Pattern.compile("'");
+            String[] splitStr = pattern2.split(s);
+            
+            String cgc=splitStr[1];
+            String id=splitStr[3];
+            
+            System.out.println(splitStr[1]);
+            System.out.println(splitStr[3]);
+
+            model.addAttribute("test",cgc);
+            model.addAttribute("test1",id);
+           
+            
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+			driver.quit();
+        }
+		
+		return "test2";
+    }
+
     @GetMapping("/ajaxtest")
 	public String ajaxtest () {
-       
+        
         return "ajaxtest";
+    }
+
+    @GetMapping("/jstest")
+	public String jstest () {
+       
+        return "jstest";
     }
 
     @GetMapping("/iframe")
